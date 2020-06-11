@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    指数形式的傅立叶变换 |
+    
+    Chipen&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+<main class="content">
+  <!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:50
+ * @Description: file content
+-->
+<section class="outer">
+  <article id="post-指数形式的傅立叶变换" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h1 class="article-title" itemprop="name">
+      指数形式的傅立叶变换
+    </h1>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" class="article-date">
+  <time datetime="2020-06-11T09:57:38.000Z" itemprop="datePublished">2020-06-11</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+                            
+    <div class="tocbot"></div>
+
+
+
+
+
+                                
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                                    <h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
+<p>$x$ 方向的单位向量，记为 $\vec{i}$, $y$ 方向的单位向量，记为 $\vec{j}$,是这个平面的<strong>基</strong>，这样一个向量就可以用这两个基来表示：</p>
+<script type="math/tex; mode=display">\vec{v} = a\cdot\vec{i} + b\cdot\vec{j}</script><p>我们如果把基替换一下，使用 $1$ 和 $i$ 这两个数，</p>
+<script type="math/tex; mode=display">z = a \cdot 1 + b \cdot i</script><p>就可以用一个复数表示平面上的点，这个以 $1$ 和 $i$ 为基的平面，称为<strong>复平面</strong>。<br>实平面上的代数结构也可以原封不动的套用到复平面上。</p>
+<h1 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h1><p>欧拉公式指出</p>
+<script type="math/tex; mode=display">e^{ix} = \cos{x} + i\sin{x}</script><p>这个公式可以由三角函数的级数展开证明，详情可以看<a href="https://zhuanlan.zhihu.com/p/42639576" target="_blank" rel="noopener">jRONI的知乎文章</a>。</p>
+<div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/Euler's_formula.svg" width=250>
+    <div style="color:gray"><font size=2>图一：图片原作者：Gunther</font></div>
+</div>
+
+<p>如图所示，利用欧拉公式，可以把一个数映射到复平面上的一个点，比如 $\phi$ 可以映射到 $(\cos{\phi},\sin{\phi})$ ,而反过来也可以把 $\cos{\phi}$ 和 $sin{\phi}$ 合起来用一个 $e^{i\phi}$ 来表示，这个特性将在下面用到。</p>
+<h1 id="傅立叶级数的指数形式"><a href="#傅立叶级数的指数形式" class="headerlink" title="傅立叶级数的指数形式"></a>傅立叶级数的指数形式</h1><p>函数利用傅立叶变换可以展开成如下形式</p>
+<script type="math/tex; mode=display">f(x) = \frac{A_0}{2} + \sum_{k=1}^{\infty} a_k \cos(k{\color{Tan} \omega_1} ) + b_k \sin(k{\color{Tan} \omega_1} )</script><p>将 $\cos()$ 和 $\sin()$ 项合并</p>
+<script type="math/tex; mode=display">\begin{align}
+        f(x) & =  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Red} a_k} \cos(k{\color{Tan} \omega_1} ) + {\color{Blue} b_k} \sin(k{\color{Tan} \omega_1} ) \\
+        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \sqrt{ {\color{Red} a_k }^2 + {\color{Blue} b_k}^2 }\cos(k{\color{Tan} \omega_1} + \arctan(-\frac{\color{Blue}b_k}{\color{Red}a_k} ) ) \\
+        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )
+    \end{align}</script><div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/Akm_ak_bk.drawio.svg" width=300>
+    <div style="color:gray"><font size=2>图二：A<sub>km</sub>, a<sub>k</sub>, b<sub>k</sub> 和 ϕ<sub>k</sub> 的关系 </font></div>
+</div>
+
+<p><br></p>
+<p>反向利用欧拉公式，可以凑出</p>
+<script type="math/tex; mode=display">\begin{align}
+        f(x) & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color    {Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )\\
+        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \frac{1}{2} {\color{Purple} A_{km} } (e^{j(kw_1t+{\color{Violet}\phi_k)} }+e^{-j(k{\color{Tan} \omega_1}t+{\color{Violet} \phi_k})}) \\
+        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} (\frac{1}{2} {\color{Purple} A_{km} } e^{\color{Violet} \phi_k}e^{jk{\color{Tan} \omega_1}t} + \frac{1}{2}{\color{Purple} A_{km} } e^{-\color{Violet} \phi_k}e^{-jk{\color{Tan} \omega_1}t}) \\
+        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t})
+\end{align}</script><p>通过以上过程可以得出</p>
+<ul>
+<li>${\color{Purple} A_{km} }$ 表示展开后各项（各个频率）对应的<strong>幅值</strong></li>
+<li>${\color{Violet} \phi_k}$ 表示了以 $\cos(0)$ 为基准的<strong>相位</strong></li>
+<li>$e^{jk{\color{Tan} \omega_1}t}$ 可以表示 以 $\cos(0)$ 为基准，<em>逆时针</em>为正方向旋转的向量，$e^{-jk{\color{Tan} \omega_1}t}$则相反，是往<em>顺时针</em>为正方向旋转的向量。${\color{Orange} c_k}$ 和 ${\color{Orange} c^<em>_k}$ 则表示向量<strong>向其对应正方向偏移的角度</strong>，以及<em>*对应幅值的信息</em></em>。<br>下面讲如何得出各项系数<br>由图二可以很容易得出 $\left\{\begin{matrix} {\color{Purple} A_{km} }\cos(\phi_k)={\color{Red}a_k},\\ {\color{Purple} A_{km} }\sin(\phi_k)=-{\color{Blue}b_k} \end{matrix}\right.$<br>所以<script type="math/tex; mode=display">{\color{Purple} A_{km} } e^{\color{Violet} \phi_k} = {\color{Purple} A_{km} }(\cos(\phi_k)+i\sin(\phi_k)) = {\color{Red}a_k} -i{\color{Blue}b_k}</script></li>
+</ul>
+<p>接着套用三角函数形式中得出 $a_k$ 和 $b_k$ 的公式。</p>
+<script type="math/tex; mode=display">\begin{align}
+        {\color{Orange} c_k} &= \frac{1}{2}{\color{Purple} A_{km} }e^{ {\color{Violet} \phi_k} }  \\
+        &= \frac{1}{2}({\color{Red} a_k} - i{\color{Blue}b_k })  \\
+        &= \frac{1}{T} \int_{0}^{T}f(t)\cos(k{\color{Tan} \omega_1}t)\mathrm{d}t -i\frac{1}{T} \int_{0}^{T}f(t)\sin(k{\color{Tan} \omega_1}t)\mathrm{d}t \\
+        &= \frac{1}{T} \int_{0}^{T}f(t)[\cos(k{\color{Tan} \omega_1}t) - i\sin(k{\color{Tan} \omega_1}t)] \mathrm{d}t  \\
+        &= \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t 
+    \end{align}</script><p>同理可求得</p>
+<script type="math/tex; mode=display">{\color{Orange} c^*_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{jk{\color{Tan} \omega_1} }\mathrm{d}t</script><p>若令 $k \to -k$ 则 ${\color{Orange}c^*_k} \to {\color{Orange}c_k}$<br>则</p>
+<script type="math/tex; mode=display">\begin{align}
+        f(x) &= \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t}) \\
+        &= \sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
+    \end{align}</script><p>最终形式</p>
+<script type="math/tex; mode=display">\left\{\begin{matrix}
+        {\color{Orange} c_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t \\\\
+        f(x) =\sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
+    \end{matrix}\right.</script><h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/fun.png" width=400 height=375>
+    <div style="color:gray"><font size=2>图三：一个函数实例 </font></div>
+</div>
+<br>
+
+现在给出一个函数 $y=x$ ,周期为 2.
+
+经过计算可以得到
+
+$$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}{k\pi}$$
+
+可以看出这是一个复数,包含了幅值和初相位的信息，取 $c_k$ 的**模** $|c_k|$ 作为每个频率分量的幅值，$c_k$ 的**幅角** $\phi_k$为每个频率分量的初相位。
+
+可以画出其幅度谱和相位谱，
+
+<div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/幅度谱.drawio.svg" width=400 height=375>
+    <div style="color:gray"><font size=2>图四：幅度谱 </font></div>
+</div>
+<div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/相位谱.drawio.svg" width=400 height=375>
+    <div style="color:gray"><font size=2>图五：相位谱 </font></div>
+</div>
+
+<p>如果要做单边的幅度谱，只需把图四中的纵坐标改为 $A_{km}$ ，然后每条谱线改为原来的两倍，（$ A_{km} = 2 |c_k|$）。单边相位谱只保留 $x$ 正半轴部分。</p>
+
+                                                                        
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://zsiothsu.github.io/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckbajjsfk000034sb0ep29ccp" class="article-share-link">
+                                            分享
+                                        </a>
+                                        
+                                    </footer>
+
+    </div>
+
+    
+        
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/06/07/Hello-World/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">Hello World!</div>
+      </a>
+    
+  </nav>
+
+
+            
+
+                
+                    
+                        
+                            
+
+</article>
+</section>
+
+
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+    <li><i class="fe fe-bookmark"></i> <span id="busuanzi_value_page_pv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2020 Chipen&#39;s blog</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/avatar.jpg" alt="Chipen&#39;s blog"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="搜索">
+        <i class="fe fe-search"></i>
+        搜索
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+  });
+</script>
+
+
+
+<script src="/js/ocean.js"></script>
+
+<!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:11
+ * @Description: file content
+-->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
