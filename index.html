@@ -139,7 +139,7 @@
 <ul>
 <li>${\color{Purple} A_{km} }$ 表示展开后各项（各个频率）对应的<strong>幅值</strong></li>
 <li>${\color{Violet} \phi_k}$ 表示了以 $\cos(0)$ 为基准的<strong>相位</strong></li>
-<li>$e^{jk{\color{Tan} \omega_1}t}$ 可以表示 以 $\cos(0)$ 为基准，<em>逆时针</em>为正方向旋转的向量，$e^{-jk{\color{Tan} \omega_1}t}$则相反，是往<em>顺时针</em>为正方向旋转的向量。${\color{Orange} c_k}$ 和 ${\color{Orange} c^<em>_k}$ 则表示向量<strong>向其对应正方向偏移的角度</strong>，以及<em>*对应幅值的信息</em></em>。<br>下面讲如何得出各项系数<br>由图二可以很容易得出 $\left\{\begin{matrix} {\color{Purple} A_{km} }\cos(\phi_k)={\color{Red}a_k},\\ {\color{Purple} A_{km} }\sin(\phi_k)=-{\color{Blue}b_k} \end{matrix}\right.$<br>所以<script type="math/tex; mode=display">{\color{Purple} A_{km} } e^{\color{Violet} \phi_k} = {\color{Purple} A_{km} }(\cos(\phi_k)+i\sin(\phi_k)) = {\color{Red}a_k} -i{\color{Blue}b_k}</script></li>
+<li>$e^{jk{\color{Tan} \omega_1}t}$ 可以表示 以 $\cos(0)$ 为基准，<em>逆时针</em>为正方向旋转的向量，$e^{-jk{\color{Tan} \omega_1}t}$则相反，是往<em>顺时针</em>为正方向旋转的向量。${\color{Orange} c_k}$ 和 ${\color{Orange} c^{*}_k}$ 则表示向量<strong>向其对应正方向偏移的角度</strong>，以及<strong>对应幅值的信息</strong>。<br>下面讲如何得出各项系数<br>由图二可以很容易得出 $\left\{\begin{matrix} {\color{Purple} A_{km} }\cos(\phi_k)={\color{Red}a_k},\\ {\color{Purple} A_{km} }\sin(\phi_k)=-{\color{Blue}b_k} \end{matrix}\right.$<br>所以<script type="math/tex; mode=display">{\color{Purple} A_{km} } e^{\color{Violet} \phi_k} = {\color{Purple} A_{km} }(\cos(\phi_k)+i\sin(\phi_k)) = {\color{Red}a_k} -i{\color{Blue}b_k}</script></li>
 </ul>
 <p>接着套用三角函数形式中得出 $a_k$ 和 $b_k$ 的公式。</p>
 <script type="math/tex; mode=display">\begin{align}
@@ -167,11 +167,12 @@
 
 经过计算可以得到
 
-$$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}{k\pi}$$
+$$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}{k\pi} $$
 
-可以看出这是一个复数,包含了幅值和初相位的信息，取 $c_k$ 的**模** $|c_k|$ 作为每个频率分量的幅值，$c_k$ 的**幅角** $\phi_k$为每个频率分量的初相位。
+可以看出这是一个复数,包含了幅值和初相位的信息，取 $c_k$ 的模 $|c_k|$ 作为每个频率分量的幅值，$c_k$ 的幅角 $\phi_k$为每个频率分量的初相位。
 
 可以画出其幅度谱和相位谱，
+
 
 <div align="center">
     <img src="/2020/06/11/指数形式的傅立叶变换/幅度谱.drawio.svg" width=400 height=375>
