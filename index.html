@@ -68,6 +68,138 @@
       <h1 class="page-type-title"></h1>
       
         
+          <article id="post-带权并查集" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h2 itemprop="name">
+      <a class="article-title" href="/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/">带权并查集</a>
+    </h2>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/" class="article-date">
+  <time datetime="2020-07-28T15:48:29.000Z" itemprop="datePublished">2020-07-28</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                                    <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p><h3>食物链（POJ-1182）</h3></p>
+<h5>Description</h5>
+
+<blockquote>
+<p>动物王国中有三类动物A,B,C，这三类动物的食物链构成了有趣的环形。A吃B， B吃C，C吃A。<br>现有N个动物，以1－N编号。每个动物都是A,B,C中的一种，但是我们并不知道它到底是哪一种。<br>有人用两种说法对这N个动物所构成的食物链关系进行描述：<br>第一种说法是”1 X Y”，表示X和Y是同类。<br>第二种说法是”2 X Y”，表示X吃Y。<br>此人对N个动物，用上述两种说法，一句接一句地说出K句话，这K句话有的是真的，有的是假的。当一句话满足下列三条之一时，这句话就是假话，否则就是真话。<br>1） 当前的话与前面的某些真的话冲突，就是假话；<br>2） 当前的话中X或Y比N大，就是假话；<br>3） 当前的话表示X吃X，就是假话。<br>你的任务是根据给定的N（1 &lt;= N &lt;= 50,000）和K句话（0 &lt;= K &lt;= 100,000），输出假话的总数。</p>
+</blockquote>
+<h5>Input</h5>
+
+<blockquote>
+<p>第一行是两个整数N和K，以一个空格分隔。<br>以下K行每行是三个正整数 D，X，Y，两数之间用一个空格隔开，其中D表示说法的种类。<br>若D=1，则表示X和Y是同类。<br>若D=2，则表示X吃Y。</p>
+</blockquote>
+<h5>Output</h5>
+
+<blockquote>
+<p>只有一个整数，表示假话的数目。</p>
+</blockquote>
+<h5>Sample Input</h5>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> <span class="number">7</span></span><br><span class="line"><span class="number">1</span> <span class="number">101</span> <span class="number">1</span> </span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">1</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> </span><br><span class="line"><span class="number">1</span> <span class="number">5</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<h5>Sample Output</h5>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>蒟蒻的我看到描述的话应该会想到，首先建一个图，然后根据图上两点的距离判断两者的关系。但又想到万一这么一种情况：</p>
+<center>
+    <img src="/2020/07/28/带权并查集/1.drawio.svg" width=250>
+</center>
+
+<p>那判断2和3的关系或者4和5的关系就比较困难了。<br>一个想法是把这个图分层：</p>
+<center>
+    <img src="/2020/07/28/带权并查集/2.drawio.svg" width=300>
+</center>
+
+<p>所以需要有一个数据结构来记录图的层次，然后嫩快速地计算出两点的关系。</p>
+<h1 id="带权并查集"><a href="#带权并查集" class="headerlink" title="带权并查集"></a>带权并查集</h1><p>带权并查集就有这么一个作用，它可以记录下每个节点相对于根节点的距离。</p>
+<p>普通并查集,通过一个<code>fa</code>数组储存其父节点，经过路径压缩可以让同一个集合里的节点指向同一个根节点：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x] = (fa[x] == x) ? x : find(fa[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而带权并查集加入了<code>d</code>数组记录距离:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br></pre></td></tr></table></figure>
+<h2 id="查找函数"><a href="#查找函数" class="headerlink" title="查找函数"></a>查找函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用下图做示例，将 $3$ 到 $1$ 的路径压缩</p>
+<center>
+    <img src="/2020/07/28/带权并查集/3.drawio.svg" width=50>
+</center>
+
+<ol>
+<li>记录 $3$ 的父节点 ： $oldFa \gets 2$</li>
+<li>更改 $3$ 的父节点为根节点 $fa[3] \gets 1$</li>
+<li>$3$ 到现在的父节点的距离就为 $3$ 到 $oldFa(2)$ 的距离加上 $oldFa$ 到根节点的距离： $d[3] \gets 3 + 4$。</li>
+</ol>
+<center>
+    <img src="/2020/07/28/带权并查集/4.drawio.svg" width=150>
+</center>
+
+<h2 id="合并函数"><a href="#合并函数" class="headerlink" title="合并函数"></a>合并函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数的作用，是将 <code>x</code> 所在分支合并到 <code>y</code> 所在分支。</p>
+<p>以下图为例，$1$、$2$ 为一个分支，$3$、$4$ 为一个分支，已知 $2$ 和 $4$ 的距离是 3 目的是将 $4$ 所在分支合并到 $2$ 所在分支。。</p>
+<center>
+    <img src="/2020/07/28/带权并查集/5.drawio.svg" width=200>
+</center>
+
+<ol>
+<li>将 $3$ 的父节点设为 $1$ ： $fa[3] \gets 1$</li>
+<li>计算 $3$ 到 $1$ 的距离</li>
+</ol>
+<p>如何计算$3$ 到 $1$ 的距离呢。可以设想一下合并后的图形，应有如下规律</p>
+<script type="math/tex; mode=display">dist(4,3) + dist(3,1) = dist(4,2) + dist(2,1)</script><p>$dist(x,y)$ 表示 $x$ 到 $y$ 的距离。那么可以得出</p>
+<script type="math/tex; mode=display">dist(3,1) = - dist(4,3) + dist(4,2) + dist(2,1)</script><p>这样就合并完了。之后在查找的时候会自动路径压缩.</p>
+<center>
+    <img src="/2020/07/28/带权并查集/6.drawio.svg" width=200>
+</center>
+
+<h2 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>只要将两者到根节点的距离相减就得到啦</p>
+<h2 id="完整模板"><a href="#完整模板" class="headerlink" title="完整模板"></a>完整模板</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><p>带权并查集可以很容易地知道两点的距离，不过依照题意，只有 $A$、$B$、$C$三种动物，所以距离只能在 0,1,2 里取，只要将模板里的距离都 $ \mod 3 $ 就可以了。<br>比如在 $A \to B \to C \to A$，这个食物链里，$dist(B,A) = 1$ 表示 $A$ 捕食 $B$，$dist(C,A) = 2$ 表示 $C$ 捕食 $A$，如果算出来距离等于0的话，就表示两者是同类。</p>
+<p>代码<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = (d[x] + d[oldFa]) % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> (d[x] - d[y] + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,k,ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ;i &lt;= n;i++) fa[i] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; k ;i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> o,x,y;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;o,&amp;x,&amp;y);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(x &gt; n || y &gt; n) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(o == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">0</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(x == y) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">1</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+                                                                        
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://zsiothsu.github.io/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="ckd74aryg0000posbau7r28af" class="article-share-link">
+                                            分享
+                                        </a>
+                                        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+                                    </footer>
+
+    </div>
+
+    
+
+                
+
+</article>
+        
           <article id="post-ArchLinux-安装nvidia显卡驱动" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
@@ -137,7 +269,7 @@
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://zsiothsu.github.io/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="ckc7pcg960000y9sb5kcc8co8" class="article-share-link">
+                                        <a data-url="http://zsiothsu.github.io/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="ckd7485dp0000mnsb80my0pmq" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -273,11 +405,11 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://zsiothsu.github.io/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckbajjsfk000034sb0ep29ccp" class="article-share-link">
+                                        <a data-url="http://zsiothsu.github.io/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckd74aryt0003posb79ffh4nu" class="article-share-link">
                                             分享
                                         </a>
                                         
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">-数学</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li></ul>
 
                                     </footer>
 
@@ -337,7 +469,7 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://zsiothsu.github.io/2020/06/07/Hello-World/" data-id="ckbajjsfr000234sbdx3xfx51" class="article-share-link">
+                                        <a data-url="http://zsiothsu.github.io/2020/06/07/Hello-World/" data-id="ckd7485dy0002mnsbb3opbnyv" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -361,13 +493,20 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
   <footer class="footer">
   <div class="outer">
     <div class="float-right">
-      <ul class="list-inline">
+      <!-- <ul class="list-inline">
   
     <li><i class="fe fe-bar-chart"></i> <span id="busuanzi_value_site_pv"></span></li>
   
     <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
   
-</ul>
+</ul> -->
+<div class="powered-by">
+  
+    <span id="busuanzi_container_site_pv">访问量:<span id="busuanzi_value_site_pv"></span></span>
+  
+	&emsp;<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">访客数:<span id="busuanzi_value_site_uv"></span></span>&emsp;
+  
+</div>
     </div>
     <ul class="list-inline">
       <li>&copy; 2020 Chipen&#39;s blog</li>
