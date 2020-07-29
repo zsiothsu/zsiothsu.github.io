@@ -121,6 +121,18 @@
       </tags>
   </entry>
   <entry>
+    <title>Hello World!</title>
+    <url>/2020/06/07/Hello-World/</url>
+    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
+<script type="math/tex; mode=display">\begin{array}{l}  
+        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
+        \nabla \cdot \mathbf{B} = 0 \\  
+        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
+        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
+    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
+]]></content>
+  </entry>
+  <entry>
     <title>指数形式的傅立叶变换</title>
     <url>/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/</url>
     <content><![CDATA[<h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
@@ -206,17 +218,5 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
       <tags>
         <tag>数学</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World!</title>
-    <url>/2020/06/07/Hello-World/</url>
-    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
-<script type="math/tex; mode=display">\begin{array}{l}  
-        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
-        \nabla \cdot \mathbf{B} = 0 \\  
-        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
-        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
-    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
-]]></content>
   </entry>
 </search>
