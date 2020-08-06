@@ -68,6 +68,138 @@
       <h1 class="page-type-title"></h1>
       
         
+          <article id="post-缩点" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h2 itemprop="name">
+      <a class="article-title" href="/2020/08/05/%E7%BC%A9%E7%82%B9/">缩点</a>
+    </h2>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2020/08/05/%E7%BC%A9%E7%82%B9/" class="article-date">
+  <time datetime="2020-08-05T14:52:36.000Z" itemprop="datePublished">2020-08-05</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                                    <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><font size=5><b>Network of Schools(POJ-1236)</b></font>
+<br>
+<font size=3><b>Description</b></font>
+
+<blockquote>
+<p>A number of schools are connected to a computer network. Agreements have been developed among those schools: each school maintains a list of schools to which it distributes software (the “receiving schools”). Note that if B is in the distribution list of school A, then A does not necessarily appear in the list of school B<br>You are to write a program that computes the minimal number of schools that must receive a copy of the new software in order for the software to reach all schools in the network according to the agreement (Subtask A). As a further task, we want to ensure that by sending the copy of new software to an arbitrary school, this software will reach all schools in the network. To achieve this goal we may have to extend the lists of receivers by new members. Compute the minimal number of extensions that have to be made so that whatever school we send the new software to, it will reach all other schools (Subtask B). One extension means introducing one new member into the list of receivers of one school.</p>
+</blockquote>
+<font size=3><b>Input</b></font>
+
+<blockquote>
+<p>The first line contains an integer N: the number of schools in the network (2 &lt;= N &lt;= 100). The schools are identified by the first N positive integers. Each of the next N lines describes a list of receivers. The line i+1 contains the identifiers of the receivers of school i. Each list ends with a 0. An empty list contains a 0 alone in the line.</p>
+</blockquote>
+<font size=3><b>Output</b></font>
+
+<blockquote>
+<p>Your program should write two lines to the standard output. The first line should contain one positive integer: the solution of subtask A. The second line should contain the solution of subtask B.</p>
+</blockquote>
+<font size=3><b>Sample Input</b></font>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">2</span> <span class="number">4</span> <span class="number">3</span> <span class="number">0</span></span><br><span class="line"><span class="number">4</span> <span class="number">5</span> <span class="number">0</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<font size=3><b>Sample Output</b></font>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>题目大意是，有 $N$ 间学校，每间学校维护这一份软件分发列表，如果 $B$ 在 $A$ 的列表上，软件就可以由 $A$ 传向 $B$。<br>任务一：软件最少分给几间学校，可以使软件传遍所有学校<br>任务二：最少需要添加多少条边，可以使得：软件给任意一个学校后，都能传遍所有学校。</p>
+<p>任务一看起来像是要找到所有结点的根结点，貌似并查集挺符合的，但是题目给的图<strong>有向</strong>且<strong>有环</strong>，任务二要求结点能够<strong>两两相互到达</strong>，这就很明显了，结点之间不仅要连通，而且要强连通。所以这道题的主要任务就是算出给定图的强连通分量。</p>
+<p>这就要引进下面这个算法：</p>
+<h1 id="Tarjan-算法"><a href="#Tarjan-算法" class="headerlink" title="Tarjan 算法"></a>Tarjan 算法</h1><p>Tarjan /tarjan/ (塔扬)，Tarjan发明了很多算法，都叫 Tarjan 算法，这里讲的是求强连通分量的 Tarjan 算法。</p>
+<h2 id="图的各种边"><a href="#图的各种边" class="headerlink" title="图的各种边"></a>图的各种边</h2><center>
+    <img src="/2020/08/05/缩点/1.drawio.svg" width=400>
+</center>
+
+<ol>
+<li>如图(a)，是一棵普通的树，连通，但没有两两相互抵达，黑色的边叫做树边。</li>
+<li>如图(b)，从 1 结点的子树上，返回了一条蓝色的边，这种指向某个结点祖先的边叫做后向边，也叫反祖边。</li>
+<li>如图(c)，一台红色的边从 1 结点指向了它的子树的结点，这种边和后向边相反，它叫前向边。</li>
+<li>如图(d)，一条边从 4 结点指向了它的兄弟，类似的，从一个结点指向自己所在路径之外的结点 <em>（比如这里到 4 结点的路径是 1 -&gt; 2 -&gt; 4 ，那 3 就在路径之外了）</em> ，这条边叫做横叉边。</li>
+</ol>
+<p>了解这些有什么用呢？有用！<br>后向边就很有用，就以图(b)为例。原本只有一条路径（黑色的边）可以从 1 走到 3，现在出现一条后向边指向了 3 结点的祖先，那又可以从 3 走回去了！然后又从 1 走到 2,2 走到 3，3 走到 1 ……树就变成了强连通图,或者可以说有了回路，有了环。所以计算强连通图的任务可以简化为<strong>查找后向边</strong>。<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>考虑一下 dfs，如果图中存在环，那么搜索时必会碰到之前遇到过的点。Tarjan 就是一个魔改过的 dfs 算法。<br>在算法执行过程中主要维护这两个变量：</p>
+<ol>
+<li>$dfn[u]$：在深度优先搜索时结点 $u$ 被遍历到的顺序。</li>
+<li>$low[u]$：以$u$为根节点的子树上，所能找到的最小 $dfn$ </li>
+</ol>
+<p>如果从某个结点 $u$ 开始遍历，遍历结束后发现 $low[u] = dfn[u]$，说明从$u$开始遍历的子树又回到了 $u$，因为 $low[u]$ 记载的是子树路径上遇到最早被遍历到的点。</p>
+<p>搜索过程中用栈记录遍历到的节点，这里用栈只是为了方便记录遍历结点的先后顺序。</p>
+<p>更新数值的方法如下：（以 $u$ 代表当前节点，$v$ 代表 下一个节点）</p>
+<ol>
+<li>如果 $(u,v)$ 为树边或前向边，且 $v$ 没有被遍历过，就顺着往下遍历，遍历完之后用 $low[v]$ 更新 $low[u]$ 方式是 $low[u] = \min(low[u],low[v])$。因为 $v$ 如果能够到达比 $u$ 更早的结点，那 $u$ 也能顺着 $v$ 到达这个节点。</li>
+<li>如果 $(u,v)$ 是后向边，且 $v$ 在栈中，那么直接用 $\min(dfn[v],low[u])$ 更新 $low[u]$。</li>
+<li>如果是横叉边，$v$ 不在栈中（如果在栈中，就成树边了），那么就不用处理。</li>
+</ol>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>伪代码</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll}
+    1 & \textbf{Input. } \text{a node of graph } e \text{ which is called } u \\
+    2 & \textbf{Output. } \text{All the result of strongly connected components }\\
+      & \text{is stored in the array } scc. \text{The number of scc is strored in } scnt \\
+    3 & \textbf{Method.} \\
+    4 & dfn[u],low[u] \gets \text{the order of } u \text{ in traverse}\\
+    5 & \text{push } u \text{ into stack}\\
+    6 & \textbf{for} \text{ each } (u,v) \text{ in the stored } e \\
+    7 & \qquad \textbf{if } v \text{ haven't been traversed}\\
+    8 & \qquad \qquad \text{travers } v\\
+    9 & \qquad \qquad low[u] \gets \min(low[u],low[v]) \\
+    10& \qquad \textbf{else if } v \text{ is in stack} \\
+    11& \qquad \qquad low[u] \gets \min(low[u],dfn[v]) \\
+    12& \textbf{if } dfn[u] = low[u] \\
+    13& \quad scnt \gets scnt + 1 \\
+    14& \quad \textbf{do} \\
+    15& \quad \quad node \gets \text{the top of stack} \\
+    16& \quad \quad \text{pop stack} \\
+    17& \quad \quad scc[node] \gets scnt \\
+    18& \quad \textbf{while } node \ne u 
+\end{array}</script><p>待更新……</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><sup><a href="#fn_1" id="reffn_1">1</a></sup>:<a href="https://oi-wiki.org/graph/scc/#dfs" target="_blank" rel="noopener">强连通分量-OI Wiki</a></p>
+
+                                                                        
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://chipensblog.tk/2020/08/05/%E7%BC%A9%E7%82%B9/" data-id="ckdi92qgt0005kosb93wybr6f" class="article-share-link">
+                                            分享
+                                        </a>
+                                        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+                                    </footer>
+
+    </div>
+
+    
+
+                
+
+</article>
+        
           <article id="post-带权并查集" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
@@ -138,8 +270,8 @@
 </center>
 
 <p>所以需要有一个数据结构来记录图的层次，然后嫩快速地计算出两点的关系。</p>
-<h1 id="带权并查集"><a href="#带权并查集" class="headerlink" title="带权并查集"></a>带权并查集</h1><p>带权并查集就有这么一个作用，它可以记录下每个节点相对于根节点的距离。</p>
-<p>普通并查集,通过一个<code>fa</code>数组储存其父节点，经过路径压缩可以让同一个集合里的节点指向同一个根节点：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x] = (fa[x] == x) ? x : find(fa[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="带权并查集"><a href="#带权并查集" class="headerlink" title="带权并查集"></a>带权并查集</h1><p>带权并查集就有这么一个作用，它可以记录下每个结点相对于根结点的距离。</p>
+<p>普通并查集,通过一个<code>fa</code>数组储存其父结点，经过路径压缩可以让同一个集合里的结点指向同一个根结点：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x] = (fa[x] == x) ? x : find(fa[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>而带权并查集加入了<code>d</code>数组记录距离:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br></pre></td></tr></table></figure>
 <h2 id="查找函数"><a href="#查找函数" class="headerlink" title="查找函数"></a>查找函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -149,9 +281,9 @@
 </center>
 
 <ol>
-<li>记录 $3$ 的父节点 ： $oldFa \gets 2$</li>
-<li>更改 $3$ 的父节点为根节点 $fa[3] \gets 1$</li>
-<li>$3$ 到现在的父节点的距离就为 $3$ 到 $oldFa(2)$ 的距离加上 $oldFa$ 到根节点的距离： $d[3] \gets 3 + 4$。</li>
+<li>记录 $3$ 的父结点 ： $oldFa \gets 2$</li>
+<li>更改 $3$ 的父结点为根结点 $fa[3] \gets 1$</li>
+<li>$3$ 到现在的父结点的距离就为 $3$ 到 $oldFa(2)$ 的距离加上 $oldFa$ 到根结点的距离： $d[3] \gets 3 + 4$。</li>
 </ol>
 <center>
     <img src="/2020/07/28/带权并查集/4.drawio.svg" width=150>
@@ -165,7 +297,7 @@
 </center>
 
 <ol>
-<li>将 $3$ 的父节点设为 $1$ ： $fa[3] \gets 1$</li>
+<li>将 $3$ 的父结点设为 $1$ ： $fa[3] \gets 1$</li>
 <li>计算 $3$ 到 $1$ 的距离</li>
 </ol>
 <p>如何计算$3$ 到 $1$ 的距离呢。可以设想一下合并后的图形，应有如下规律</p>
@@ -176,7 +308,7 @@
 </center>
 
 <h2 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>只要将两者到根节点的距离相减就得到啦</p>
+<p>只要将两者到根结点的距离相减就得到啦</p>
 <h2 id="完整模板"><a href="#完整模板" class="headerlink" title="完整模板"></a>完整模板</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><p>带权并查集可以很容易地知道两点的距离，不过依照题意，只有 $A$、$B$、$C$三种动物，所以距离只能在 0,1,2 里取，只要将模板里的距离都 $ \mod 3 $ 就可以了。<br>比如在 $A \to B \to C \to A$，这个食物链里，$dist(B,A) = 1$ 表示 $A$ 捕食 $B$，$dist(C,A) = 2$ 表示 $C$ 捕食 $A$，如果算出来距离等于0的话，就表示两者是同类。</p>
 <p>代码<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = (d[x] + d[oldFa]) % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> (d[x] - d[y] + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,k,ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ;i &lt;= n;i++) fa[i] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; k ;i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> o,x,y;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;o,&amp;x,&amp;y);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(x &gt; n || y &gt; n) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(o == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">0</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(x == y) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">1</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
@@ -184,11 +316,11 @@
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="ckd7e4a520002nhsbfqrlgbf3" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="ckdi92qgu0006kosbgtgteat6" class="article-share-link">
                                             分享
                                         </a>
                                         
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
                                     </footer>
 
@@ -269,7 +401,7 @@
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="ckd7e4a4s0000nhsbhja4dyen" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="ckdi92qgc0000kosbexmogfha" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -405,7 +537,7 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckd7e4a570005nhsbaeg89pe7" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckdi92qgw0007kosb7kop398c" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -469,7 +601,7 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/06/07/Hello-World/" data-id="ckd7e4a550004nhsb2527b7xk" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/06/07/Hello-World/" data-id="ckdi92qgk0002kosb22d87ty6" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -541,6 +673,10 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
     
       <li class="nav-item">
         <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/tags">Tags</a>
       </li>
     
     <li class="nav-item">
