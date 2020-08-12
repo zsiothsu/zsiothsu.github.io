@@ -126,7 +126,7 @@
 <li>$low[u]$：以$u$为根节点的子树上，所能找到的最小 $dfn$ </li>
 </ol>
 <p>如果从某个结点 $u$ 开始遍历，遍历结束后发现 $low[u] = dfn[u]$，说明从$u$开始遍历的子树又回到了 $u$，因为 $low[u]$ 记载的是子树路径上遇到最早被遍历到的点。</p>
-<p>搜索过程中用栈记录遍历到的节点，这里用栈只是为了方便记录遍历结点的先后顺序。（关于栈的作用的可以看这篇博客，图解很详细<sup><a href="#fn_2" id="reffn_2">2</a></sup>）</p>
+<p>搜索过程中用栈记录遍历到的节点，这里用栈只是为了方便记录遍历结点的先后顺序。（关于栈的作用的可以看这篇博客<sup><a href="#fn_2" id="reffn_2">2</a></sup>，图解很详细）</p>
 <p>更新数值的方法如下：（以 $u$ 代表当前节点，$v$ 代表 下一个节点）</p>
 <ol>
 <li>如果 $(u,v)$ 为树边或前向边，且 $v$ 没有被遍历过，就顺着往下遍历，遍历完之后用 $low[v]$ 更新 $low[u]$ 方式是 $low[u] = \min(low[u],low[v])$。因为 $v$ 如果能够到达比 $u$ 更早的结点，那 $u$ 也能顺着 $v$ 到达这个节点。</li>
@@ -313,9 +313,19 @@
     </li>
     <li class="nav-item">
       
-        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
-          <i class="fe fe-feed"></i>
+        <a class="nav-item-link" target="_blank" href="https://github.com/zsiothsu" title="github">
+          <img src="images/github.svg" width=20px>
         </a>
+      
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="https://www.zhihu.com/people/xu-jia-bin-18-83" title="zhihu">
+          <img src="images/zhihu.svg" width=20px>
+        </a>
+      
+    </li>
+    <li class="nav-item">
       
     </li>
   </ul>
