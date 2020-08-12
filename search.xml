@@ -1,6 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hello World!</title>
+    <url>/2020/06/07/Hello-World/</url>
+    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
+<script type="math/tex; mode=display">\begin{array}{l}  
+        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
+        \nabla \cdot \mathbf{B} = 0 \\  
+        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
+        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
+    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>带权并查集</title>
+    <url>/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/</url>
+    <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p><h3>食物链（POJ-1182）</h3></p>
+<h5>Description</h5>
+
+<blockquote>
+<p>动物王国中有三类动物A,B,C，这三类动物的食物链构成了有趣的环形。A吃B， B吃C，C吃A。<br>现有N个动物，以1－N编号。每个动物都是A,B,C中的一种，但是我们并不知道它到底是哪一种。<br>有人用两种说法对这N个动物所构成的食物链关系进行描述：<br>第一种说法是”1 X Y”，表示X和Y是同类。<br>第二种说法是”2 X Y”，表示X吃Y。<br>此人对N个动物，用上述两种说法，一句接一句地说出K句话，这K句话有的是真的，有的是假的。当一句话满足下列三条之一时，这句话就是假话，否则就是真话。<br>1） 当前的话与前面的某些真的话冲突，就是假话；<br>2） 当前的话中X或Y比N大，就是假话；<br>3） 当前的话表示X吃X，就是假话。<br>你的任务是根据给定的N（1 &lt;= N &lt;= 50,000）和K句话（0 &lt;= K &lt;= 100,000），输出假话的总数。</p>
+</blockquote>
+<h5>Input</h5>
+
+<blockquote>
+<p>第一行是两个整数N和K，以一个空格分隔。<br>以下K行每行是三个正整数 D，X，Y，两数之间用一个空格隔开，其中D表示说法的种类。<br>若D=1，则表示X和Y是同类。<br>若D=2，则表示X吃Y。</p>
+</blockquote>
+<h5>Output</h5>
+
+<blockquote>
+<p>只有一个整数，表示假话的数目。</p>
+</blockquote>
+<h5>Sample Input</h5>
+
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="number">100</span> <span class="number">7</span></span><br><span class="line"><span class="number">1</span> <span class="number">101</span> <span class="number">1</span> </span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">1</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> </span><br><span class="line"><span class="number">1</span> <span class="number">5</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
+<h5>Sample Output</h5>
+
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>蒟蒻的我看到描述的话应该会想到，首先建一个图，然后根据图上两点的距离判断两者的关系。但又想到万一这么一种情况：</p>
+<center>
+    <img src="/2020/07/28/带权并查集/1.drawio.svg" width=250>
+</center>
+
+<p>那判断2和3的关系或者4和5的关系就比较困难了。<br>一个想法是把这个图分层：</p>
+<center>
+    <img src="/2020/07/28/带权并查集/2.drawio.svg" width=300>
+</center>
+
+<p>所以需要有一个数据结构来记录图的层次，然后嫩快速地计算出两点的关系。</p>
+<h1 id="带权并查集"><a href="#带权并查集" class="headerlink" title="带权并查集"></a>带权并查集</h1><p>带权并查集就有这么一个作用，它可以记录下每个结点相对于根结点的距离。</p>
+<p>普通并查集,通过一个<code>fa</code>数组储存其父结点，经过路径压缩可以让同一个集合里的结点指向同一个根结点：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x] = (fa[x] == x) ? x : find(fa[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>而带权并查集加入了<code>d</code>数组记录距离:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br></pre></td></tr></table></figure>
+<h2 id="查找函数"><a href="#查找函数" class="headerlink" title="查找函数"></a>查找函数</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>用下图做示例，将 $3$ 到 $1$ 的路径压缩</p>
+<center>
+    <img src="/2020/07/28/带权并查集/3.drawio.svg" width=50>
+</center>
+
+<ol>
+<li>记录 $3$ 的父结点 ： $oldFa \gets 2$</li>
+<li>更改 $3$ 的父结点为根结点 $fa[3] \gets 1$</li>
+<li>$3$ 到现在的父结点的距离就为 $3$ 到 $oldFa(2)$ 的距离加上 $oldFa$ 到根结点的距离： $d[3] \gets 3 + 4$。</li>
+</ol>
+<center>
+    <img src="/2020/07/28/带权并查集/4.drawio.svg" width=150>
+</center>
+
+<h2 id="合并函数"><a href="#合并函数" class="headerlink" title="合并函数"></a>合并函数</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个函数的作用，是将 <code>x</code> 所在分支合并到 <code>y</code> 所在分支。</p>
+<p>以下图为例，$1$、$2$ 为一个分支，$3$、$4$ 为一个分支，已知 $2$ 和 $4$ 的距离是 3 目的是将 $4$ 所在分支合并到 $2$ 所在分支。。</p>
+<center>
+    <img src="/2020/07/28/带权并查集/5.drawio.svg" width=200>
+</center>
+
+<ol>
+<li>将 $3$ 的父结点设为 $1$ ： $fa[3] \gets 1$</li>
+<li>计算 $3$ 到 $1$ 的距离</li>
+</ol>
+<p>如何计算$3$ 到 $1$ 的距离呢。可以设想一下合并后的图形，应有如下规律</p>
+<script type="math/tex; mode=display">dist(4,3) + dist(3,1) = dist(4,2) + dist(2,1)</script><p>$dist(x,y)$ 表示 $x$ 到 $y$ 的距离。那么可以得出</p>
+<script type="math/tex; mode=display">dist(3,1) = - dist(4,3) + dist(4,2) + dist(2,1)</script><p>这样就合并完了。之后在查找的时候会自动路径压缩.</p>
+<center>
+    <img src="/2020/07/28/带权并查集/6.drawio.svg" width=200>
+</center>
+
+<h2 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>只要将两者到根结点的距离相减就得到啦</p>
+<h2 id="完整模板"><a href="#完整模板" class="headerlink" title="完整模板"></a>完整模板</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><p>带权并查集可以很容易地知道两点的距离，不过依照题意，只有 $A$、$B$、$C$三种动物，所以距离只能在 0,1,2 里取，只要将模板里的距离都 $ \mod 3 $ 就可以了。<br>比如在 $A \to B \to C \to A$，这个食物链里，$dist(B,A) = 1$ 表示 $A$ 捕食 $B$，$dist(C,A) = 2$ 表示 $C$ 捕食 $A$，如果算出来距离等于0的话，就表示两者是同类。</p>
+<p>代码<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = (d[x] + d[oldFa]) % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> (d[x] - d[y] + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,k,ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ;i &lt;= n;i++) fa[i] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; k ;i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> o,x,y;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;o,&amp;x,&amp;y);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(x &gt; n || y &gt; n) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(o == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">0</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(x == y) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">1</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+      <tags>
+        <tag>算法</tag>
+        <tag>图论</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>[ArchLinux] 安装nvidia显卡驱动</title>
     <url>/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</url>
     <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p><strike>安装Linux的时候我已经做好不打游戏的打算了</strike>，nvidia 的驱动安装起来真的麻烦。最近要安装 nvidia 驱动的原因是，开始搞机器学习了。这坎还是要过的。安装过程太痛苦了，踩了很多坑，这篇博文收集了网络上的各种安装驱动的资讯，记录安装过程。</p>
@@ -38,16 +134,91 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World!</title>
-    <url>/2020/06/07/Hello-World/</url>
-    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
-<script type="math/tex; mode=display">\begin{array}{l}  
-        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
-        \nabla \cdot \mathbf{B} = 0 \\  
-        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
-        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
-    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
+    <title>指数形式的傅立叶变换</title>
+    <url>/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/</url>
+    <content><![CDATA[<h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
+<p>$x$ 方向的单位向量，记为 $\vec{i}$, $y$ 方向的单位向量，记为 $\vec{j}$,是这个平面的<strong>基</strong>，这样一个向量就可以用这两个基来表示：</p>
+<script type="math/tex; mode=display">\vec{v} = a\cdot\vec{i} + b\cdot\vec{j}</script><p>我们如果把基替换一下，使用 $1$ 和 $i$ 这两个数，</p>
+<script type="math/tex; mode=display">z = a \cdot 1 + b \cdot i</script><p>就可以用一个复数表示平面上的点，这个以 $1$ 和 $i$ 为基的平面，称为<strong>复平面</strong>。<br>实平面上的代数结构也可以原封不动的套用到复平面上。</p>
+<h1 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h1><p>欧拉公式指出</p>
+<script type="math/tex; mode=display">e^{ix} = \cos{x} + i\sin{x}</script><p>这个公式可以由三角函数的级数展开证明，详情可以看<a href="https://zhuanlan.zhihu.com/p/42639576" target="_blank" rel="noopener">jRONI的知乎文章</a>。</p>
+<div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/Euler's_formula.svg" width=250>
+    <div style="color:gray"><font size=2>图一：图片原作者：Gunther</font></div>
+</div>
+
+<p>如图所示，利用欧拉公式，可以把一个数映射到复平面上的一个点，比如 $\phi$ 可以映射到 $(\cos{\phi},\sin{\phi})$ ,而反过来也可以把 $\cos{\phi}$ 和 $sin{\phi}$ 合起来用一个 $e^{i\phi}$ 来表示，这个特性将在下面用到。</p>
+<h1 id="傅立叶级数的指数形式"><a href="#傅立叶级数的指数形式" class="headerlink" title="傅立叶级数的指数形式"></a>傅立叶级数的指数形式</h1><p>函数利用傅立叶变换可以展开成如下形式</p>
+<script type="math/tex; mode=display">f(x) = \frac{A_0}{2} + \sum_{k=1}^{\infty} a_k \cos(k{\color{Tan} \omega_1} ) + b_k \sin(k{\color{Tan} \omega_1} )</script><p>将 $\cos()$ 和 $\sin()$ 项合并</p>
+<script type="math/tex; mode=display">\begin{align}
+        f(x) & =  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Red} a_k} \cos(k{\color{Tan} \omega_1} ) + {\color{Blue} b_k} \sin(k{\color{Tan} \omega_1} ) \\
+        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \sqrt{ {\color{Red} a_k }^2 + {\color{Blue} b_k}^2 }\cos(k{\color{Tan} \omega_1} + \arctan(-\frac{\color{Blue}b_k}{\color{Red}a_k} ) ) \\
+        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )
+    \end{align}</script><div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/Akm_ak_bk.drawio.svg" width=300>
+    <div style="color:gray"><font size=2>图二：A<sub>km</sub>, a<sub>k</sub>, b<sub>k</sub> 和 ϕ<sub>k</sub> 的关系 </font></div>
+</div>
+
+<p><br></p>
+<p>反向利用欧拉公式，可以凑出</p>
+<script type="math/tex; mode=display">\begin{align}
+        f(x) & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color    {Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )\\
+        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \frac{1}{2} {\color{Purple} A_{km} } (e^{j(kw_1t+{\color{Violet}\phi_k)} }+e^{-j(k{\color{Tan} \omega_1}t+{\color{Violet} \phi_k})}) \\
+        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} (\frac{1}{2} {\color{Purple} A_{km} } e^{\color{Violet} \phi_k}e^{jk{\color{Tan} \omega_1}t} + \frac{1}{2}{\color{Purple} A_{km} } e^{-\color{Violet} \phi_k}e^{-jk{\color{Tan} \omega_1}t}) \\
+        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t})
+\end{align}</script><p>通过以上过程可以得出</p>
+<ul>
+<li>${\color{Purple} A_{km} }$ 表示展开后各项（各个频率）对应的<strong>幅值</strong></li>
+<li>${\color{Violet} \phi_k}$ 表示了以 $\cos(0)$ 为基准的<strong>相位</strong></li>
+<li>$e^{jk{\color{Tan} \omega_1}t}$ 可以表示 以 $\cos(0)$ 为基准，<em>逆时针</em>为正方向旋转的向量，$e^{-jk{\color{Tan} \omega_1}t}$则相反，是往<em>顺时针</em>为正方向旋转的向量。${\color{Orange} c_k}$ 和 ${\color{Orange} c^{*}_k}$ 则表示向量<strong>向其对应正方向偏移的角度</strong>，以及<strong>对应幅值的信息</strong>。<br>下面讲如何得出各项系数<br>由图二可以很容易得出 $\left\{\begin{matrix} {\color{Purple} A_{km} }\cos(\phi_k)={\color{Red}a_k},\\ {\color{Purple} A_{km} }\sin(\phi_k)=-{\color{Blue}b_k} \end{matrix}\right.$<br>所以<script type="math/tex; mode=display">{\color{Purple} A_{km} } e^{\color{Violet} \phi_k} = {\color{Purple} A_{km} }(\cos(\phi_k)+i\sin(\phi_k)) = {\color{Red}a_k} -i{\color{Blue}b_k}</script></li>
+</ul>
+<p>接着套用三角函数形式中得出 $a_k$ 和 $b_k$ 的公式。</p>
+<script type="math/tex; mode=display">\begin{align}
+        {\color{Orange} c_k} &= \frac{1}{2}{\color{Purple} A_{km} }e^{ {\color{Violet} \phi_k} }  \\
+        &= \frac{1}{2}({\color{Red} a_k} - i{\color{Blue}b_k })  \\
+        &= \frac{1}{T} \int_{0}^{T}f(t)\cos(k{\color{Tan} \omega_1}t)\mathrm{d}t -i\frac{1}{T} \int_{0}^{T}f(t)\sin(k{\color{Tan} \omega_1}t)\mathrm{d}t \\
+        &= \frac{1}{T} \int_{0}^{T}f(t)[\cos(k{\color{Tan} \omega_1}t) - i\sin(k{\color{Tan} \omega_1}t)] \mathrm{d}t  \\
+        &= \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t 
+    \end{align}</script><p>同理可求得</p>
+<script type="math/tex; mode=display">{\color{Orange} c^*_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{jk{\color{Tan} \omega_1} }\mathrm{d}t</script><p>若令 $k \to -k$ 则 ${\color{Orange}c^*_k} \to {\color{Orange}c_k}$<br>则</p>
+<script type="math/tex; mode=display">\begin{align}
+        f(x) &= \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t}) \\
+        &= \sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
+    \end{align}</script><p>最终形式</p>
+<script type="math/tex; mode=display">\left\{\begin{matrix}
+        {\color{Orange} c_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t \\\\
+        f(x) =\sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
+    \end{matrix}\right.</script><h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/fun.png" width=400 height=375>
+    <div style="color:gray"><font size=2>图三：一个函数实例 </font></div>
+</div>
+<br>
+
+现在给出一个函数 $y=x$ ,周期为 2.
+
+经过计算可以得到
+
+$$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}{k\pi} $$
+
+可以看出这是一个复数,包含了幅值和初相位的信息，取 $c_k$ 的模 $|c_k|$ 作为每个频率分量的幅值，$c_k$ 的幅角 $\phi_k$为每个频率分量的初相位。
+
+可以画出其幅度谱和相位谱，
+
+
+<div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/幅度谱.drawio.svg" width=400 height=375>
+    <div style="color:gray"><font size=2>图四：幅度谱 </font></div>
+</div>
+<div align="center">
+    <img src="/2020/06/11/指数形式的傅立叶变换/相位谱.drawio.svg" width=400 height=375>
+    <div style="color:gray"><font size=2>图五：相位谱 </font></div>
+</div>
+
+<p>如果要做单边的幅度谱，只需把图四中的纵坐标改为 $A_{km}$ ，然后每条谱线改为原来的两倍，（$ A_{km} = 2 |c_k|$）。单边相位谱只保留 $x$ 正半轴部分。</p>
 ]]></content>
+      <tags>
+        <tag>数学</tag>
+      </tags>
   </entry>
   <entry>
     <title>缩点</title>
@@ -151,177 +322,6 @@
       <tags>
         <tag>算法</tag>
         <tag>图论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>带权并查集</title>
-    <url>/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/</url>
-    <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p><h3>食物链（POJ-1182）</h3></p>
-<h5>Description</h5>
-
-<blockquote>
-<p>动物王国中有三类动物A,B,C，这三类动物的食物链构成了有趣的环形。A吃B， B吃C，C吃A。<br>现有N个动物，以1－N编号。每个动物都是A,B,C中的一种，但是我们并不知道它到底是哪一种。<br>有人用两种说法对这N个动物所构成的食物链关系进行描述：<br>第一种说法是”1 X Y”，表示X和Y是同类。<br>第二种说法是”2 X Y”，表示X吃Y。<br>此人对N个动物，用上述两种说法，一句接一句地说出K句话，这K句话有的是真的，有的是假的。当一句话满足下列三条之一时，这句话就是假话，否则就是真话。<br>1） 当前的话与前面的某些真的话冲突，就是假话；<br>2） 当前的话中X或Y比N大，就是假话；<br>3） 当前的话表示X吃X，就是假话。<br>你的任务是根据给定的N（1 &lt;= N &lt;= 50,000）和K句话（0 &lt;= K &lt;= 100,000），输出假话的总数。</p>
-</blockquote>
-<h5>Input</h5>
-
-<blockquote>
-<p>第一行是两个整数N和K，以一个空格分隔。<br>以下K行每行是三个正整数 D，X，Y，两数之间用一个空格隔开，其中D表示说法的种类。<br>若D=1，则表示X和Y是同类。<br>若D=2，则表示X吃Y。</p>
-</blockquote>
-<h5>Output</h5>
-
-<blockquote>
-<p>只有一个整数，表示假话的数目。</p>
-</blockquote>
-<h5>Sample Input</h5>
-
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="number">100</span> <span class="number">7</span></span><br><span class="line"><span class="number">1</span> <span class="number">101</span> <span class="number">1</span> </span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">1</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> </span><br><span class="line"><span class="number">1</span> <span class="number">5</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<h5>Sample Output</h5>
-
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
-<p>蒟蒻的我看到描述的话应该会想到，首先建一个图，然后根据图上两点的距离判断两者的关系。但又想到万一这么一种情况：</p>
-<center>
-    <img src="/2020/07/28/带权并查集/1.drawio.svg" width=250>
-</center>
-
-<p>那判断2和3的关系或者4和5的关系就比较困难了。<br>一个想法是把这个图分层：</p>
-<center>
-    <img src="/2020/07/28/带权并查集/2.drawio.svg" width=300>
-</center>
-
-<p>所以需要有一个数据结构来记录图的层次，然后嫩快速地计算出两点的关系。</p>
-<h1 id="带权并查集"><a href="#带权并查集" class="headerlink" title="带权并查集"></a>带权并查集</h1><p>带权并查集就有这么一个作用，它可以记录下每个结点相对于根结点的距离。</p>
-<p>普通并查集,通过一个<code>fa</code>数组储存其父结点，经过路径压缩可以让同一个集合里的结点指向同一个根结点：<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x] = (fa[x] == x) ? x : find(fa[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>而带权并查集加入了<code>d</code>数组记录距离:</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br></pre></td></tr></table></figure>
-<h2 id="查找函数"><a href="#查找函数" class="headerlink" title="查找函数"></a>查找函数</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>用下图做示例，将 $3$ 到 $1$ 的路径压缩</p>
-<center>
-    <img src="/2020/07/28/带权并查集/3.drawio.svg" width=50>
-</center>
-
-<ol>
-<li>记录 $3$ 的父结点 ： $oldFa \gets 2$</li>
-<li>更改 $3$ 的父结点为根结点 $fa[3] \gets 1$</li>
-<li>$3$ 到现在的父结点的距离就为 $3$ 到 $oldFa(2)$ 的距离加上 $oldFa$ 到根结点的距离： $d[3] \gets 3 + 4$。</li>
-</ol>
-<center>
-    <img src="/2020/07/28/带权并查集/4.drawio.svg" width=150>
-</center>
-
-<h2 id="合并函数"><a href="#合并函数" class="headerlink" title="合并函数"></a>合并函数</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个函数的作用，是将 <code>x</code> 所在分支合并到 <code>y</code> 所在分支。</p>
-<p>以下图为例，$1$、$2$ 为一个分支，$3$、$4$ 为一个分支，已知 $2$ 和 $4$ 的距离是 3 目的是将 $4$ 所在分支合并到 $2$ 所在分支。。</p>
-<center>
-    <img src="/2020/07/28/带权并查集/5.drawio.svg" width=200>
-</center>
-
-<ol>
-<li>将 $3$ 的父结点设为 $1$ ： $fa[3] \gets 1$</li>
-<li>计算 $3$ 到 $1$ 的距离</li>
-</ol>
-<p>如何计算$3$ 到 $1$ 的距离呢。可以设想一下合并后的图形，应有如下规律</p>
-<script type="math/tex; mode=display">dist(4,3) + dist(3,1) = dist(4,2) + dist(2,1)</script><p>$dist(x,y)$ 表示 $x$ 到 $y$ 的距离。那么可以得出</p>
-<script type="math/tex; mode=display">dist(3,1) = - dist(4,3) + dist(4,2) + dist(2,1)</script><p>这样就合并完了。之后在查找的时候会自动路径压缩.</p>
-<center>
-    <img src="/2020/07/28/带权并查集/6.drawio.svg" width=200>
-</center>
-
-<h2 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>只要将两者到根结点的距离相减就得到啦</p>
-<h2 id="完整模板"><a href="#完整模板" class="headerlink" title="完整模板"></a>完整模板</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><p>带权并查集可以很容易地知道两点的距离，不过依照题意，只有 $A$、$B$、$C$三种动物，所以距离只能在 0,1,2 里取，只要将模板里的距离都 $ \mod 3 $ 就可以了。<br>比如在 $A \to B \to C \to A$，这个食物链里，$dist(B,A) = 1$ 表示 $A$ 捕食 $B$，$dist(C,A) = 2$ 表示 $C$ 捕食 $A$，如果算出来距离等于0的话，就表示两者是同类。</p>
-<p>代码<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = (d[x] + d[oldFa]) % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> (d[x] - d[y] + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,k,ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ;i &lt;= n;i++) fa[i] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; k ;i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> o,x,y;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;o,&amp;x,&amp;y);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(x &gt; n || y &gt; n) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(o == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">0</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(x == y) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">1</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-]]></content>
-      <tags>
-        <tag>算法</tag>
-        <tag>图论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>指数形式的傅立叶变换</title>
-    <url>/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/</url>
-    <content><![CDATA[<h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
-<p>$x$ 方向的单位向量，记为 $\vec{i}$, $y$ 方向的单位向量，记为 $\vec{j}$,是这个平面的<strong>基</strong>，这样一个向量就可以用这两个基来表示：</p>
-<script type="math/tex; mode=display">\vec{v} = a\cdot\vec{i} + b\cdot\vec{j}</script><p>我们如果把基替换一下，使用 $1$ 和 $i$ 这两个数，</p>
-<script type="math/tex; mode=display">z = a \cdot 1 + b \cdot i</script><p>就可以用一个复数表示平面上的点，这个以 $1$ 和 $i$ 为基的平面，称为<strong>复平面</strong>。<br>实平面上的代数结构也可以原封不动的套用到复平面上。</p>
-<h1 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h1><p>欧拉公式指出</p>
-<script type="math/tex; mode=display">e^{ix} = \cos{x} + i\sin{x}</script><p>这个公式可以由三角函数的级数展开证明，详情可以看<a href="https://zhuanlan.zhihu.com/p/42639576" target="_blank" rel="noopener">jRONI的知乎文章</a>。</p>
-<div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/Euler's_formula.svg" width=250>
-    <div style="color:gray"><font size=2>图一：图片原作者：Gunther</font></div>
-</div>
-
-<p>如图所示，利用欧拉公式，可以把一个数映射到复平面上的一个点，比如 $\phi$ 可以映射到 $(\cos{\phi},\sin{\phi})$ ,而反过来也可以把 $\cos{\phi}$ 和 $sin{\phi}$ 合起来用一个 $e^{i\phi}$ 来表示，这个特性将在下面用到。</p>
-<h1 id="傅立叶级数的指数形式"><a href="#傅立叶级数的指数形式" class="headerlink" title="傅立叶级数的指数形式"></a>傅立叶级数的指数形式</h1><p>函数利用傅立叶变换可以展开成如下形式</p>
-<script type="math/tex; mode=display">f(x) = \frac{A_0}{2} + \sum_{k=1}^{\infty} a_k \cos(k{\color{Tan} \omega_1} ) + b_k \sin(k{\color{Tan} \omega_1} )</script><p>将 $\cos()$ 和 $\sin()$ 项合并</p>
-<script type="math/tex; mode=display">\begin{align}
-        f(x) & =  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Red} a_k} \cos(k{\color{Tan} \omega_1} ) + {\color{Blue} b_k} \sin(k{\color{Tan} \omega_1} ) \\
-        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \sqrt{ {\color{Red} a_k }^2 + {\color{Blue} b_k}^2 }\cos(k{\color{Tan} \omega_1} + \arctan(-\frac{\color{Blue}b_k}{\color{Red}a_k} ) ) \\
-        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )
-    \end{align}</script><div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/Akm_ak_bk.drawio.svg" width=300>
-    <div style="color:gray"><font size=2>图二：A<sub>km</sub>, a<sub>k</sub>, b<sub>k</sub> 和 ϕ<sub>k</sub> 的关系 </font></div>
-</div>
-
-<p><br></p>
-<p>反向利用欧拉公式，可以凑出</p>
-<script type="math/tex; mode=display">\begin{align}
-        f(x) & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color    {Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )\\
-        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \frac{1}{2} {\color{Purple} A_{km} } (e^{j(kw_1t+{\color{Violet}\phi_k)} }+e^{-j(k{\color{Tan} \omega_1}t+{\color{Violet} \phi_k})}) \\
-        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} (\frac{1}{2} {\color{Purple} A_{km} } e^{\color{Violet} \phi_k}e^{jk{\color{Tan} \omega_1}t} + \frac{1}{2}{\color{Purple} A_{km} } e^{-\color{Violet} \phi_k}e^{-jk{\color{Tan} \omega_1}t}) \\
-        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t})
-\end{align}</script><p>通过以上过程可以得出</p>
-<ul>
-<li>${\color{Purple} A_{km} }$ 表示展开后各项（各个频率）对应的<strong>幅值</strong></li>
-<li>${\color{Violet} \phi_k}$ 表示了以 $\cos(0)$ 为基准的<strong>相位</strong></li>
-<li>$e^{jk{\color{Tan} \omega_1}t}$ 可以表示 以 $\cos(0)$ 为基准，<em>逆时针</em>为正方向旋转的向量，$e^{-jk{\color{Tan} \omega_1}t}$则相反，是往<em>顺时针</em>为正方向旋转的向量。${\color{Orange} c_k}$ 和 ${\color{Orange} c^{*}_k}$ 则表示向量<strong>向其对应正方向偏移的角度</strong>，以及<strong>对应幅值的信息</strong>。<br>下面讲如何得出各项系数<br>由图二可以很容易得出 $\left\{\begin{matrix} {\color{Purple} A_{km} }\cos(\phi_k)={\color{Red}a_k},\\ {\color{Purple} A_{km} }\sin(\phi_k)=-{\color{Blue}b_k} \end{matrix}\right.$<br>所以<script type="math/tex; mode=display">{\color{Purple} A_{km} } e^{\color{Violet} \phi_k} = {\color{Purple} A_{km} }(\cos(\phi_k)+i\sin(\phi_k)) = {\color{Red}a_k} -i{\color{Blue}b_k}</script></li>
-</ul>
-<p>接着套用三角函数形式中得出 $a_k$ 和 $b_k$ 的公式。</p>
-<script type="math/tex; mode=display">\begin{align}
-        {\color{Orange} c_k} &= \frac{1}{2}{\color{Purple} A_{km} }e^{ {\color{Violet} \phi_k} }  \\
-        &= \frac{1}{2}({\color{Red} a_k} - i{\color{Blue}b_k })  \\
-        &= \frac{1}{T} \int_{0}^{T}f(t)\cos(k{\color{Tan} \omega_1}t)\mathrm{d}t -i\frac{1}{T} \int_{0}^{T}f(t)\sin(k{\color{Tan} \omega_1}t)\mathrm{d}t \\
-        &= \frac{1}{T} \int_{0}^{T}f(t)[\cos(k{\color{Tan} \omega_1}t) - i\sin(k{\color{Tan} \omega_1}t)] \mathrm{d}t  \\
-        &= \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t 
-    \end{align}</script><p>同理可求得</p>
-<script type="math/tex; mode=display">{\color{Orange} c^*_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{jk{\color{Tan} \omega_1} }\mathrm{d}t</script><p>若令 $k \to -k$ 则 ${\color{Orange}c^*_k} \to {\color{Orange}c_k}$<br>则</p>
-<script type="math/tex; mode=display">\begin{align}
-        f(x) &= \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t}) \\
-        &= \sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
-    \end{align}</script><p>最终形式</p>
-<script type="math/tex; mode=display">\left\{\begin{matrix}
-        {\color{Orange} c_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t \\\\
-        f(x) =\sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
-    \end{matrix}\right.</script><h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/fun.png" width=400 height=375>
-    <div style="color:gray"><font size=2>图三：一个函数实例 </font></div>
-</div>
-<br>
-
-现在给出一个函数 $y=x$ ,周期为 2.
-
-经过计算可以得到
-
-$$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}{k\pi} $$
-
-可以看出这是一个复数,包含了幅值和初相位的信息，取 $c_k$ 的模 $|c_k|$ 作为每个频率分量的幅值，$c_k$ 的幅角 $\phi_k$为每个频率分量的初相位。
-
-可以画出其幅度谱和相位谱，
-
-
-<div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/幅度谱.drawio.svg" width=400 height=375>
-    <div style="color:gray"><font size=2>图四：幅度谱 </font></div>
-</div>
-<div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/相位谱.drawio.svg" width=400 height=375>
-    <div style="color:gray"><font size=2>图五：相位谱 </font></div>
-</div>
-
-<p>如果要做单边的幅度谱，只需把图四中的纵坐标改为 $A_{km}$ ，然后每条谱线改为原来的两倍，（$ A_{km} = 2 |c_k|$）。单边相位谱只保留 $x$ 正半轴部分。</p>
-]]></content>
-      <tags>
-        <tag>数学</tag>
       </tags>
   </entry>
 </search>
