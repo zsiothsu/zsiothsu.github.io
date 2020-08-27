@@ -138,12 +138,12 @@
     1 & \textbf{Input. } \text{a node of graph } e \text{ which is called } u \\
     2 & \textbf{Output. } \text{All the result of strongly connected components }\\
       & \text{is stored in the array } scc. \text{The number of scc is strored in } scnt \\
-    3 & \textbf{Method.} \\
+    3 & \textbf{Method.} \text{ Tarjan}\\
     4 & dfn[u],low[u] \gets \text{the order of } u \text{ in traverse}\\
     5 & \text{push } u \text{ into stack}\\
     6 & \textbf{for} \text{ each } (u,v) \text{ in the stored } e \\
     7 & \qquad \textbf{if } v \text{ haven't been traversed}\\
-    8 & \qquad \qquad \text{travers } v\\
+    8 & \qquad \qquad \text{Tarjan(}{v} \text{)}\\
     9 & \qquad \qquad low[u] \gets \min(low[u],low[v]) \\
     10& \qquad \textbf{else if } v \text{ is in stack} \\
     11& \qquad \qquad low[u] \gets \min(low[u],dfn[v]) \\
@@ -323,14 +323,14 @@
     <li class="nav-item">
       
         <a class="nav-item-link" target="_blank" href="https://github.com/zsiothsu" title="github">
-          <img src="images/github.svg" width=20px>
+          <img src="/images/github.svg" width=20px>
         </a>
       
     </li>
     <li class="nav-item">
       
         <a class="nav-item-link" target="_blank" href="https://www.zhihu.com/people/xu-jia-bin-18-83" title="zhihu">
-          <img src="images/zhihu.svg" width=20px>
+          <img src="/images/zhihu.svg" width=20px>
         </a>
       
     </li>
@@ -386,5 +386,27 @@
 
 <script src="/js/ocean.js"></script>
 
+<!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:11
+ * @Description: file content
+-->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    匈牙利算法 |
+    
+    Chipen&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+<main class="content">
+  <!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:50
+ * @Description: file content
+-->
+<section class="outer">
+  <article id="post-匈牙利算法" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h1 class="article-title" itemprop="name">
+      匈牙利算法
+    </h1>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2020-08-27T11:33:51.000Z" itemprop="datePublished">2020-08-27</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+                            
+    <div class="tocbot"></div>
+
+
+
+
+
+                                
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                                    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学校一堆破事之中找到了时间来学算法，这篇是图论的最后一篇（大概）。<br>刚开始查资料的时候找到很多，都是用很专业的话在介绍匈牙利算法，但这种方式确实不适合学习。<br>最后找到这篇博客，用比较容易理解的方式讲了匈牙利算法的过程：</p>
+<p><a href="https://blog.csdn.net/dark_scope/article/details/8880547#commentBox" target="_blank" rel="noopener">趣写算法系列之—匈牙利算法</a></p>
+<p>继续往下看之前先把上面的博客看了，很有帮助的。</p>
+<h1 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h1><div align="center">
+    <img src="/2020/08/27/匈牙利算法/Simple-bipartite-graph.svg" width=150>
+    <!-- <img src="匈牙利算法/Simple-bipartite-graph.svg" width=150> -->
+    <div style="color:gray"><font size=2>图一：一个二分图的实例 </font></div>
+</div>
+
+<p>如果图 $G=(U,V,E)$中，$U$和$V$为不相交的点集，且 $E = \{(u,v)|u \in U ,v \in V\}$，则 $G$ 为二分图。通俗点讲就是图内的点可以分成两个集合，且每条边都是跨接在这两个集合间的，那这个图就是二分图。<br>最常见的例子就是把男生和女生分开，且每个人都对多个异性有好感（震惊.jpg（不考虑特殊性取向（当然也可以换别的例子但我想不到）））。</p>
+<h1 id="匈牙利算法"><a href="#匈牙利算法" class="headerlink" title="匈牙利算法"></a>匈牙利算法</h1><p>匈牙利算法（Hungarian Algorithm）听起来很难学（确实人名（地名）算法听起来比较强），但基本思路比较简单，是用来解决二分图最大匹配问题的。</p>
+<h2 id="图的匹配"><a href="#图的匹配" class="headerlink" title="图的匹配"></a>图的匹配</h2><div align="center">
+    <img src="/2020/08/27/匈牙利算法/0.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/0.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图二：二分图的匹配 </font></div>
+</div>
+
+<p>匹配是指从图中找到边可以使左点集和右点集一一匹配，设匹配边数量为 $M$，当 $M$ 达到最大时即为最大匹配。</p>
+<h2 id="算法过程"><a href="#算法过程" class="headerlink" title="算法过程"></a>算法过程</h2><p>匈牙利算法有 dfs 和 bfs 版本，这里介绍比较简单的 dfs 版本，bfs 还没学（逃。<br>要用到递归的话，首先要明确单个 dfs 树的目的，这里是<strong>找到当前点的匹配</strong>。<br>下面开始分步详解。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/1.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/1.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图三：点 1 的匹配 </font></div>
+</div>
+
+<p>图(a)，点 1 的第一条边指向了点 5，点 5 此时没有被匹配，所以点 1 可以和点 5 匹配。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/2.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/2.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图四：点 2 的匹配 </font></div>
+</div>
+
+<p>图(b)，开始匹配点 2，点 2 的第一条边指向点 5，但点 5 已经被点 1 匹配，所以<strong>开始和与点 5 配对的点 1 协调</strong>，尝试使点 1 匹配其它点。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/3.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/3.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图五：点 2 的匹配,协调点 1 </font></div>
+</div>
+
+<p>图(c)，点 1 的协调过程，点 1 开始尝试它的第二条边，指向点 7，点 7 此时没有被匹配，所以点 1 可以和点 7 匹配。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/4.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/4.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图六：点 3 的匹配 </font></div>
+</div>
+
+<p>图(d)，点 2 对点 1 的协调完成，于是点 2 匹配点 5,点 1 匹配点 7。<br>点 3 开始尝试匹配，第一条边指向了点 5 ，<strong>开始和与点 5 配对的点 2 协调</strong></p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/5.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/5.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图七：点 3 的匹配,对点 2 协调失败，换一条边 </font></div>
+</div>
+
+<p>图(e)，由于点 2 没有其它边了，只能匹配点 5,所以点 3 对点 2 的协调失败，尝试下一条边，指向点 6,点 6 此时没有被匹配，所以点 3 可以和点 6 匹配。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/6.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/6.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图八：点 4 的匹配 </font></div>
+</div>
+
+<p>图(f)，点 4 的第一条边指向点 7，点 7 已经被点 1 匹配，和刚才一样的情况，点 1 显然已经没法继续协调，所以点 4 要尝试下一条边</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/7.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/7.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图九：点 4 的匹配 </font></div>
+</div>
+
+<p>图(g)，点 4 尝试第二条边，和点 8 匹配。</p>
+<p>整个流程就是这样，是点和点相互协调的过程，协调这步就可以用递归来完成。</p>
+<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><script type="math/tex; mode=display">
+\begin{array}{ll}
+    1 & \textbf{Input. } \text{a node } u \in U \text{ of graph } G(U,V,E) \text{,}\\
+      &\text{information about matching is stored in array } mch\\
+    2 & \textbf{Output. } \text{result of matching, true or false} \\
+    3 & \textbf{Method.} \text{ hungarian}\\
+    4 & \textbf{if } u \text{ isn't in current dfs tree} \\
+    5 & \qquad \textbf{for} \text{ each } (u,v)\\
+    6 & \qquad \qquad \textbf{if } v \text{ hasn't been matched } \\
+      & \qquad \qquad \quad \textbf{or} \text{ hungarian(} mch[v] \text{) is } true\\
+    7 & \qquad \qquad \qquad mch[v] \gets u \\
+    8 & \qquad \qquad \qquad \textbf{return } true \\
+    9 & \qquad \textbf{return } false \\
+    10 & \textbf{else} \\
+    11 & \qquad \textbf{return } false
+\end{array}</script><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 505</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; G[MAXN];</span><br><span class="line"><span class="keyword">int</span> timestamp[MAXN];</span><br><span class="line"><span class="keyword">int</span> mch[MAXN];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@function:    bool hungarian(int u,int time)</span></span><br><span class="line"><span class="comment"> *@param:       u: 节点 u,在图的左部</span></span><br><span class="line"><span class="comment"> *              time: 时间戳</span></span><br><span class="line"><span class="comment"> *@return:      true: 匹配成功</span></span><br><span class="line"><span class="comment"> *              false: 匹配失败</span></span><br><span class="line"><span class="comment"> *@note:        使用时需要已经明确图的左部和右部</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hungarian</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 在本轮 dfs 树已经被访问过</span></span><br><span class="line">    <span class="keyword">if</span>(timestamp[u] == time) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 标上时间戳</span></span><br><span class="line">    timestamp[u] = time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> v: G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//      未匹配               协调成功</span></span><br><span class="line">        <span class="keyword">if</span>((mch[v] == <span class="number">0</span>) || hungarian(mch[v],time))</span><br><span class="line">        &#123;</span><br><span class="line">            mch[v] = u;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//记录匹配边的数量</span></span><br><span class="line"><span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 只遍历左部点</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(hungarian(i,i)) ans++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="二分图的最大匹配"><a href="#二分图的最大匹配" class="headerlink" title="二分图的最大匹配"></a>二分图的最大匹配</h2><p><a href="https://www.luogu.com.cn/problem/P3386" target="_blank" rel="noopener">【模板】二分图最大匹配-Luogu-P3386</a><br><a href="http://poj.org/problem?id=1469" target="_blank" rel="noopener">COURSES-POJ-1469</a></p>
+<h2 id="二分图最小点覆盖"><a href="#二分图最小点覆盖" class="headerlink" title="二分图最小点覆盖"></a>二分图最小点覆盖</h2><p>最小点覆盖是指：在图 $G(U,V,E)$ 中，一个最小的点集 $S=\{P| P \in U  or P \in V\}$，使得图内的每条边都至少有一个端点在点集 $S$ 内。<br>可以证明在二分图中 二分图最小点覆盖 等于 二分图的最大匹配。怎么证明这里就不写了</p>
+<p><a href="http://poj.org/problem?id=3041" target="_blank" rel="noopener">Asteroids-POJ-3041</a></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>感谢学校团委，没有他们举办的活动的衬托我不可能知道学习算法是多么轻松快乐。<br>感谢楼下和桥下的四果汤店，在我饱受折磨的时候恢复心情。</p>
+
+                                                                        
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://chipensblog.tk/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/" data-id="ckecqcidz0000tpsbfxxca1jg" class="article-share-link">
+                                            分享
+                                        </a>
+                                        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E8%AE%BA/" rel="tag">图论</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+                                    </footer>
+
+    </div>
+
+    
+        
+  <nav class="article-nav">
+    
+    
+      <a href="/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">假的，都是假的</div>
+      </a>
+    
+  </nav>
+
+
+            
+
+                
+                    
+                        
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '716c45e2d3a22f047a0e',
+      clientSecret: '92883abf985a2388bd6ba230e54f3cfb6c10b236',
+      repo: 'gittalk',
+      owner: 'zsiothsu',
+      admin: ['zsiothsu'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+                            
+
+</article>
+</section>
+
+
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <!-- <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+    <li><i class="fe fe-bookmark"></i> <span id="busuanzi_value_page_pv"></span></li>
+  
+</ul> -->
+<div class="powered-by">
+  
+	&emsp;<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">访客数:<span id="busuanzi_value_site_uv"></span></span>&emsp;
+  
+    <i class="fe fe-bookmark"></i>文章访问量:<span id="busuanzi_value_page_pv"></span>
+  
+</div>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2020 Chipen&#39;s blog</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/avatar.jpg" alt="Chipen&#39;s blog"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/tags">Tags</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="搜索">
+        <i class="fe fe-search"></i>
+        搜索
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="https://github.com/zsiothsu" title="github">
+          <img src="/images/github.svg" width=20px>
+        </a>
+      
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="https://www.zhihu.com/people/xu-jia-bin-18-83" title="zhihu">
+          <img src="/images/zhihu.svg" width=20px>
+        </a>
+      
+    </li>
+    <li class="nav-item">
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+  });
+</script>
+
+
+
+<script src="/js/ocean.js"></script>
+
+<!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:11
+ * @Description: file content
+-->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
