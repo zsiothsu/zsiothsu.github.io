@@ -1,6 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>[ArchLinux] 安装nvidia显卡驱动</title>
+    <url>/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</url>
+    <content><![CDATA[<p>Linux安装显卡驱动一直是一个很麻烦的事，这篇文章是一个经验贴，安装nvdia驱动，并且安装cuda<br><a id="more"></a></p>
+<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p><strike>安装Linux的时候我已经做好不打游戏的打算了</strike>，nvidia 的驱动安装起来真的麻烦。最近要安装 nvidia 驱动的原因是，开始搞机器学习了。这坎还是要过的。安装过程太痛苦了，踩了很多坑，这篇博文收集了网络上的各种安装驱动的资讯，记录安装过程。</p>
+<p>本机的系统是 ArchLinux，显卡为 NVIDIA GeForce MX250，窗体管理器为 LightDM。</p>
+<p>命令主要都由<code>sudo</code>运行，或者可以直接全程以root用户执行。</p>
+<h1 id="2-主要参考的博客"><a href="#2-主要参考的博客" class="headerlink" title="2.主要参考的博客"></a>2.主要参考的博客</h1><p>感谢这些博客积累下来的经验</p>
+<p><a href="https://juejin.im/entry/5d4275f9f265da03ab422cdb" target="_blank" rel="noopener">Archlinux安装NVIDIA1050Ti显卡驱动</a><br><a href="http://ivo-wang.github.io/2018/02/18/a/" target="_blank" rel="noopener">ivo Blog - archlinux 笔记本安装nvidia显卡驱动与intel显卡驱动</a><br><a href="https://blogs.gorquan.cn/2019/07/29/yuque/Ubuntu%E4%B8%8BNVIDIA%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%A4%84%E7%90%86/#M3fMb" target="_blank" rel="noopener">gorquan’s Blog - Ubuntu下NVIDIA显卡驱动处理</a><br><a href="https://blog.lilydjwg.me/tag/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8" target="_blank" rel="noopener">依云’s Blog - NVIDIA PRIME 配置笔记</a></p>
+<h1 id="3-一些准备"><a href="#3-一些准备" class="headerlink" title="3.一些准备"></a>3.一些准备</h1><h2 id="3-1-关闭桌面环境"><a href="#3-1-关闭桌面环境" class="headerlink" title="3.1.关闭桌面环境"></a>3.1.关闭桌面环境</h2><p>为了防止不必要的麻烦，先关闭图形界面，先按<code>Ctrl + Alt + F2</code>进入 <code>tty2</code>，然后执行<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl stop lightdm</span><br></pre></td></tr></table></figure><br>执行完后桌面服务会被关闭</p>
+<h2 id="3-2-禁用开源-nouveau-驱动"><a href="#3-2-禁用开源-nouveau-驱动" class="headerlink" title="3.2.禁用开源 nouveau 驱动"></a>3.2.禁用开源 nouveau 驱动</h2><p>编辑<code>/etc/modprobe.d/nouveau_blacklist.conf</code><br>加入<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset&#x3D;0</span><br></pre></td></tr></table></figure></p>
+<h1 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h1><p>执行<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -S nvidia nvidia-libgl xorg-xrandr nvidia-utils nvidia-settings nvidia-prime</span><br></pre></td></tr></table></figure><br>其中</p>
+<blockquote>
+<p><code>nvidia</code>： nvidia 的驱动<br><code>nvidia-libgl</code>： OpenGL的库<br><code>xorg-xrandr</code>： 用于显示设置<br><code>nvidia-utils</code>： NVIDIA drivers utilities<br><code>nvidia-settings</code>： 用于配置显卡<br><code>nvidia-prime</code>： 用于显卡的切换</p>
+</blockquote>
+<h1 id="5-配置"><a href="#5-配置" class="headerlink" title="5.配置"></a>5.配置</h1><p><em>！配置的步骤比较重要，配置不当会导致黑屏，lightdm无法启动等问题</em></p>
+<h2 id="5-1-查看显卡的BusID"><a href="#5-1-查看显卡的BusID" class="headerlink" title="5.1.查看显卡的BusID"></a>5.1.查看显卡的BusID</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lspci | grep -E "VGA|3D"</span><br></pre></td></tr></table></figure>
+<p>执行此命令后会出现<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 620 (rev 07)</span><br><span class="line">01:00.0 3D controller: NVIDIA Corporation GP108BM [GeForce MX250] (rev a1)</span><br></pre></td></tr></table></figure><br>记住<code>00:02.0</code>和<code>01:00.0</code>这两串数字（读者显卡的BusID可能不一样），分别是intel集显和NVIDIA独显的BusID。待会会用到。</p>
+<h2 id="5-2-编辑xorg-conf文件"><a href="#5-2-编辑xorg-conf文件" class="headerlink" title="5.2.编辑xorg.conf文件"></a>5.2.编辑xorg.conf文件</h2><p>编辑<code>/etc/X11/xorg.conf</code>文件，如果没有的话使用<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo nvidia-xconfig</span><br></pre></td></tr></table></figure><br>生成此文件</p>
+<p>开始编辑文件，用习惯的文本编辑器。<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/X11/xorg.conf</span><br></pre></td></tr></table></figure></p>
+<p>要往文件中追加这些内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Section &quot;Module&quot;</span><br><span class="line">	Load           &quot;modesetting&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Device&quot;</span><br><span class="line">	Identifier     &quot;nvidia&quot;</span><br><span class="line">	Driver         &quot;nvidia&quot;</span><br><span class="line">	BusID          &quot;PCI:1:0:0&quot; #!!!这句是要改的</span><br><span class="line">	Option         &quot;AllowEmptyInitialConfiguration&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure><br>BusId是根据上面用<code>lspci</code>指令读到的NVIDIA显卡的ID而定，比如我的是<code>01:00.0</code>，那就写成 <code>&quot;PCI:1:0:0&quot;</code>，读者可以根据此格式更改。</p>
+<h2 id="5-3-配置lightdm"><a href="#5-3-配置lightdm" class="headerlink" title="5.3.配置lightdm"></a>5.3.配置lightdm</h2><p><em>！如果不是使用lightdm，可以参考上面所列举的博客</em></p>
+<p>编辑<code>/etc/lightdm/display_setup.sh</code>文件，这个文件是需要手动创建的<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/lightdm/display_setup.sh</span><br></pre></td></tr></table></figure><br>往文件中写入<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">xrandr --setprovideroutputsource modesetting NVIDIA-0</span><br><span class="line">xrandr --auto</span><br></pre></td></tr></table></figure><br>编辑<code>/etc/lightdm/lightdm.conf</code>文件<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/lightdm/lightdm.conf</span><br></pre></td></tr></table></figure><br>找到<code>display-setup-script</code>所在行，把注释取消，改为<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">display-setup-script&#x3D;&#x2F;etc&#x2F;lightdm&#x2F;display_setup.sh</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>vim</code>用户可以使用<br><code>/display-setup-script</code><br>指令来找到这行</p>
+</blockquote>
+<h1 id="6-重启"><a href="#6-重启" class="headerlink" title="6.重启"></a>6.重启</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
+<p>理论上重启就能用了，如果没有进入桌面，按 <code>Ctrl + Alt + F2</code>进入<code>tty2</code><br>编辑<code>/etc/X11/xorg.conf.d/intel.conf</code>，这个文件也是要手动创建的<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/X11/xorg.conf.d/intel.conf</span><br></pre></td></tr></table></figure><br>加入：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier &quot;intel&quot;</span><br><span class="line">    Driver &quot;modesetting&quot;</span><br><span class="line">    BusID &quot;PCI:0:2:0&quot; #!!!这句需要更改</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure><br>将集显的BusID用相应格式更改，然后重启。</p>
+<h1 id="7-检验"><a href="#7-检验" class="headerlink" title="7.检验"></a>7.检验</h1><p>使用<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure><br>如果出现<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 440.100      Driver Version: 440.100      CUDA Version: 10.2     |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage&#x2F;Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|</span><br><span class="line">|   0  GeForce MX250       Off  | 00000000:01:00.0 Off |                  N&#x2F;A |</span><br><span class="line">| N&#x2F;A   37C    P8    N&#x2F;A &#x2F;  N&#x2F;A |     14MiB &#x2F;  2002MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                               </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID   Type   Process name                             Usage      |</span><br><span class="line">|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|</span><br><span class="line">|    0       732      G   &#x2F;usr&#x2F;lib&#x2F;Xorg                                 14MiB |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p>说明驱动已经成功安装，并且正在用NVIDIA显卡运行桌面。</p>
+<h1 id="8-用-NVIDIA-显卡运行程序"><a href="#8-用-NVIDIA-显卡运行程序" class="headerlink" title="8.用 NVIDIA 显卡运行程序"></a>8.用 NVIDIA 显卡运行程序</h1><p>由于系统默认使用集显运行程序，所以运行程序时还需要配置一些变量：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">__NV_PRIME_RENDER_OFFLOAD&#x3D;1</span><br><span class="line">__GLX_VENDOR_LIBRARY_NAME&#x3D;nvidia</span><br></pre></td></tr></table></figure><br>用这些变量可以指定用 NVIDIA 显卡运行程序<br>为了方便起见，使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alias nvrun&#x3D;&quot;__NV_PRIME_RENDER_OFFLOAD&#x3D;1 __GLX_VENDOR_LIBRARY_NAME&#x3D;nvidia&quot;</span><br></pre></td></tr></table></figure><br>这样以来就可以使用<code>nvrun</code>运行程序了。</p>
+<p>比如要运行 minecraft 就可以使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nvrun minecraft-launcher</span><br></pre></td></tr></table></figure><br>进入 minecraft 后按<code>F3</code>可以打开调试信息，看到显卡信息为 NVIDIA Corporation，说明此时正在用独显运行。</p>
+]]></content>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>cuda</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World!</title>
     <url>/2020/06/07/Hello-World/</url>
     <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
@@ -13,9 +51,120 @@
 ]]></content>
   </entry>
   <entry>
+    <title>假的，都是假的</title>
+    <url>/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/</url>
+    <content><![CDATA[<p>老师假装教书<br>学生假装念书<br>学习的结果是绩点<br>比赛比的是ppt<br>入党是为了优先<br>选票看的是人脉不是实力<br>志愿活动重要的是宣传</p>
+<p>美好的大学生活都是假的</p>
+]]></content>
+      <tags>
+        <tag>瞎想</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>匈牙利算法</title>
+    <url>/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<p>匈牙利算法是一种在多项式时间内求解任务分配问题的组合优化算法，并推动了后来的原始对偶方法。 美国数学家哈罗德·库恩于1955年提出该算法。 此算法之所以被称作匈牙利算法，是因为算法很大一部分是基于以前匈牙利数学家Dénes Kőnig和Jenő Egerváry的工作之上创建起来的。<br><a id="more"></a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学校一堆破事之中找到了时间来学算法，这篇是图论的最后一篇（大概）。<br>刚开始查资料的时候找到很多，都是用很专业的话在介绍匈牙利算法，但这种方式确实不适合学习。<br>最后找到这篇博客，用比较容易理解的方式讲了匈牙利算法的过程：</p>
+<p><a href="https://blog.csdn.net/dark_scope/article/details/8880547#commentBox" target="_blank" rel="noopener">趣写算法系列之—匈牙利算法</a></p>
+<p>继续往下看之前先把上面的博客看了，很有帮助的。</p>
+<h1 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h1><div align="center">
+    <img src="/2020/08/27/匈牙利算法/Simple-bipartite-graph.svg" width=150>
+    <!-- <img src="匈牙利算法/Simple-bipartite-graph.svg" width=150> -->
+    <div style="color:gray"><font size=2>图一：一个二分图的实例 </font></div>
+</div>
+
+<p>如果图 $G=(U,V,E)$中，$U$和$V$为不相交的点集，且 $E = \{(u,v)|u \in U ,v \in V\}$，则 $G$ 为二分图。通俗点讲就是图内的点可以分成两个集合，且每条边都是跨接在这两个集合间的，那这个图就是二分图。<br>最常见的例子就是把男生和女生分开，且每个人都对多个异性有好感（震惊.jpg（不考虑特殊性取向（当然也可以换别的例子但我想不到）））。</p>
+<h1 id="匈牙利算法"><a href="#匈牙利算法" class="headerlink" title="匈牙利算法"></a>匈牙利算法</h1><p>匈牙利算法（Hungarian Algorithm）听起来很难学（确实人名（地名）算法听起来比较强），但基本思路比较简单，是用来解决二分图最大匹配问题的。</p>
+<h2 id="图的匹配"><a href="#图的匹配" class="headerlink" title="图的匹配"></a>图的匹配</h2><div align="center">
+    <img src="/2020/08/27/匈牙利算法/0.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/0.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图二：二分图的匹配 </font></div>
+</div>
+
+<p>匹配是指从图中找到边可以使左点集和右点集一一匹配，设匹配边数量为 $M$，当 $M$ 达到最大时即为最大匹配。</p>
+<h2 id="算法过程"><a href="#算法过程" class="headerlink" title="算法过程"></a>算法过程</h2><p>匈牙利算法有 dfs 和 bfs 版本，这里介绍比较简单的 dfs 版本，bfs 还没学（逃。<br>要用到递归的话，首先要明确单个 dfs 树的目的，这里是<strong>找到当前点的匹配</strong>。<br>下面开始分步详解。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/1.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/1.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图三：点 1 的匹配 </font></div>
+</div>
+
+<p>图(a)，点 1 的第一条边指向了点 5，点 5 此时没有被匹配，所以点 1 可以和点 5 匹配。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/2.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/2.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图四：点 2 的匹配 </font></div>
+</div>
+
+<p>图(b)，开始匹配点 2，点 2 的第一条边指向点 5，但点 5 已经被点 1 匹配，所以<strong>开始和与点 5 配对的点 1 协调</strong>，尝试使点 1 匹配其它点。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/3.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/3.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图五：点 2 的匹配,协调点 1 </font></div>
+</div>
+
+<p>图(c)，点 1 的协调过程，点 1 开始尝试它的第二条边，指向点 7，点 7 此时没有被匹配，所以点 1 可以和点 7 匹配。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/4.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/4.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图六：点 3 的匹配 </font></div>
+</div>
+
+<p>图(d)，点 2 对点 1 的协调完成，于是点 2 匹配点 5,点 1 匹配点 7。<br>点 3 开始尝试匹配，第一条边指向了点 5 ，<strong>开始和与点 5 配对的点 2 协调</strong></p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/5.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/5.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图七：点 3 的匹配,对点 2 协调失败，换一条边 </font></div>
+</div>
+
+<p>图(e)，由于点 2 没有其它边了，只能匹配点 5,所以点 3 对点 2 的协调失败，尝试下一条边，指向点 6,点 6 此时没有被匹配，所以点 3 可以和点 6 匹配。</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/6.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/6.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图八：点 4 的匹配 </font></div>
+</div>
+
+<p>图(f)，点 4 的第一条边指向点 7，点 7 已经被点 1 匹配，和刚才一样的情况，点 1 显然已经没法继续协调，所以点 4 要尝试下一条边</p>
+<div align="center">
+    <img src="/2020/08/27/匈牙利算法/7.drawio.svg" width=150>
+    <!-- <img src="匈牙利算法/7.drawio.svg" width=150> -->
+    <div style="color:gray"><font size=2>图九：点 4 的匹配 </font></div>
+</div>
+
+<p>图(g)，点 4 尝试第二条边，和点 8 匹配。</p>
+<p>整个流程就是这样，是点和点相互协调的过程，协调这步就可以用递归来完成。</p>
+<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><script type="math/tex; mode=display">
+\begin{array}{ll}
+    1 & \textbf{Input. } \text{a node } u \in U \text{ of graph } G(U,V,E) \text{,}\\
+      &\text{information about matching is stored in array } mch\\
+    2 & \textbf{Output. } \text{result of matching, true or false} \\
+    3 & \textbf{Method.} \text{ hungarian}\\
+    4 & \textbf{if } u \text{ isn't in current dfs tree} \\
+    5 & \qquad \textbf{for} \text{ each } (u,v)\\
+    6 & \qquad \qquad \textbf{if } v \text{ hasn't been matched } \\
+      & \qquad \qquad \quad \textbf{or} \text{ hungarian(} mch[v] \text{) is } true\\
+    7 & \qquad \qquad \qquad mch[v] \gets u \\
+    8 & \qquad \qquad \qquad \textbf{return } true \\
+    9 & \qquad \textbf{return } false \\
+    10 & \textbf{else} \\
+    11 & \qquad \textbf{return } false
+\end{array}</script><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 505</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; G[MAXN];</span><br><span class="line"><span class="keyword">int</span> timestamp[MAXN];</span><br><span class="line"><span class="keyword">int</span> mch[MAXN];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@function:    bool hungarian(int u,int time)</span></span><br><span class="line"><span class="comment"> *@param:       u: 节点 u,在图的左部</span></span><br><span class="line"><span class="comment"> *              time: 时间戳</span></span><br><span class="line"><span class="comment"> *@return:      true: 匹配成功</span></span><br><span class="line"><span class="comment"> *              false: 匹配失败</span></span><br><span class="line"><span class="comment"> *@note:        使用时需要已经明确图的左部和右部</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hungarian</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 在本轮 dfs 树已经被访问过</span></span><br><span class="line">    <span class="keyword">if</span>(timestamp[u] == time) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 标上时间戳</span></span><br><span class="line">    timestamp[u] = time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> v: G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//      未匹配               协调成功</span></span><br><span class="line">        <span class="keyword">if</span>((mch[v] == <span class="number">0</span>) || hungarian(mch[v],time))</span><br><span class="line">        &#123;</span><br><span class="line">            mch[v] = u;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//记录匹配边的数量</span></span><br><span class="line"><span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 只遍历左部点</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(hungarian(i,i)) ans++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="二分图的最大匹配"><a href="#二分图的最大匹配" class="headerlink" title="二分图的最大匹配"></a>二分图的最大匹配</h2><p><a href="https://www.luogu.com.cn/problem/P3386" target="_blank" rel="noopener">【模板】二分图最大匹配-Luogu-P3386</a><br><a href="http://poj.org/problem?id=1469" target="_blank" rel="noopener">COURSES-POJ-1469</a></p>
+<h2 id="二分图最小点覆盖"><a href="#二分图最小点覆盖" class="headerlink" title="二分图最小点覆盖"></a>二分图最小点覆盖</h2><p>最小点覆盖是指：在图 $G(U,V,E)$ 中，一个最小的点集 $S=\{P| P \in U  or P \in V\}$，使得图内的每条边都至少有一个端点在点集 $S$ 内。<br>可以证明在二分图中 二分图最小点覆盖 等于 二分图的最大匹配。怎么证明这里就不写了</p>
+<p><a href="http://poj.org/problem?id=3041" target="_blank" rel="noopener">Asteroids-POJ-3041</a></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>感谢学校团委，没有他们举办的活动的衬托我不可能知道学习算法是多么轻松快乐。<br>感谢楼下和桥下的四果汤店，在我饱受折磨的时候恢复心情。</p>
+]]></content>
+      <tags>
+        <tag>算法</tag>
+        <tag>图论</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>带权并查集</title>
     <url>/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/</url>
-    <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p><h3>食物链（POJ-1182）</h3></p>
+    <content><![CDATA[<p>相比普通并查集，带权并查集记录了结点到根的距离，可以用来解决某些求路径长度的问题<br><a id="more"></a></p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p><h3>食物链（POJ-1182）</h3></p>
 <h5>Description</h5>
 
 <blockquote>
@@ -97,46 +246,10 @@
       </tags>
   </entry>
   <entry>
-    <title>[ArchLinux] 安装nvidia显卡驱动</title>
-    <url>/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</url>
-    <content><![CDATA[<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p><strike>安装Linux的时候我已经做好不打游戏的打算了</strike>，nvidia 的驱动安装起来真的麻烦。最近要安装 nvidia 驱动的原因是，开始搞机器学习了。这坎还是要过的。安装过程太痛苦了，踩了很多坑，这篇博文收集了网络上的各种安装驱动的资讯，记录安装过程。</p>
-<p>本机的系统是 ArchLinux，显卡为 NVIDIA GeForce MX250，窗体管理器为 LightDM。</p>
-<p>命令主要都由<code>sudo</code>运行，或者可以直接全程以root用户执行。</p>
-<h1 id="2-主要参考的博客"><a href="#2-主要参考的博客" class="headerlink" title="2.主要参考的博客"></a>2.主要参考的博客</h1><p>感谢这些博客积累下来的经验</p>
-<p><a href="https://juejin.im/entry/5d4275f9f265da03ab422cdb" target="_blank" rel="noopener">Archlinux安装NVIDIA1050Ti显卡驱动</a><br><a href="http://ivo-wang.github.io/2018/02/18/a/" target="_blank" rel="noopener">ivo Blog - archlinux 笔记本安装nvidia显卡驱动与intel显卡驱动</a><br><a href="https://blogs.gorquan.cn/2019/07/29/yuque/Ubuntu%E4%B8%8BNVIDIA%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%A4%84%E7%90%86/#M3fMb" target="_blank" rel="noopener">gorquan’s Blog - Ubuntu下NVIDIA显卡驱动处理</a><br><a href="https://blog.lilydjwg.me/tag/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8" target="_blank" rel="noopener">依云’s Blog - NVIDIA PRIME 配置笔记</a></p>
-<h1 id="3-一些准备"><a href="#3-一些准备" class="headerlink" title="3.一些准备"></a>3.一些准备</h1><h2 id="3-1-关闭桌面环境"><a href="#3-1-关闭桌面环境" class="headerlink" title="3.1.关闭桌面环境"></a>3.1.关闭桌面环境</h2><p>为了防止不必要的麻烦，先关闭图形界面，先按<code>Ctrl + Alt + F2</code>进入 <code>tty2</code>，然后执行<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl stop lightdm</span><br></pre></td></tr></table></figure><br>执行完后桌面服务会被关闭</p>
-<h2 id="3-2-禁用开源-nouveau-驱动"><a href="#3-2-禁用开源-nouveau-驱动" class="headerlink" title="3.2.禁用开源 nouveau 驱动"></a>3.2.禁用开源 nouveau 驱动</h2><p>编辑<code>/etc/modprobe.d/nouveau_blacklist.conf</code><br>加入<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset&#x3D;0</span><br></pre></td></tr></table></figure></p>
-<h1 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h1><p>执行<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo pacman -S nvidia nvidia-libgl xorg-xrandr nvidia-utils nvidia-settings nvidia-prime</span><br></pre></td></tr></table></figure><br>其中</p>
-<blockquote>
-<p><code>nvidia</code>： nvidia 的驱动<br><code>nvidia-libgl</code>： OpenGL的库<br><code>xorg-xrandr</code>： 用于显示设置<br><code>nvidia-utils</code>： NVIDIA drivers utilities<br><code>nvidia-settings</code>： 用于配置显卡<br><code>nvidia-prime</code>： 用于显卡的切换</p>
-</blockquote>
-<h1 id="5-配置"><a href="#5-配置" class="headerlink" title="5.配置"></a>5.配置</h1><p><em>！配置的步骤比较重要，配置不当会导致黑屏，lightdm无法启动等问题</em></p>
-<h2 id="5-1-查看显卡的BusID"><a href="#5-1-查看显卡的BusID" class="headerlink" title="5.1.查看显卡的BusID"></a>5.1.查看显卡的BusID</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">lspci | grep -E "VGA|3D"</span><br></pre></td></tr></table></figure>
-<p>执行此命令后会出现<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 620 (rev 07)</span><br><span class="line">01:00.0 3D controller: NVIDIA Corporation GP108BM [GeForce MX250] (rev a1)</span><br></pre></td></tr></table></figure><br>记住<code>00:02.0</code>和<code>01:00.0</code>这两串数字（读者显卡的BusID可能不一样），分别是intel集显和NVIDIA独显的BusID。待会会用到。</p>
-<h2 id="5-2-编辑xorg-conf文件"><a href="#5-2-编辑xorg-conf文件" class="headerlink" title="5.2.编辑xorg.conf文件"></a>5.2.编辑xorg.conf文件</h2><p>编辑<code>/etc/X11/xorg.conf</code>文件，如果没有的话使用<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo nvidia-xconfig</span><br></pre></td></tr></table></figure><br>生成此文件</p>
-<p>开始编辑文件，用习惯的文本编辑器。<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/X11/xorg.conf</span><br></pre></td></tr></table></figure></p>
-<p>要往文件中追加这些内容<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Section &quot;Module&quot;</span><br><span class="line">	Load           &quot;modesetting&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Device&quot;</span><br><span class="line">	Identifier     &quot;nvidia&quot;</span><br><span class="line">	Driver         &quot;nvidia&quot;</span><br><span class="line">	BusID          &quot;PCI:1:0:0&quot; #!!!这句是要改的</span><br><span class="line">	Option         &quot;AllowEmptyInitialConfiguration&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure><br>BusId是根据上面用<code>lspci</code>指令读到的NVIDIA显卡的ID而定，比如我的是<code>01:00.0</code>，那就写成 <code>&quot;PCI:1:0:0&quot;</code>，读者可以根据此格式更改。</p>
-<h2 id="5-3-配置lightdm"><a href="#5-3-配置lightdm" class="headerlink" title="5.3.配置lightdm"></a>5.3.配置lightdm</h2><p><em>！如果不是使用lightdm，可以参考上面所列举的博客</em></p>
-<p>编辑<code>/etc/lightdm/display_setup.sh</code>文件，这个文件是需要手动创建的<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/lightdm/display_setup.sh</span><br></pre></td></tr></table></figure><br>往文件中写入<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">xrandr --setprovideroutputsource modesetting NVIDIA-0</span><br><span class="line">xrandr --auto</span><br></pre></td></tr></table></figure><br>编辑<code>/etc/lightdm/lightdm.conf</code>文件<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/lightdm/lightdm.conf</span><br></pre></td></tr></table></figure><br>找到<code>display-setup-script</code>所在行，把注释取消，改为<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">display-setup-script&#x3D;&#x2F;etc&#x2F;lightdm&#x2F;display_setup.sh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>vim</code>用户可以使用<br><code>/display-setup-script</code><br>指令来找到这行</p>
-</blockquote>
-<h1 id="6-重启"><a href="#6-重启" class="headerlink" title="6.重启"></a>6.重启</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
-<p>理论上重启就能用了，如果没有进入桌面，按 <code>Ctrl + Alt + F2</code>进入<code>tty2</code><br>编辑<code>/etc/X11/xorg.conf.d/intel.conf</code>，这个文件也是要手动创建的<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/X11/xorg.conf.d/intel.conf</span><br></pre></td></tr></table></figure><br>加入：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier &quot;intel&quot;</span><br><span class="line">    Driver &quot;modesetting&quot;</span><br><span class="line">    BusID &quot;PCI:0:2:0&quot; #!!!这句需要更改</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure><br>将集显的BusID用相应格式更改，然后重启。</p>
-<h1 id="7-检验"><a href="#7-检验" class="headerlink" title="7.检验"></a>7.检验</h1><p>使用<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure><br>如果出现<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 440.100      Driver Version: 440.100      CUDA Version: 10.2     |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage&#x2F;Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|</span><br><span class="line">|   0  GeForce MX250       Off  | 00000000:01:00.0 Off |                  N&#x2F;A |</span><br><span class="line">| N&#x2F;A   37C    P8    N&#x2F;A &#x2F;  N&#x2F;A |     14MiB &#x2F;  2002MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                               </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID   Type   Process name                             Usage      |</span><br><span class="line">|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|</span><br><span class="line">|    0       732      G   &#x2F;usr&#x2F;lib&#x2F;Xorg                                 14MiB |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
-<p>说明驱动已经成功安装，并且正在用NVIDIA显卡运行桌面。</p>
-<h1 id="8-用-NVIDIA-显卡运行程序"><a href="#8-用-NVIDIA-显卡运行程序" class="headerlink" title="8.用 NVIDIA 显卡运行程序"></a>8.用 NVIDIA 显卡运行程序</h1><p>由于系统默认使用集显运行程序，所以运行程序时还需要配置一些变量：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">__NV_PRIME_RENDER_OFFLOAD&#x3D;1</span><br><span class="line">__GLX_VENDOR_LIBRARY_NAME&#x3D;nvidia</span><br></pre></td></tr></table></figure><br>用这些变量可以指定用 NVIDIA 显卡运行程序<br>为了方便起见，使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">alias nvrun&#x3D;&quot;__NV_PRIME_RENDER_OFFLOAD&#x3D;1 __GLX_VENDOR_LIBRARY_NAME&#x3D;nvidia&quot;</span><br></pre></td></tr></table></figure><br>这样以来就可以使用<code>nvrun</code>运行程序了。</p>
-<p>比如要运行 minecraft 就可以使用<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nvrun minecraft-launcher</span><br></pre></td></tr></table></figure><br>进入 minecraft 后按<code>F3</code>可以打开调试信息，看到显卡信息为 NVIDIA Corporation，说明此时正在用独显运行。</p>
-]]></content>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>cuda</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>指数形式的傅立叶变换</title>
     <url>/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/</url>
-    <content><![CDATA[<h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
+    <content><![CDATA[<p>在信号与系统中傅立叶变换是一个绕不开的问题，本文介绍了傅立叶变换的指数形式，希望能加深对它的理解<br><a id="more"></a></p>
+<h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
 <p>$x$ 方向的单位向量，记为 $\vec{i}$, $y$ 方向的单位向量，记为 $\vec{j}$,是这个平面的<strong>基</strong>，这样一个向量就可以用这两个基来表示：</p>
 <script type="math/tex; mode=display">\vec{v} = a\cdot\vec{i} + b\cdot\vec{j}</script><p>我们如果把基替换一下，使用 $1$ 和 $i$ 这两个数，</p>
 <script type="math/tex; mode=display">z = a \cdot 1 + b \cdot i</script><p>就可以用一个复数表示平面上的点，这个以 $1$ 和 $i$ 为基的平面，称为<strong>复平面</strong>。<br>实平面上的代数结构也可以原封不动的套用到复平面上。</p>
@@ -223,7 +336,8 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
   <entry>
     <title>缩点</title>
     <url>/2020/08/05/%E7%BC%A9%E7%82%B9/</url>
-    <content><![CDATA[<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><font size=5><b>Network of Schools(POJ-1236)</b></font>
+    <content><![CDATA[<p>Tarjan算法 （以发现者Robert Tarjan[1]命名）是一个在图中查找强连通分量的算法。<br><a id="more"></a></p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><font size=5><b>Network of Schools(POJ-1236)</b></font>
 <br>
 <font size=3><b>Description</b></font>
 
@@ -319,115 +433,6 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>使用链式前向星储存图，tarjan用到的栈是手写的，不过没关系，都一样（</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 105</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXM 10005</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> min(a,b) (((a) &lt; (b)) ? (a) : (b))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> max(a,b) (((a) &gt; (b)) ? (a) : (b))</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> head[MAXN],nxt[MAXM],to[MAXM];</span><br><span class="line"><span class="keyword">int</span> cnt;</span><br><span class="line"><span class="keyword">int</span> <span class="built_in">stack</span>[MAXN],top = <span class="number">-1</span>;</span><br><span class="line"><span class="keyword">bool</span> instack[MAXN];</span><br><span class="line"><span class="keyword">int</span> scc[MAXN],scnt;</span><br><span class="line"><span class="keyword">int</span> dfn[MAXN],low[MAXN];</span><br><span class="line"><span class="keyword">int</span> dfscnt;</span><br><span class="line"><span class="keyword">int</span> in_deg[MAXN],out_deg[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    nxt[++cnt] = head[u];</span><br><span class="line">    head[u] = cnt;</span><br><span class="line">    to[cnt] = v;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; MAXN;i++) head[i] = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; MAXM;i++) nxt[i] = <span class="number">-1</span>;</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++dfscnt;</span><br><span class="line">    <span class="built_in">stack</span>[++top] = u;</span><br><span class="line">    instack[u] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = head[u];~i;i = nxt[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> v = to[i];</span><br><span class="line">        <span class="keyword">if</span>(!dfn[v])</span><br><span class="line">        &#123;</span><br><span class="line">            tarjan(v);</span><br><span class="line">            low[u] = min(low[u],low[v]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(instack[v]) low[u] = min(low[u],dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(dfn[u] == low[u])</span><br><span class="line">    &#123;</span><br><span class="line">        ++scnt;</span><br><span class="line">        <span class="keyword">while</span>(<span class="built_in">stack</span>[top] != u)</span><br><span class="line">        &#123;</span><br><span class="line">            scc[<span class="built_in">stack</span>[top]] = scnt;</span><br><span class="line">            instack[<span class="built_in">stack</span>[top]] = <span class="literal">false</span>;</span><br><span class="line">            top--;</span><br><span class="line">        &#125;</span><br><span class="line">        scc[u] = scnt;</span><br><span class="line">        instack[u] = <span class="literal">false</span>;</span><br><span class="line">        top--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    init();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> u = <span class="number">1</span>;u &lt;= n;u++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> v;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;v);</span><br><span class="line">            <span class="keyword">if</span>(v == <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">            add(u,v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++) <span class="keyword">if</span>(!dfn[i])tarjan(i);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> u = <span class="number">1</span>;u &lt;= n;u++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> v;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = head[u];~i;i = nxt[i])</span><br><span class="line">        &#123;</span><br><span class="line">            v = to[i];</span><br><span class="line">            <span class="keyword">if</span>(scc[u] != scc[v])</span><br><span class="line">            &#123;</span><br><span class="line">                out_deg[(scc[u])]++;</span><br><span class="line">                in_deg[(scc[v])]++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> zero_in = <span class="number">0</span>,zero_out = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= scnt;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(in_deg[i] == <span class="number">0</span>) zero_in++;</span><br><span class="line">        <span class="keyword">if</span>(out_deg[i] == <span class="number">0</span>) zero_out++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(scnt == <span class="number">1</span>) <span class="built_in">printf</span>(<span class="string">"1\n0"</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"%d\n%d"</span>,zero_in,max(zero_in,zero_out));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1>]]></content>
-      <tags>
-        <tag>算法</tag>
-        <tag>图论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>假的，都是假的</title>
-    <url>/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/</url>
-    <content><![CDATA[<p>老师假装教书<br>学生假装念书<br>学习的结果是绩点<br>比赛比的是ppt<br>入党是为了优先<br>选票看的是人脉不是实力<br>志愿活动重要的是宣传</p>
-<p>美好的大学生活都是假的</p>
-]]></content>
-      <tags>
-        <tag>瞎想</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>匈牙利算法</title>
-    <url>/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学校一堆破事之中找到了时间来学算法，这篇是图论的最后一篇（大概）。<br>刚开始查资料的时候找到很多，都是用很专业的话在介绍匈牙利算法，但这种方式确实不适合学习。<br>最后找到这篇博客，用比较容易理解的方式讲了匈牙利算法的过程：</p>
-<p><a href="https://blog.csdn.net/dark_scope/article/details/8880547#commentBox" target="_blank" rel="noopener">趣写算法系列之—匈牙利算法</a></p>
-<p>继续往下看之前先把上面的博客看了，很有帮助的。</p>
-<h1 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h1><div align="center">
-    <img src="/2020/08/27/匈牙利算法/Simple-bipartite-graph.svg" width=150>
-    <!-- <img src="匈牙利算法/Simple-bipartite-graph.svg" width=150> -->
-    <div style="color:gray"><font size=2>图一：一个二分图的实例 </font></div>
-</div>
-
-<p>如果图 $G=(U,V,E)$中，$U$和$V$为不相交的点集，且 $E = \{(u,v)|u \in U ,v \in V\}$，则 $G$ 为二分图。通俗点讲就是图内的点可以分成两个集合，且每条边都是跨接在这两个集合间的，那这个图就是二分图。<br>最常见的例子就是把男生和女生分开，且每个人都对多个异性有好感（震惊.jpg（不考虑特殊性取向（当然也可以换别的例子但我想不到）））。</p>
-<h1 id="匈牙利算法"><a href="#匈牙利算法" class="headerlink" title="匈牙利算法"></a>匈牙利算法</h1><p>匈牙利算法（Hungarian Algorithm）听起来很难学（确实人名（地名）算法听起来比较强），但基本思路比较简单，是用来解决二分图最大匹配问题的。</p>
-<h2 id="图的匹配"><a href="#图的匹配" class="headerlink" title="图的匹配"></a>图的匹配</h2><div align="center">
-    <img src="/2020/08/27/匈牙利算法/0.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/0.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图二：二分图的匹配 </font></div>
-</div>
-
-<p>匹配是指从图中找到边可以使左点集和右点集一一匹配，设匹配边数量为 $M$，当 $M$ 达到最大时即为最大匹配。</p>
-<h2 id="算法过程"><a href="#算法过程" class="headerlink" title="算法过程"></a>算法过程</h2><p>匈牙利算法有 dfs 和 bfs 版本，这里介绍比较简单的 dfs 版本，bfs 还没学（逃。<br>要用到递归的话，首先要明确单个 dfs 树的目的，这里是<strong>找到当前点的匹配</strong>。<br>下面开始分步详解。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/1.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/1.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图三：点 1 的匹配 </font></div>
-</div>
-
-<p>图(a)，点 1 的第一条边指向了点 5，点 5 此时没有被匹配，所以点 1 可以和点 5 匹配。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/2.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/2.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图四：点 2 的匹配 </font></div>
-</div>
-
-<p>图(b)，开始匹配点 2，点 2 的第一条边指向点 5，但点 5 已经被点 1 匹配，所以<strong>开始和与点 5 配对的点 1 协调</strong>，尝试使点 1 匹配其它点。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/3.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/3.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图五：点 2 的匹配,协调点 1 </font></div>
-</div>
-
-<p>图(c)，点 1 的协调过程，点 1 开始尝试它的第二条边，指向点 7，点 7 此时没有被匹配，所以点 1 可以和点 7 匹配。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/4.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/4.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图六：点 3 的匹配 </font></div>
-</div>
-
-<p>图(d)，点 2 对点 1 的协调完成，于是点 2 匹配点 5,点 1 匹配点 7。<br>点 3 开始尝试匹配，第一条边指向了点 5 ，<strong>开始和与点 5 配对的点 2 协调</strong></p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/5.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/5.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图七：点 3 的匹配,对点 2 协调失败，换一条边 </font></div>
-</div>
-
-<p>图(e)，由于点 2 没有其它边了，只能匹配点 5,所以点 3 对点 2 的协调失败，尝试下一条边，指向点 6,点 6 此时没有被匹配，所以点 3 可以和点 6 匹配。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/6.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/6.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图八：点 4 的匹配 </font></div>
-</div>
-
-<p>图(f)，点 4 的第一条边指向点 7，点 7 已经被点 1 匹配，和刚才一样的情况，点 1 显然已经没法继续协调，所以点 4 要尝试下一条边</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/7.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/7.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图九：点 4 的匹配 </font></div>
-</div>
-
-<p>图(g)，点 4 尝试第二条边，和点 8 匹配。</p>
-<p>整个流程就是这样，是点和点相互协调的过程，协调这步就可以用递归来完成。</p>
-<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><script type="math/tex; mode=display">
-\begin{array}{ll}
-    1 & \textbf{Input. } \text{a node } u \in U \text{ of graph } G(U,V,E) \text{,}\\
-      &\text{information about matching is stored in array } mch\\
-    2 & \textbf{Output. } \text{result of matching, true or false} \\
-    3 & \textbf{Method.} \text{ hungarian}\\
-    4 & \textbf{if } u \text{ isn't in current dfs tree} \\
-    5 & \qquad \textbf{for} \text{ each } (u,v)\\
-    6 & \qquad \qquad \textbf{if } v \text{ hasn't been matched } \\
-      & \qquad \qquad \quad \textbf{or} \text{ hungarian(} mch[v] \text{) is } true\\
-    7 & \qquad \qquad \qquad mch[v] \gets u \\
-    8 & \qquad \qquad \qquad \textbf{return } true \\
-    9 & \qquad \textbf{return } false \\
-    10 & \textbf{else} \\
-    11 & \qquad \textbf{return } false
-\end{array}</script><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 505</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; G[MAXN];</span><br><span class="line"><span class="keyword">int</span> timestamp[MAXN];</span><br><span class="line"><span class="keyword">int</span> mch[MAXN];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@function:    bool hungarian(int u,int time)</span></span><br><span class="line"><span class="comment"> *@param:       u: 节点 u,在图的左部</span></span><br><span class="line"><span class="comment"> *              time: 时间戳</span></span><br><span class="line"><span class="comment"> *@return:      true: 匹配成功</span></span><br><span class="line"><span class="comment"> *              false: 匹配失败</span></span><br><span class="line"><span class="comment"> *@note:        使用时需要已经明确图的左部和右部</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hungarian</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 在本轮 dfs 树已经被访问过</span></span><br><span class="line">    <span class="keyword">if</span>(timestamp[u] == time) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 标上时间戳</span></span><br><span class="line">    timestamp[u] = time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> v: G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//      未匹配               协调成功</span></span><br><span class="line">        <span class="keyword">if</span>((mch[v] == <span class="number">0</span>) || hungarian(mch[v],time))</span><br><span class="line">        &#123;</span><br><span class="line">            mch[v] = u;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用<br><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//记录匹配边的数量</span></span><br><span class="line"><span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 只遍历左部点</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(hungarian(i,i)) ans++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="二分图的最大匹配"><a href="#二分图的最大匹配" class="headerlink" title="二分图的最大匹配"></a>二分图的最大匹配</h2><p><a href="https://www.luogu.com.cn/problem/P3386" target="_blank" rel="noopener">【模板】二分图最大匹配-Luogu-P3386</a><br><a href="http://poj.org/problem?id=1469" target="_blank" rel="noopener">COURSES-POJ-1469</a></p>
-<h2 id="二分图最小点覆盖"><a href="#二分图最小点覆盖" class="headerlink" title="二分图最小点覆盖"></a>二分图最小点覆盖</h2><p>最小点覆盖是指：在图 $G(U,V,E)$ 中，一个最小的点集 $S=\{P| P \in U  or P \in V\}$，使得图内的每条边都至少有一个端点在点集 $S$ 内。<br>可以证明在二分图中 二分图最小点覆盖 等于 二分图的最大匹配。怎么证明这里就不写了</p>
-<p><a href="http://poj.org/problem?id=3041" target="_blank" rel="noopener">Asteroids-POJ-3041</a></p>
-<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>感谢学校团委，没有他们举办的活动的衬托我不可能知道学习算法是多么轻松快乐。<br>感谢楼下和桥下的四果汤店，在我饱受折磨的时候恢复心情。</p>
-]]></content>
       <tags>
         <tag>算法</tag>
         <tag>图论</tag>

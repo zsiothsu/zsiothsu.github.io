@@ -80,7 +80,8 @@
                                             
 
                                                 
-                                                                    <h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
+                                                                    <p>在信号与系统中傅立叶变换是一个绕不开的问题，本文介绍了傅立叶变换的指数形式，希望能加深对它的理解<br><a id="more"></a></p>
+<h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
 <p>$x$ 方向的单位向量，记为 $\vec{i}$, $y$ 方向的单位向量，记为 $\vec{j}$,是这个平面的<strong>基</strong>，这样一个向量就可以用这两个基来表示：</p>
 <script type="math/tex; mode=display">\vec{v} = a\cdot\vec{i} + b\cdot\vec{j}</script><p>我们如果把基替换一下，使用 $1$ 和 $i$ 这两个数，</p>
 <script type="math/tex; mode=display">z = a \cdot 1 + b \cdot i</script><p>就可以用一个复数表示平面上的点，这个以 $1$ 和 $i$ 为基的平面，称为<strong>复平面</strong>。<br>实平面上的代数结构也可以原封不动的套用到复平面上。</p>
@@ -163,7 +164,7 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckecqdlk4000fzcsb1h295i0m" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="cked0j6450009txsb5xnka574" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -370,5 +371,27 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
 
 <script src="/js/ocean.js"></script>
 
+<!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:11
+ * @Description: file content
+-->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

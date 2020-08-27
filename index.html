@@ -105,101 +105,16 @@
                                             
 
                                                 
-                                                                    <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在学校一堆破事之中找到了时间来学算法，这篇是图论的最后一篇（大概）。<br>刚开始查资料的时候找到很多，都是用很专业的话在介绍匈牙利算法，但这种方式确实不适合学习。<br>最后找到这篇博客，用比较容易理解的方式讲了匈牙利算法的过程：</p>
-<p><a href="https://blog.csdn.net/dark_scope/article/details/8880547#commentBox" target="_blank" rel="noopener">趣写算法系列之—匈牙利算法</a></p>
-<p>继续往下看之前先把上面的博客看了，很有帮助的。</p>
-<h1 id="二分图"><a href="#二分图" class="headerlink" title="二分图"></a>二分图</h1><div align="center">
-    <img src="/2020/08/27/匈牙利算法/Simple-bipartite-graph.svg" width=150>
-    <!-- <img src="匈牙利算法/Simple-bipartite-graph.svg" width=150> -->
-    <div style="color:gray"><font size=2>图一：一个二分图的实例 </font></div>
-</div>
-
-<p>如果图 $G=(U,V,E)$中，$U$和$V$为不相交的点集，且 $E = \{(u,v)|u \in U ,v \in V\}$，则 $G$ 为二分图。通俗点讲就是图内的点可以分成两个集合，且每条边都是跨接在这两个集合间的，那这个图就是二分图。<br>最常见的例子就是把男生和女生分开，且每个人都对多个异性有好感（震惊.jpg（不考虑特殊性取向（当然也可以换别的例子但我想不到）））。</p>
-<h1 id="匈牙利算法"><a href="#匈牙利算法" class="headerlink" title="匈牙利算法"></a>匈牙利算法</h1><p>匈牙利算法（Hungarian Algorithm）听起来很难学（确实人名（地名）算法听起来比较强），但基本思路比较简单，是用来解决二分图最大匹配问题的。</p>
-<h2 id="图的匹配"><a href="#图的匹配" class="headerlink" title="图的匹配"></a>图的匹配</h2><div align="center">
-    <img src="/2020/08/27/匈牙利算法/0.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/0.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图二：二分图的匹配 </font></div>
-</div>
-
-<p>匹配是指从图中找到边可以使左点集和右点集一一匹配，设匹配边数量为 $M$，当 $M$ 达到最大时即为最大匹配。</p>
-<h2 id="算法过程"><a href="#算法过程" class="headerlink" title="算法过程"></a>算法过程</h2><p>匈牙利算法有 dfs 和 bfs 版本，这里介绍比较简单的 dfs 版本，bfs 还没学（逃。<br>要用到递归的话，首先要明确单个 dfs 树的目的，这里是<strong>找到当前点的匹配</strong>。<br>下面开始分步详解。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/1.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/1.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图三：点 1 的匹配 </font></div>
-</div>
-
-<p>图(a)，点 1 的第一条边指向了点 5，点 5 此时没有被匹配，所以点 1 可以和点 5 匹配。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/2.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/2.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图四：点 2 的匹配 </font></div>
-</div>
-
-<p>图(b)，开始匹配点 2，点 2 的第一条边指向点 5，但点 5 已经被点 1 匹配，所以<strong>开始和与点 5 配对的点 1 协调</strong>，尝试使点 1 匹配其它点。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/3.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/3.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图五：点 2 的匹配,协调点 1 </font></div>
-</div>
-
-<p>图(c)，点 1 的协调过程，点 1 开始尝试它的第二条边，指向点 7，点 7 此时没有被匹配，所以点 1 可以和点 7 匹配。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/4.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/4.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图六：点 3 的匹配 </font></div>
-</div>
-
-<p>图(d)，点 2 对点 1 的协调完成，于是点 2 匹配点 5,点 1 匹配点 7。<br>点 3 开始尝试匹配，第一条边指向了点 5 ，<strong>开始和与点 5 配对的点 2 协调</strong></p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/5.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/5.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图七：点 3 的匹配,对点 2 协调失败，换一条边 </font></div>
-</div>
-
-<p>图(e)，由于点 2 没有其它边了，只能匹配点 5,所以点 3 对点 2 的协调失败，尝试下一条边，指向点 6,点 6 此时没有被匹配，所以点 3 可以和点 6 匹配。</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/6.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/6.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图八：点 4 的匹配 </font></div>
-</div>
-
-<p>图(f)，点 4 的第一条边指向点 7，点 7 已经被点 1 匹配，和刚才一样的情况，点 1 显然已经没法继续协调，所以点 4 要尝试下一条边</p>
-<div align="center">
-    <img src="/2020/08/27/匈牙利算法/7.drawio.svg" width=150>
-    <!-- <img src="匈牙利算法/7.drawio.svg" width=150> -->
-    <div style="color:gray"><font size=2>图九：点 4 的匹配 </font></div>
-</div>
-
-<p>图(g)，点 4 尝试第二条边，和点 8 匹配。</p>
-<p>整个流程就是这样，是点和点相互协调的过程，协调这步就可以用递归来完成。</p>
-<h2 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h2><script type="math/tex; mode=display">
-\begin{array}{ll}
-    1 & \textbf{Input. } \text{a node } u \in U \text{ of graph } G(U,V,E) \text{,}\\
-      &\text{information about matching is stored in array } mch\\
-    2 & \textbf{Output. } \text{result of matching, true or false} \\
-    3 & \textbf{Method.} \text{ hungarian}\\
-    4 & \textbf{if } u \text{ isn't in current dfs tree} \\
-    5 & \qquad \textbf{for} \text{ each } (u,v)\\
-    6 & \qquad \qquad \textbf{if } v \text{ hasn't been matched } \\
-      & \qquad \qquad \quad \textbf{or} \text{ hungarian(} mch[v] \text{) is } true\\
-    7 & \qquad \qquad \qquad mch[v] \gets u \\
-    8 & \qquad \qquad \qquad \textbf{return } true \\
-    9 & \qquad \textbf{return } false \\
-    10 & \textbf{else} \\
-    11 & \qquad \textbf{return } false
-\end{array}</script><h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 505</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; G[MAXN];</span><br><span class="line"><span class="keyword">int</span> timestamp[MAXN];</span><br><span class="line"><span class="keyword">int</span> mch[MAXN];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@function:    bool hungarian(int u,int time)</span></span><br><span class="line"><span class="comment"> *@param:       u: 节点 u,在图的左部</span></span><br><span class="line"><span class="comment"> *              time: 时间戳</span></span><br><span class="line"><span class="comment"> *@return:      true: 匹配成功</span></span><br><span class="line"><span class="comment"> *              false: 匹配失败</span></span><br><span class="line"><span class="comment"> *@note:        使用时需要已经明确图的左部和右部</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">hungarian</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 在本轮 dfs 树已经被访问过</span></span><br><span class="line">    <span class="keyword">if</span>(timestamp[u] == time) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// 标上时间戳</span></span><br><span class="line">    timestamp[u] = time;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> v: G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//      未匹配               协调成功</span></span><br><span class="line">        <span class="keyword">if</span>((mch[v] == <span class="number">0</span>) || hungarian(mch[v],time))</span><br><span class="line">        &#123;</span><br><span class="line">            mch[v] = u;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//记录匹配边的数量</span></span><br><span class="line"><span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 只遍历左部点</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(hungarian(i,i)) ans++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="二分图的最大匹配"><a href="#二分图的最大匹配" class="headerlink" title="二分图的最大匹配"></a>二分图的最大匹配</h2><p><a href="https://www.luogu.com.cn/problem/P3386" target="_blank" rel="noopener">【模板】二分图最大匹配-Luogu-P3386</a><br><a href="http://poj.org/problem?id=1469" target="_blank" rel="noopener">COURSES-POJ-1469</a></p>
-<h2 id="二分图最小点覆盖"><a href="#二分图最小点覆盖" class="headerlink" title="二分图最小点覆盖"></a>二分图最小点覆盖</h2><p>最小点覆盖是指：在图 $G(U,V,E)$ 中，一个最小的点集 $S=\{P| P \in U  or P \in V\}$，使得图内的每条边都至少有一个端点在点集 $S$ 内。<br>可以证明在二分图中 二分图最小点覆盖 等于 二分图的最大匹配。怎么证明这里就不写了</p>
-<p><a href="http://poj.org/problem?id=3041" target="_blank" rel="noopener">Asteroids-POJ-3041</a></p>
-<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>感谢学校团委，没有他们举办的活动的衬托我不可能知道学习算法是多么轻松快乐。<br>感谢楼下和桥下的四果汤店，在我饱受折磨的时候恢复心情。</p>
-
-                                                                        
+                                                    <p>匈牙利算法是一种在多项式时间内求解任务分配问题的组合优化算法，并推动了后来的原始对偶方法。 美国数学家哈罗德·库恩于1955年提出该算法。 此算法之所以被称作匈牙利算法，是因为算法很大一部分是基于以前匈牙利数学家Dénes Kőnig和Jenő Egerváry的工作之上创建起来的。<br>
+                                                        
+                                                            <a class="article-more-link" href="/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/" data-id="ckecqcidz0000tpsbfxxca1jg" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/" data-id="cked0j63z0006txsb75oo6eyo" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -258,7 +173,7 @@
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/" data-id="ckeb04tuk0000rysb1p98e2vh" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/" data-id="cked0j63x0005txsbadyqd3uc" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -311,106 +226,16 @@
                                             
 
                                                 
-                                                                    <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><font size=5><b>Network of Schools(POJ-1236)</b></font>
-<br>
-<font size=3><b>Description</b></font>
-
-<blockquote>
-<p>A number of schools are connected to a computer network. Agreements have been developed among those schools: each school maintains a list of schools to which it distributes software (the “receiving schools”). Note that if B is in the distribution list of school A, then A does not necessarily appear in the list of school B<br>You are to write a program that computes the minimal number of schools that must receive a copy of the new software in order for the software to reach all schools in the network according to the agreement (Subtask A). As a further task, we want to ensure that by sending the copy of new software to an arbitrary school, this software will reach all schools in the network. To achieve this goal we may have to extend the lists of receivers by new members. Compute the minimal number of extensions that have to be made so that whatever school we send the new software to, it will reach all other schools (Subtask B). One extension means introducing one new member into the list of receivers of one school.</p>
-</blockquote>
-<font size=3><b>Input</b></font>
-
-<blockquote>
-<p>The first line contains an integer N: the number of schools in the network (2 &lt;= N &lt;= 100). The schools are identified by the first N positive integers. Each of the next N lines describes a list of receivers. The line i+1 contains the identifiers of the receivers of school i. Each list ends with a 0. An empty list contains a 0 alone in the line.</p>
-</blockquote>
-<font size=3><b>Output</b></font>
-
-<blockquote>
-<p>Your program should write two lines to the standard output. The first line should contain one positive integer: the solution of subtask A. The second line should contain the solution of subtask B.</p>
-</blockquote>
-<font size=3><b>Sample Input</b></font>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">2</span> <span class="number">4</span> <span class="number">3</span> <span class="number">0</span></span><br><span class="line"><span class="number">4</span> <span class="number">5</span> <span class="number">0</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="number">1</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<font size=3><b>Sample Output</b></font>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
-<p>题目大意是，有 $N$ 间学校，每间学校维护这一份软件分发列表，如果 $B$ 在 $A$ 的列表上，软件就可以由 $A$ 传向 $B$。<br>任务一：软件最少分给几间学校，可以使软件传遍所有学校<br>任务二：最少需要添加多少条边，可以使得：软件给任意一个学校后，都能传遍所有学校。</p>
-<p>任务一看起来像是要找到所有结点的根结点，貌似并查集挺符合的，但是题目给的图<strong>有向</strong>且<strong>有环</strong>，任务二要求结点能够<strong>两两相互到达</strong>，这就很明显了，结点之间不仅要连通，而且要强连通。所以这道题的主要任务就是算出给定图的强连通分量。</p>
-<p>这就要引进下面这个算法：</p>
-<h1 id="Tarjan-算法"><a href="#Tarjan-算法" class="headerlink" title="Tarjan 算法"></a>Tarjan 算法</h1><p>Tarjan /tarjan/ (塔扬)，Tarjan发明了很多算法，都叫 Tarjan 算法，这里讲的是求强连通分量的 Tarjan 算法。</p>
-<h2 id="图的各种边"><a href="#图的各种边" class="headerlink" title="图的各种边"></a>图的各种边</h2><center>
-    <img src="/2020/08/05/缩点/1.drawio.svg" width=400>
-    <!-- <img src="缩点/1.drawio.svg" width=400> -->
-    <div style="color:gray"><font size=2>图一：四种不同的边</font></div>
-</center>
-
-<ol>
-<li>如图(a)，是一棵普通的树，连通，但没有两两相互抵达，黑色的边叫做树边。</li>
-<li>如图(b)，从 1 结点的子树上，返回了一条蓝色的边，这种指向某个结点祖先的边叫做后向边，也叫反祖边。</li>
-<li>如图(c)，一台红色的边从 1 结点指向了它的子树的结点，这种边和后向边相反，它叫前向边。</li>
-<li>如图(d)，一条边从 4 结点指向了它的兄弟，类似的，从一个结点指向自己所在路径之外的结点 <em>（比如这里到 4 结点的路径是 1 -&gt; 2 -&gt; 4 ，那 3 就在路径之外了）</em> ，这条边叫做横叉边。</li>
-</ol>
-<p>了解这些有什么用呢？有用！<br>后向边就很有用，就以图(b)为例。原本只有一条路径（黑色的边）可以从 1 走到 3，现在出现一条后向边指向了 3 结点的祖先，那又可以从 3 走回去了！然后又从 1 走到 2,2 走到 3，3 走到 1 ……树就变成了强连通图,或者可以说有了回路，有了环。所以计算强连通图的任务可以简化为<strong>查找后向边</strong>。<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>考虑一下 dfs，如果图中存在环，那么搜索时必会碰到之前遇到过的点。Tarjan 就是一个魔改过的 dfs 算法。<br>在算法执行过程中主要维护这两个变量：</p>
-<ol>
-<li>$dfn[u]$：在深度优先搜索时结点 $u$ 被遍历到的顺序。</li>
-<li>$low[u]$：以$u$为根节点的子树上，所能找到的最小 $dfn$ </li>
-</ol>
-<p>如果从某个结点 $u$ 开始遍历，遍历结束后发现 $low[u] = dfn[u]$，说明从$u$开始遍历的子树又回到了 $u$，因为 $low[u]$ 记载的是子树路径上遇到最早被遍历到的点。</p>
-<p>搜索过程中用栈记录遍历到的节点，这里用栈只是为了方便记录遍历结点的先后顺序。（关于栈的作用的可以看这篇博客<sup><a href="#fn_2" id="reffn_2">2</a></sup>，图解很详细）</p>
-<p>更新数值的方法如下：（以 $u$ 代表当前节点，$v$ 代表 下一个节点）</p>
-<ol>
-<li>如果 $(u,v)$ 为树边或前向边，且 $v$ 没有被遍历过，就顺着往下遍历，遍历完之后用 $low[v]$ 更新 $low[u]$ 方式是 $low[u] = \min(low[u],low[v])$。因为 $v$ 如果能够到达比 $u$ 更早的结点，那 $u$ 也能顺着 $v$ 到达这个节点。</li>
-<li>如果 $(u,v)$ 是后向边，且 $v$ 在栈中，那么直接用 $\min(dfn[v],low[u])$ 更新 $low[u]$。</li>
-<li>如果是横叉边，$v$ 不在栈中（如果在栈中，就成树边了），那么就不用处理。</li>
-</ol>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><h4 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h4><script type="math/tex; mode=display">
-\begin{array}{ll}
-    1 & \textbf{Input. } \text{a node of graph } e \text{ which is called } u \\
-    2 & \textbf{Output. } \text{All the result of strongly connected components }\\
-      & \text{is stored in the array } scc. \text{The number of scc is strored in } scnt \\
-    3 & \textbf{Method.} \text{ Tarjan}\\
-    4 & dfn[u],low[u] \gets \text{the order of } u \text{ in traverse}\\
-    5 & \text{push } u \text{ into stack}\\
-    6 & \textbf{for} \text{ each } (u,v) \text{ in the stored } e \\
-    7 & \qquad \textbf{if } v \text{ haven't been traversed}\\
-    8 & \qquad \qquad \text{Tarjan(}{v} \text{)}\\
-    9 & \qquad \qquad low[u] \gets \min(low[u],low[v]) \\
-    10& \qquad \textbf{else if } v \text{ is in stack} \\
-    11& \qquad \qquad low[u] \gets \min(low[u],dfn[v]) \\
-    12& \textbf{if } dfn[u] = low[u] \\
-    13& \quad scnt \gets scnt + 1 \\
-    14& \quad \textbf{do} \\
-    15& \quad \quad node \gets \text{the top of stack} \\
-    16& \quad \quad \text{pop stack} \\
-    17& \quad \quad scc[node] \gets scnt \\
-    18& \quad \textbf{while } node \ne u 
-\end{array}</script><h4 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; G[MAXN];</span><br><span class="line"><span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt; Stack;</span><br><span class="line"><span class="keyword">bool</span> in_stack[MAXN];</span><br><span class="line"><span class="keyword">int</span> scc[MAXN],scnt;</span><br><span class="line"><span class="keyword">int</span> dfn[MAXN],low[MAXN];</span><br><span class="line"><span class="keyword">int</span> dcnt;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++dcnt;</span><br><span class="line">    Stack.push(u);</span><br><span class="line">    in_stack[u] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> v : G[u])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(!dfn[v])</span><br><span class="line">        &#123;</span><br><span class="line">            tarjan(v);</span><br><span class="line">            low[u] = min(low[u],low[v]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(in_stack[v]) low[u] = min(low[u],dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(dfn[u] == low[u])</span><br><span class="line">    &#123;</span><br><span class="line">        ++scnt;</span><br><span class="line">        <span class="keyword">int</span> node;</span><br><span class="line">        <span class="keyword">do</span></span><br><span class="line">        &#123;</span><br><span class="line">            node = Stack.top();</span><br><span class="line">            Stack.pop();</span><br><span class="line">            in_stack[node] = <span class="literal">false</span>;</span><br><span class="line">            scc[node] = scnt;</span><br><span class="line">        &#125; <span class="keyword">while</span>(node != u);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>每个点位于哪个强连通分量内，信息储存在scc数组里，总分量个数存在scnt里。使用时要对每个节点都使用一遍 tarjan：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++) tarjan(i);</span><br></pre></td></tr></table></figure></p>
-<h1 id="缩点"><a href="#缩点" class="headerlink" title="缩点"></a>缩点</h1><p>强连通分量有一个特点，就是同一个连通分量内，每一个结点都相互可达，那么对于一个外部结点来说，能访问其中一个，便能访问分量内的所有结点。那么对外部结点来讲，同一个连通分量的所有结点就可以看成一个整体。这个思想叫做缩点。<br>像是「环」这种结构，因为环自身就是一个强连通的结构，所以通过把环内所有节点看成一个整体，对外部来讲就少了一个环。如果把所有环都经过缩点处理，那么整张图就变成了<strong>有向无环图(DAG)</strong>，有了DAG之后就可以进行很多<strike>奇奇怪怪的</strike>算法了，比如简单的dfs，或者可以在上面进行dp。</p>
-<div align="center">
-    <img src="/2020/08/05/缩点/2.drawio.svg" width=300>
-    <!-- <img src="缩点/2.drawio.svg" width=400> -->
-    <div style="color:gray"><font size=2>图二：将强连通分量缩点</font></div>
-</div>
-
-<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><p><strong>任务一：软件最少分给几间学校，可以使软件传遍所有学校</strong><br>因为同一个强连通分量内可以相互传递，所以同一个分量是可以缩成一个点来看待的。<br>对于一个节点来说，如果拥有入度，说明软件可以由其它有出度的点传过来，这个点就不用管了，对于没有入度的点，那软件就必须发到这个学校。所以只要统计缩点后入度为 0 的点的个数就行了。</p>
-<strike>（写题目的时候第一个想到的就是这个办法，但不知道是不是脑子进水,我自己否定掉了这个办法 qwq。。。所以不要随便否定自己的方案，除非有很明确的输入可以证明这方法是错的）</strike>
-
-<p><strong>任务二：最少需要添加多少条边，可以使得：软件给任意一个学校后，都能传遍所有学校</strong><br>还是从入度和出度的角度考虑，要使整张图强连通，就需要解决掉入度为 0 的点和出度为 0 的点。</p>
-<ol>
-<li>$n(\text{入度为 0}) &gt; n(\text{出度为 0})$，可以从出度为 0 的点和其它任意点接一些边到入度为 0 的点上，结果为 $n(\text{入度为 0})$。</li>
-<li>$n(\text{入度为 0}) &lt; n(\text{出度为 0})$, 从出度为 0 的点接边到入度为 0 的点，剩下出度为 0 的点接边到任意点，结果为 n(\text{出度为 0})。</li>
-<li>$n(\text{入度为 0}) = n(\text{出度为 0})$，从出度为 0 的点接边到入度为 0 的点，结果为 $n(\text{入度为 0})$ 或 $n(\text{出度为 0})$<br>答案为 $\max(n(\text{入度为 0}) , n(\text{出度为 0}))$。</li>
-</ol>
-<p>当缩点后整张图只有一个强连通分量时，结果是 1 ，但其实不用添加边整张图就已经强连通，所以这时候要特判答案为 0。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>使用链式前向星储存图，tarjan用到的栈是手写的，不过没关系，都一样（</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 105</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXM 10005</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> min(a,b) (((a) &lt; (b)) ? (a) : (b))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> max(a,b) (((a) &gt; (b)) ? (a) : (b))</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> head[MAXN],nxt[MAXM],to[MAXM];</span><br><span class="line"><span class="keyword">int</span> cnt;</span><br><span class="line"><span class="keyword">int</span> <span class="built_in">stack</span>[MAXN],top = <span class="number">-1</span>;</span><br><span class="line"><span class="keyword">bool</span> instack[MAXN];</span><br><span class="line"><span class="keyword">int</span> scc[MAXN],scnt;</span><br><span class="line"><span class="keyword">int</span> dfn[MAXN],low[MAXN];</span><br><span class="line"><span class="keyword">int</span> dfscnt;</span><br><span class="line"><span class="keyword">int</span> in_deg[MAXN],out_deg[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> u,<span class="keyword">int</span> v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    nxt[++cnt] = head[u];</span><br><span class="line">    head[u] = cnt;</span><br><span class="line">    to[cnt] = v;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; MAXN;i++) head[i] = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; MAXM;i++) nxt[i] = <span class="number">-1</span>;</span><br><span class="line">    cnt = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">tarjan</span><span class="params">(<span class="keyword">int</span> u)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dfn[u] = low[u] = ++dfscnt;</span><br><span class="line">    <span class="built_in">stack</span>[++top] = u;</span><br><span class="line">    instack[u] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = head[u];~i;i = nxt[i])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> v = to[i];</span><br><span class="line">        <span class="keyword">if</span>(!dfn[v])</span><br><span class="line">        &#123;</span><br><span class="line">            tarjan(v);</span><br><span class="line">            low[u] = min(low[u],low[v]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(instack[v]) low[u] = min(low[u],dfn[v]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(dfn[u] == low[u])</span><br><span class="line">    &#123;</span><br><span class="line">        ++scnt;</span><br><span class="line">        <span class="keyword">while</span>(<span class="built_in">stack</span>[top] != u)</span><br><span class="line">        &#123;</span><br><span class="line">            scc[<span class="built_in">stack</span>[top]] = scnt;</span><br><span class="line">            instack[<span class="built_in">stack</span>[top]] = <span class="literal">false</span>;</span><br><span class="line">            top--;</span><br><span class="line">        &#125;</span><br><span class="line">        scc[u] = scnt;</span><br><span class="line">        instack[u] = <span class="literal">false</span>;</span><br><span class="line">        top--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    init();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> u = <span class="number">1</span>;u &lt;= n;u++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> v;</span><br><span class="line">        <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;v);</span><br><span class="line">            <span class="keyword">if</span>(v == <span class="number">0</span>) <span class="keyword">break</span>;</span><br><span class="line">            add(u,v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= n;i++) <span class="keyword">if</span>(!dfn[i])tarjan(i);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> u = <span class="number">1</span>;u &lt;= n;u++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> v;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = head[u];~i;i = nxt[i])</span><br><span class="line">        &#123;</span><br><span class="line">            v = to[i];</span><br><span class="line">            <span class="keyword">if</span>(scc[u] != scc[v])</span><br><span class="line">            &#123;</span><br><span class="line">                out_deg[(scc[u])]++;</span><br><span class="line">                in_deg[(scc[v])]++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> zero_in = <span class="number">0</span>,zero_out = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt;= scnt;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(in_deg[i] == <span class="number">0</span>) zero_in++;</span><br><span class="line">        <span class="keyword">if</span>(out_deg[i] == <span class="number">0</span>) zero_out++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(scnt == <span class="number">1</span>) <span class="built_in">printf</span>(<span class="string">"1\n0"</span>);</span><br><span class="line">    <span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"%d\n%d"</span>,zero_in,max(zero_in,zero_out));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1>
-                                                                        
+                                                    <p>Tarjan算法 （以发现者Robert Tarjan[1]命名）是一个在图中查找强连通分量的算法。<br>
+                                                        
+                                                            <a class="article-more-link" href="/2020/08/05/%E7%BC%A9%E7%82%B9/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/08/05/%E7%BC%A9%E7%82%B9/" data-id="ckdrgl81q000671sb0wa32qkl" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/08/05/%E7%BC%A9%E7%82%B9/" data-id="cked0j646000atxsbdpjmhjg1" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -463,86 +288,16 @@
                                             
 
                                                 
-                                                                    <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p><h3>食物链（POJ-1182）</h3></p>
-<h5>Description</h5>
-
-<blockquote>
-<p>动物王国中有三类动物A,B,C，这三类动物的食物链构成了有趣的环形。A吃B， B吃C，C吃A。<br>现有N个动物，以1－N编号。每个动物都是A,B,C中的一种，但是我们并不知道它到底是哪一种。<br>有人用两种说法对这N个动物所构成的食物链关系进行描述：<br>第一种说法是”1 X Y”，表示X和Y是同类。<br>第二种说法是”2 X Y”，表示X吃Y。<br>此人对N个动物，用上述两种说法，一句接一句地说出K句话，这K句话有的是真的，有的是假的。当一句话满足下列三条之一时，这句话就是假话，否则就是真话。<br>1） 当前的话与前面的某些真的话冲突，就是假话；<br>2） 当前的话中X或Y比N大，就是假话；<br>3） 当前的话表示X吃X，就是假话。<br>你的任务是根据给定的N（1 &lt;= N &lt;= 50,000）和K句话（0 &lt;= K &lt;= 100,000），输出假话的总数。</p>
-</blockquote>
-<h5>Input</h5>
-
-<blockquote>
-<p>第一行是两个整数N和K，以一个空格分隔。<br>以下K行每行是三个正整数 D，X，Y，两数之间用一个空格隔开，其中D表示说法的种类。<br>若D=1，则表示X和Y是同类。<br>若D=2，则表示X吃Y。</p>
-</blockquote>
-<h5>Output</h5>
-
-<blockquote>
-<p>只有一个整数，表示假话的数目。</p>
-</blockquote>
-<h5>Sample Input</h5>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">100</span> <span class="number">7</span></span><br><span class="line"><span class="number">1</span> <span class="number">101</span> <span class="number">1</span> </span><br><span class="line"><span class="number">2</span> <span class="number">1</span> <span class="number">2</span></span><br><span class="line"><span class="number">2</span> <span class="number">2</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">3</span> </span><br><span class="line"><span class="number">1</span> <span class="number">1</span> <span class="number">3</span> </span><br><span class="line"><span class="number">2</span> <span class="number">3</span> <span class="number">1</span> </span><br><span class="line"><span class="number">1</span> <span class="number">5</span> <span class="number">5</span></span><br></pre></td></tr></table></figure>
-<h5>Sample Output</h5>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
-<p>蒟蒻的我看到描述的话应该会想到，首先建一个图，然后根据图上两点的距离判断两者的关系。但又想到万一这么一种情况：</p>
-<center>
-    <img src="/2020/07/28/带权并查集/1.drawio.svg" width=250>
-</center>
-
-<p>那判断2和3的关系或者4和5的关系就比较困难了。<br>一个想法是把这个图分层：</p>
-<center>
-    <img src="/2020/07/28/带权并查集/2.drawio.svg" width=300>
-</center>
-
-<p>所以需要有一个数据结构来记录图的层次，然后嫩快速地计算出两点的关系。</p>
-<h1 id="带权并查集"><a href="#带权并查集" class="headerlink" title="带权并查集"></a>带权并查集</h1><p>带权并查集就有这么一个作用，它可以记录下每个结点相对于根结点的距离。</p>
-<p>普通并查集,通过一个<code>fa</code>数组储存其父结点，经过路径压缩可以让同一个集合里的结点指向同一个根结点：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x] = (fa[x] == x) ? x : find(fa[x]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>而带权并查集加入了<code>d</code>数组记录距离:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br></pre></td></tr></table></figure>
-<h2 id="查找函数"><a href="#查找函数" class="headerlink" title="查找函数"></a>查找函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>用下图做示例，将 $3$ 到 $1$ 的路径压缩</p>
-<center>
-    <img src="/2020/07/28/带权并查集/3.drawio.svg" width=50>
-</center>
-
-<ol>
-<li>记录 $3$ 的父结点 ： $oldFa \gets 2$</li>
-<li>更改 $3$ 的父结点为根结点 $fa[3] \gets 1$</li>
-<li>$3$ 到现在的父结点的距离就为 $3$ 到 $oldFa(2)$ 的距离加上 $oldFa$ 到根结点的距离： $d[3] \gets 3 + 4$。</li>
-</ol>
-<center>
-    <img src="/2020/07/28/带权并查集/4.drawio.svg" width=150>
-</center>
-
-<h2 id="合并函数"><a href="#合并函数" class="headerlink" title="合并函数"></a>合并函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这个函数的作用，是将 <code>x</code> 所在分支合并到 <code>y</code> 所在分支。</p>
-<p>以下图为例，$1$、$2$ 为一个分支，$3$、$4$ 为一个分支，已知 $2$ 和 $4$ 的距离是 3 目的是将 $4$ 所在分支合并到 $2$ 所在分支。。</p>
-<center>
-    <img src="/2020/07/28/带权并查集/5.drawio.svg" width=200>
-</center>
-
-<ol>
-<li>将 $3$ 的父结点设为 $1$ ： $fa[3] \gets 1$</li>
-<li>计算 $3$ 到 $1$ 的距离</li>
-</ol>
-<p>如何计算$3$ 到 $1$ 的距离呢。可以设想一下合并后的图形，应有如下规律</p>
-<script type="math/tex; mode=display">dist(4,3) + dist(3,1) = dist(4,2) + dist(2,1)</script><p>$dist(x,y)$ 表示 $x$ 到 $y$ 的距离。那么可以得出</p>
-<script type="math/tex; mode=display">dist(3,1) = - dist(4,3) + dist(4,2) + dist(2,1)</script><p>这样就合并完了。之后在查找的时候会自动路径压缩.</p>
-<center>
-    <img src="/2020/07/28/带权并查集/6.drawio.svg" width=200>
-</center>
-
-<h2 id="计算距离"><a href="#计算距离" class="headerlink" title="计算距离"></a>计算距离</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>只要将两者到根结点的距离相减就得到啦</p>
-<h2 id="完整模板"><a href="#完整模板" class="headerlink" title="完整模板"></a>完整模板</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = d[x] + d[oldFa];</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = -d[x] + d[y] + w;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> d[x] - d[y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h1><p>带权并查集可以很容易地知道两点的距离，不过依照题意，只有 $A$、$B$、$C$三种动物，所以距离只能在 0,1,2 里取，只要将模板里的距离都 $ \mod 3 $ 就可以了。<br>比如在 $A \to B \to C \to A$，这个食物链里，$dist(B,A) = 1$ 表示 $A$ 捕食 $B$，$dist(C,A) = 2$ 表示 $C$ 捕食 $A$，如果算出来距离等于0的话，就表示两者是同类。</p>
-<p>代码<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXN 50005</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fa[MAXN],d[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(fa[x] == x) <span class="keyword">return</span> x;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> oldFa = fa[x];</span><br><span class="line">        fa[x] = find(oldFa);</span><br><span class="line">        d[x] = (d[x] + d[oldFa]) % <span class="number">3</span>;</span><br><span class="line">        <span class="keyword">return</span> fa[x];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y,<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax == fay) <span class="keyword">return</span>;</span><br><span class="line">    fa[fax] = fay;</span><br><span class="line">    d[fax] = (-d[x] + d[y] + w + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dist</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">    <span class="keyword">if</span>(fax != fay) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> (d[x] - d[y] + <span class="number">3</span>) % <span class="number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n,k,ans = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;k);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span> ;i &lt;= n;i++) fa[i] = i;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; k ;i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> o,x,y;</span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;o,&amp;x,&amp;y);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(x &gt; n || y &gt; n) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(o == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">0</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span>(x == y) &#123;ans++;<span class="keyword">continue</span>;&#125;</span><br><span class="line">            <span class="keyword">int</span> fax = find(x),fay = find(y);</span><br><span class="line">            <span class="keyword">if</span>(fax != fay) merge(x,y,<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(dist(x,y) != <span class="number">1</span>) ans++;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%d"</span>,ans);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-
-                                                                        
+                                                    <p>相比普通并查集，带权并查集记录了结点到根的距离，可以用来解决某些求路径长度的问题<br>
+                                                        
+                                                            <a class="article-more-link" href="/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="ckdrgl81j000271sb92ot17ok" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/" data-id="cked0j6420007txsbefoy9dik" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -595,39 +350,16 @@
                                             
 
                                                 
-                                                                    <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p><strike>安装Linux的时候我已经做好不打游戏的打算了</strike>，nvidia 的驱动安装起来真的麻烦。最近要安装 nvidia 驱动的原因是，开始搞机器学习了。这坎还是要过的。安装过程太痛苦了，踩了很多坑，这篇博文收集了网络上的各种安装驱动的资讯，记录安装过程。</p>
-<p>本机的系统是 ArchLinux，显卡为 NVIDIA GeForce MX250，窗体管理器为 LightDM。</p>
-<p>命令主要都由<code>sudo</code>运行，或者可以直接全程以root用户执行。</p>
-<h1 id="2-主要参考的博客"><a href="#2-主要参考的博客" class="headerlink" title="2.主要参考的博客"></a>2.主要参考的博客</h1><p>感谢这些博客积累下来的经验</p>
-<p><a href="https://juejin.im/entry/5d4275f9f265da03ab422cdb" target="_blank" rel="noopener">Archlinux安装NVIDIA1050Ti显卡驱动</a><br><a href="http://ivo-wang.github.io/2018/02/18/a/" target="_blank" rel="noopener">ivo Blog - archlinux 笔记本安装nvidia显卡驱动与intel显卡驱动</a><br><a href="https://blogs.gorquan.cn/2019/07/29/yuque/Ubuntu%E4%B8%8BNVIDIA%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%A4%84%E7%90%86/#M3fMb" target="_blank" rel="noopener">gorquan’s Blog - Ubuntu下NVIDIA显卡驱动处理</a><br><a href="https://blog.lilydjwg.me/tag/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8" target="_blank" rel="noopener">依云’s Blog - NVIDIA PRIME 配置笔记</a></p>
-<h1 id="3-一些准备"><a href="#3-一些准备" class="headerlink" title="3.一些准备"></a>3.一些准备</h1><h2 id="3-1-关闭桌面环境"><a href="#3-1-关闭桌面环境" class="headerlink" title="3.1.关闭桌面环境"></a>3.1.关闭桌面环境</h2><p>为了防止不必要的麻烦，先关闭图形界面，先按<code>Ctrl + Alt + F2</code>进入 <code>tty2</code>，然后执行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl stop lightdm</span><br></pre></td></tr></table></figure><br>执行完后桌面服务会被关闭</p>
-<h2 id="3-2-禁用开源-nouveau-驱动"><a href="#3-2-禁用开源-nouveau-驱动" class="headerlink" title="3.2.禁用开源 nouveau 驱动"></a>3.2.禁用开源 nouveau 驱动</h2><p>编辑<code>/etc/modprobe.d/nouveau_blacklist.conf</code><br>加入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau</span><br><span class="line">options nouveau modeset&#x3D;0</span><br></pre></td></tr></table></figure></p>
-<h1 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h1><p>执行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S nvidia nvidia-libgl xorg-xrandr nvidia-utils nvidia-settings nvidia-prime</span><br></pre></td></tr></table></figure><br>其中</p>
-<blockquote>
-<p><code>nvidia</code>： nvidia 的驱动<br><code>nvidia-libgl</code>： OpenGL的库<br><code>xorg-xrandr</code>： 用于显示设置<br><code>nvidia-utils</code>： NVIDIA drivers utilities<br><code>nvidia-settings</code>： 用于配置显卡<br><code>nvidia-prime</code>： 用于显卡的切换</p>
-</blockquote>
-<h1 id="5-配置"><a href="#5-配置" class="headerlink" title="5.配置"></a>5.配置</h1><p><em>！配置的步骤比较重要，配置不当会导致黑屏，lightdm无法启动等问题</em></p>
-<h2 id="5-1-查看显卡的BusID"><a href="#5-1-查看显卡的BusID" class="headerlink" title="5.1.查看显卡的BusID"></a>5.1.查看显卡的BusID</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lspci | grep -E "VGA|3D"</span><br></pre></td></tr></table></figure>
-<p>执行此命令后会出现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 620 (rev 07)</span><br><span class="line">01:00.0 3D controller: NVIDIA Corporation GP108BM [GeForce MX250] (rev a1)</span><br></pre></td></tr></table></figure><br>记住<code>00:02.0</code>和<code>01:00.0</code>这两串数字（读者显卡的BusID可能不一样），分别是intel集显和NVIDIA独显的BusID。待会会用到。</p>
-<h2 id="5-2-编辑xorg-conf文件"><a href="#5-2-编辑xorg-conf文件" class="headerlink" title="5.2.编辑xorg.conf文件"></a>5.2.编辑xorg.conf文件</h2><p>编辑<code>/etc/X11/xorg.conf</code>文件，如果没有的话使用<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo nvidia-xconfig</span><br></pre></td></tr></table></figure><br>生成此文件</p>
-<p>开始编辑文件，用习惯的文本编辑器。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/X11/xorg.conf</span><br></pre></td></tr></table></figure></p>
-<p>要往文件中追加这些内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Section &quot;Module&quot;</span><br><span class="line">	Load           &quot;modesetting&quot;</span><br><span class="line">EndSection</span><br><span class="line"></span><br><span class="line">Section &quot;Device&quot;</span><br><span class="line">	Identifier     &quot;nvidia&quot;</span><br><span class="line">	Driver         &quot;nvidia&quot;</span><br><span class="line">	BusID          &quot;PCI:1:0:0&quot; #!!!这句是要改的</span><br><span class="line">	Option         &quot;AllowEmptyInitialConfiguration&quot;</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure><br>BusId是根据上面用<code>lspci</code>指令读到的NVIDIA显卡的ID而定，比如我的是<code>01:00.0</code>，那就写成 <code>&quot;PCI:1:0:0&quot;</code>，读者可以根据此格式更改。</p>
-<h2 id="5-3-配置lightdm"><a href="#5-3-配置lightdm" class="headerlink" title="5.3.配置lightdm"></a>5.3.配置lightdm</h2><p><em>！如果不是使用lightdm，可以参考上面所列举的博客</em></p>
-<p>编辑<code>/etc/lightdm/display_setup.sh</code>文件，这个文件是需要手动创建的<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/lightdm/display_setup.sh</span><br></pre></td></tr></table></figure><br>往文件中写入<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xrandr --setprovideroutputsource modesetting NVIDIA-0</span><br><span class="line">xrandr --auto</span><br></pre></td></tr></table></figure><br>编辑<code>/etc/lightdm/lightdm.conf</code>文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/lightdm/lightdm.conf</span><br></pre></td></tr></table></figure><br>找到<code>display-setup-script</code>所在行，把注释取消，改为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">display-setup-script&#x3D;&#x2F;etc&#x2F;lightdm&#x2F;display_setup.sh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p><code>vim</code>用户可以使用<br><code>/display-setup-script</code><br>指令来找到这行</p>
-</blockquote>
-<h1 id="6-重启"><a href="#6-重启" class="headerlink" title="6.重启"></a>6.重启</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shutdown -r now</span><br></pre></td></tr></table></figure>
-<p>理论上重启就能用了，如果没有进入桌面，按 <code>Ctrl + Alt + F2</code>进入<code>tty2</code><br>编辑<code>/etc/X11/xorg.conf.d/intel.conf</code>，这个文件也是要手动创建的<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/X11/xorg.conf.d/intel.conf</span><br></pre></td></tr></table></figure><br>加入：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Section &quot;Device&quot;</span><br><span class="line">    Identifier &quot;intel&quot;</span><br><span class="line">    Driver &quot;modesetting&quot;</span><br><span class="line">    BusID &quot;PCI:0:2:0&quot; #!!!这句需要更改</span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure><br>将集显的BusID用相应格式更改，然后重启。</p>
-<h1 id="7-检验"><a href="#7-检验" class="headerlink" title="7.检验"></a>7.检验</h1><p>使用<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure><br>如果出现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 440.100      Driver Version: 440.100      CUDA Version: 10.2     |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage&#x2F;Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|</span><br><span class="line">|   0  GeForce MX250       Off  | 00000000:01:00.0 Off |                  N&#x2F;A |</span><br><span class="line">| N&#x2F;A   37C    P8    N&#x2F;A &#x2F;  N&#x2F;A |     14MiB &#x2F;  2002MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                               </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID   Type   Process name                             Usage      |</span><br><span class="line">|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|</span><br><span class="line">|    0       732      G   &#x2F;usr&#x2F;lib&#x2F;Xorg                                 14MiB |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
-<p>说明驱动已经成功安装，并且正在用NVIDIA显卡运行桌面。</p>
-<h1 id="8-用-NVIDIA-显卡运行程序"><a href="#8-用-NVIDIA-显卡运行程序" class="headerlink" title="8.用 NVIDIA 显卡运行程序"></a>8.用 NVIDIA 显卡运行程序</h1><p>由于系统默认使用集显运行程序，所以运行程序时还需要配置一些变量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__NV_PRIME_RENDER_OFFLOAD&#x3D;1</span><br><span class="line">__GLX_VENDOR_LIBRARY_NAME&#x3D;nvidia</span><br></pre></td></tr></table></figure><br>用这些变量可以指定用 NVIDIA 显卡运行程序<br>为了方便起见，使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias nvrun&#x3D;&quot;__NV_PRIME_RENDER_OFFLOAD&#x3D;1 __GLX_VENDOR_LIBRARY_NAME&#x3D;nvidia&quot;</span><br></pre></td></tr></table></figure><br>这样以来就可以使用<code>nvrun</code>运行程序了。</p>
-<p>比如要运行 minecraft 就可以使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvrun minecraft-launcher</span><br></pre></td></tr></table></figure><br>进入 minecraft 后按<code>F3</code>可以打开调试信息，看到显卡信息为 NVIDIA Corporation，说明此时正在用独显运行。</p>
-
-                                                                        
+                                                    <p>Linux安装显卡驱动一直是一个很麻烦的事，这篇文章是一个经验贴，安装nvdia驱动，并且安装cuda<br>
+                                                        
+                                                            <a class="article-more-link" href="/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="ckdrgl81l000371sbg0gvaj36" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="cked0j63f0000txsb6j6t24xk" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -680,90 +412,16 @@
                                             
 
                                                 
-                                                                    <h1 id="复平面"><a href="#复平面" class="headerlink" title="复平面"></a>复平面</h1><p>如何表示平面中的一个点呢。我们都学过 $ (2,3) $ 表示平面上往 $x$ 方向偏移 $2$ 个单位长度，往 $y$ 方向偏移 $3$ 个单位长度，就对应 $\left\{\begin{matrix} x=2\\ y=3 \end{matrix}\right.$ 这个点。</p>
-<p>$x$ 方向的单位向量，记为 $\vec{i}$, $y$ 方向的单位向量，记为 $\vec{j}$,是这个平面的<strong>基</strong>，这样一个向量就可以用这两个基来表示：</p>
-<script type="math/tex; mode=display">\vec{v} = a\cdot\vec{i} + b\cdot\vec{j}</script><p>我们如果把基替换一下，使用 $1$ 和 $i$ 这两个数，</p>
-<script type="math/tex; mode=display">z = a \cdot 1 + b \cdot i</script><p>就可以用一个复数表示平面上的点，这个以 $1$ 和 $i$ 为基的平面，称为<strong>复平面</strong>。<br>实平面上的代数结构也可以原封不动的套用到复平面上。</p>
-<h1 id="欧拉公式"><a href="#欧拉公式" class="headerlink" title="欧拉公式"></a>欧拉公式</h1><p>欧拉公式指出</p>
-<script type="math/tex; mode=display">e^{ix} = \cos{x} + i\sin{x}</script><p>这个公式可以由三角函数的级数展开证明，详情可以看<a href="https://zhuanlan.zhihu.com/p/42639576" target="_blank" rel="noopener">jRONI的知乎文章</a>。</p>
-<div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/Euler's_formula.svg" width=250>
-    <div style="color:gray"><font size=2>图一：图片原作者：Gunther</font></div>
-</div>
-
-<p>如图所示，利用欧拉公式，可以把一个数映射到复平面上的一个点，比如 $\phi$ 可以映射到 $(\cos{\phi},\sin{\phi})$ ,而反过来也可以把 $\cos{\phi}$ 和 $sin{\phi}$ 合起来用一个 $e^{i\phi}$ 来表示，这个特性将在下面用到。</p>
-<h1 id="傅立叶级数的指数形式"><a href="#傅立叶级数的指数形式" class="headerlink" title="傅立叶级数的指数形式"></a>傅立叶级数的指数形式</h1><p>函数利用傅立叶变换可以展开成如下形式</p>
-<script type="math/tex; mode=display">f(x) = \frac{A_0}{2} + \sum_{k=1}^{\infty} a_k \cos(k{\color{Tan} \omega_1} ) + b_k \sin(k{\color{Tan} \omega_1} )</script><p>将 $\cos()$ 和 $\sin()$ 项合并</p>
-<script type="math/tex; mode=display">\begin{align}
-        f(x) & =  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Red} a_k} \cos(k{\color{Tan} \omega_1} ) + {\color{Blue} b_k} \sin(k{\color{Tan} \omega_1} ) \\
-        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \sqrt{ {\color{Red} a_k }^2 + {\color{Blue} b_k}^2 }\cos(k{\color{Tan} \omega_1} + \arctan(-\frac{\color{Blue}b_k}{\color{Red}a_k} ) ) \\
-        &=  \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color{Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )
-    \end{align}</script><div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/Akm_ak_bk.drawio.svg" width=300>
-    <div style="color:gray"><font size=2>图二：A<sub>km</sub>, a<sub>k</sub>, b<sub>k</sub> 和 ϕ<sub>k</sub> 的关系 </font></div>
-</div>
-
-<p><br></p>
-<p>反向利用欧拉公式，可以凑出</p>
-<script type="math/tex; mode=display">\begin{align}
-        f(x) & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} {\color    {Purple} A_{km} } \cos(k{\color{Tan} \omega_1} + {\color{Violet} \phi_k} )\\
-        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} \frac{1}{2} {\color{Purple} A_{km} } (e^{j(kw_1t+{\color{Violet}\phi_k)} }+e^{-j(k{\color{Tan} \omega_1}t+{\color{Violet} \phi_k})}) \\
-        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} (\frac{1}{2} {\color{Purple} A_{km} } e^{\color{Violet} \phi_k}e^{jk{\color{Tan} \omega_1}t} + \frac{1}{2}{\color{Purple} A_{km} } e^{-\color{Violet} \phi_k}e^{-jk{\color{Tan} \omega_1}t}) \\
-        & = \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t})
-\end{align}</script><p>通过以上过程可以得出</p>
-<ul>
-<li>${\color{Purple} A_{km} }$ 表示展开后各项（各个频率）对应的<strong>幅值</strong></li>
-<li>${\color{Violet} \phi_k}$ 表示了以 $\cos(0)$ 为基准的<strong>相位</strong></li>
-<li>$e^{jk{\color{Tan} \omega_1}t}$ 可以表示 以 $\cos(0)$ 为基准，<em>逆时针</em>为正方向旋转的向量，$e^{-jk{\color{Tan} \omega_1}t}$则相反，是往<em>顺时针</em>为正方向旋转的向量。${\color{Orange} c_k}$ 和 ${\color{Orange} c^{*}_k}$ 则表示向量<strong>向其对应正方向偏移的角度</strong>，以及<strong>对应幅值的信息</strong>。<br>下面讲如何得出各项系数<br>由图二可以很容易得出 $\left\{\begin{matrix} {\color{Purple} A_{km} }\cos(\phi_k)={\color{Red}a_k},\\ {\color{Purple} A_{km} }\sin(\phi_k)=-{\color{Blue}b_k} \end{matrix}\right.$<br>所以<script type="math/tex; mode=display">{\color{Purple} A_{km} } e^{\color{Violet} \phi_k} = {\color{Purple} A_{km} }(\cos(\phi_k)+i\sin(\phi_k)) = {\color{Red}a_k} -i{\color{Blue}b_k}</script></li>
-</ul>
-<p>接着套用三角函数形式中得出 $a_k$ 和 $b_k$ 的公式。</p>
-<script type="math/tex; mode=display">\begin{align}
-        {\color{Orange} c_k} &= \frac{1}{2}{\color{Purple} A_{km} }e^{ {\color{Violet} \phi_k} }  \\
-        &= \frac{1}{2}({\color{Red} a_k} - i{\color{Blue}b_k })  \\
-        &= \frac{1}{T} \int_{0}^{T}f(t)\cos(k{\color{Tan} \omega_1}t)\mathrm{d}t -i\frac{1}{T} \int_{0}^{T}f(t)\sin(k{\color{Tan} \omega_1}t)\mathrm{d}t \\
-        &= \frac{1}{T} \int_{0}^{T}f(t)[\cos(k{\color{Tan} \omega_1}t) - i\sin(k{\color{Tan} \omega_1}t)] \mathrm{d}t  \\
-        &= \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t 
-    \end{align}</script><p>同理可求得</p>
-<script type="math/tex; mode=display">{\color{Orange} c^*_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{jk{\color{Tan} \omega_1} }\mathrm{d}t</script><p>若令 $k \to -k$ 则 ${\color{Orange}c^*_k} \to {\color{Orange}c_k}$<br>则</p>
-<script type="math/tex; mode=display">\begin{align}
-        f(x) &= \frac{A_0}{2} + \sum_{k  =  1}^{\infty} ({\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t} + {\color{Orange} c^*_k} e^{-jk{\color{Tan} \omega_1}t}) \\
-        &= \sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
-    \end{align}</script><p>最终形式</p>
-<script type="math/tex; mode=display">\left\{\begin{matrix}
-        {\color{Orange} c_k} = \frac{1}{T} \int_{0}^{T}f(t) e^{-jk{\color{Tan} \omega_1} }\mathrm{d}t \\\\
-        f(x) =\sum_{k = -\infty}^{\infty} {\color{Orange} c_k} e^{jk{\color{Tan} \omega_1}t}
-    \end{matrix}\right.</script><h1 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h1><div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/fun.png" width=400 height=375>
-    <div style="color:gray"><font size=2>图三：一个函数实例 </font></div>
-</div>
-<br>
-
-现在给出一个函数 $y=x$ ,周期为 2.
-
-经过计算可以得到
-
-$$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}{k\pi} $$
-
-可以看出这是一个复数,包含了幅值和初相位的信息，取 $c_k$ 的模 $|c_k|$ 作为每个频率分量的幅值，$c_k$ 的幅角 $\phi_k$为每个频率分量的初相位。
-
-可以画出其幅度谱和相位谱，
-
-
-<div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/幅度谱.drawio.svg" width=400 height=375>
-    <div style="color:gray"><font size=2>图四：幅度谱 </font></div>
-</div>
-<div align="center">
-    <img src="/2020/06/11/指数形式的傅立叶变换/相位谱.drawio.svg" width=400 height=375>
-    <div style="color:gray"><font size=2>图五：相位谱 </font></div>
-</div>
-
-<p>如果要做单边的幅度谱，只需把图四中的纵坐标改为 $A_{km}$ ，然后每条谱线改为原来的两倍，（$ A_{km} = 2 |c_k|$）。单边相位谱只保留 $x$ 正半轴部分。</p>
-
-                                                                        
+                                                    <p>在信号与系统中傅立叶变换是一个绕不开的问题，本文介绍了傅立叶变换的指数形式，希望能加深对它的理解<br>
+                                                        
+                                                            <a class="article-more-link" href="/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/">
+                                                                Read More...
+                                                            </a>
+                                                            
+                                                                
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="ckdrgl81o000571sbaj7lhs0f" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" data-id="cked0j6450009txsb5xnka574" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -827,7 +485,7 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/06/07/Hello-World/" data-id="ckdrgl819000071sb5890636v" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/06/07/Hello-World/" data-id="cked0j63q0002txsbdxyd08ln" class="article-share-link">
                                             分享
                                         </a>
                                         

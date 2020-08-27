@@ -80,7 +80,8 @@
                                             
 
                                                 
-                                                                    <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p><strike>安装Linux的时候我已经做好不打游戏的打算了</strike>，nvidia 的驱动安装起来真的麻烦。最近要安装 nvidia 驱动的原因是，开始搞机器学习了。这坎还是要过的。安装过程太痛苦了，踩了很多坑，这篇博文收集了网络上的各种安装驱动的资讯，记录安装过程。</p>
+                                                                    <p>Linux安装显卡驱动一直是一个很麻烦的事，这篇文章是一个经验贴，安装nvdia驱动，并且安装cuda<br><a id="more"></a></p>
+<h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p><strike>安装Linux的时候我已经做好不打游戏的打算了</strike>，nvidia 的驱动安装起来真的麻烦。最近要安装 nvidia 驱动的原因是，开始搞机器学习了。这坎还是要过的。安装过程太痛苦了，踩了很多坑，这篇博文收集了网络上的各种安装驱动的资讯，记录安装过程。</p>
 <p>本机的系统是 ArchLinux，显卡为 NVIDIA GeForce MX250，窗体管理器为 LightDM。</p>
 <p>命令主要都由<code>sudo</code>运行，或者可以直接全程以root用户执行。</p>
 <h1 id="2-主要参考的博客"><a href="#2-主要参考的博客" class="headerlink" title="2.主要参考的博客"></a>2.主要参考的博客</h1><p>感谢这些博客积累下来的经验</p>
@@ -112,7 +113,7 @@
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="ckecqdliz0001zcsbbrfa1hwn" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" data-id="cked0j63f0000txsb6j6t24xk" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -319,5 +320,27 @@
 
 <script src="/js/ocean.js"></script>
 
+<!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:11
+ * @Description: file content
+-->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 </html>

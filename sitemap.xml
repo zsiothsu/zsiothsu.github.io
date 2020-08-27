@@ -2,23 +2,44 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://chipensblog.tk/about/index.html</loc>
+    <loc>http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</loc>
     
-    <lastmod>2020-08-27T16:12:13.222Z</lastmod>
+    <lastmod>2020-08-27T16:30:20.702Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://chipensblog.tk/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/</loc>
+    <loc>http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/</loc>
     
-    <lastmod>2020-08-27T15:25:24.992Z</lastmod>
+    <lastmod>2020-08-27T16:29:15.991Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://chipensblog.tk/2020/08/05/%E7%BC%A9%E7%82%B9/</loc>
     
-    <lastmod>2020-08-27T14:23:38.247Z</lastmod>
+    <lastmod>2020-08-27T16:27:52.357Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://chipensblog.tk/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/</loc>
+    
+    <lastmod>2020-08-27T16:26:30.995Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://chipensblog.tk/2020/08/27/%E5%8C%88%E7%89%99%E5%88%A9%E7%AE%97%E6%B3%95/</loc>
+    
+    <lastmod>2020-08-27T16:25:46.253Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://chipensblog.tk/about/index.html</loc>
+    
+    <lastmod>2020-08-27T16:12:13.222Z</lastmod>
     
   </url>
   
@@ -33,27 +54,6 @@
     <loc>http://chipensblog.tk/tags/index.html</loc>
     
     <lastmod>2020-08-06T03:37:10.381Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://chipensblog.tk/2020/07/28/%E5%B8%A6%E6%9D%83%E5%B9%B6%E6%9F%A5%E9%9B%86/</loc>
-    
-    <lastmod>2020-08-06T01:48:59.804Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://chipensblog.tk/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/</loc>
-    
-    <lastmod>2020-07-29T08:38:43.220Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://chipensblog.tk/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</loc>
-    
-    <lastmod>2020-07-04T15:27:09.186Z</lastmod>
     
   </url>
   
