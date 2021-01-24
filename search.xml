@@ -36,6 +36,7 @@
       <tags>
         <tag>机器学习</tag>
         <tag>cuda</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -500,7 +501,21 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
 <p><sup><a href="#fn_1" id="reffn_1">1</a></sup>:<a href="https://www.cnblogs.com/missmzt/p/5408351.html" target="_blank" rel="noopener">linux sighup 信号 - 博客园</a></p>
 ]]></content>
       <tags>
-        <tag>linux</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>用Linux学习应该养成的好习惯</title>
+    <url>/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/</url>
+    <content><![CDATA[<p>在用Linux（特别是arch）的时候，比较折腾的一件事就是开发软件的问题，python3.8用着挺正常，3.9 一出就很头疼，一些库还得重新安装。或者是Linux内核的更新让虚拟机炸了，卸载又很难卸……<br><a id="more"></a></p>
+<p>为了避免这些问题就要养成特别强迫症的习惯。由于上面的原因，以及后悔装了DDE，让我把用了一年的 Arch 重装了。这次比较注重这几个点（以下全指学习的环境，生产过程要考虑实际情况）：</p>
+<h2 id="包管理器"><a href="#包管理器" class="headerlink" title="包管理器"></a>包管理器</h2><p>软件能在系统自带包管理器（pacman或者aur）找到的就直接用包管理器安装，用脚本或者编译安装的，更新和卸载都会很麻烦，比如vmware，卸载时需要保留安装包。</p>
+<h2 id="虚拟环境"><a href="#虚拟环境" class="headerlink" title="虚拟环境"></a>虚拟环境</h2><p>对于mysql这种包管理器找不到的软件，可以考虑安装在Docker里，一是省去了安装的流程，二是损坏了之后可以快速地重新部署，更重要的是可以和宿主系统隔离，解决一些版本问题也会比较容易</p>
+<h2 id="版本共存"><a href="#版本共存" class="headerlink" title="版本共存"></a>版本共存</h2><p>python，java，gcc等，这些在开发过程中都会碰到版本冲突的问题.用现成的方案解决，比如在 archlinux 下，用 conda 创建 python 的虚拟环境使得各版本 python 共存，或是用 <code>archlinux-java</code> 指令选择 java 版本。不要尝试通过卸载和安装来控制版本。</p>
+<h2 id="折腾"><a href="#折腾" class="headerlink" title="折腾"></a>折腾</h2><p>碰到问题记得google，不要急着卸载。</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
 </search>

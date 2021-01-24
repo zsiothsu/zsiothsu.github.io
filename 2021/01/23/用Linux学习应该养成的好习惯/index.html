@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>
-    Hello World! |
+    用Linux学习应该养成的好习惯 |
     
     Chipen&#39;s blog</title>
   
@@ -35,7 +35,7 @@
  * @Description: file content
 -->
 <section class="outer">
-  <article id="post-Hello-World" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  <article id="post-用Linux学习应该养成的好习惯" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
         
@@ -43,7 +43,7 @@
                 
   
     <h1 class="article-title" itemprop="name">
-      Hello World!
+      用Linux学习应该养成的好习惯
     </h1>
   
   
@@ -56,8 +56,8 @@
 
                 
                     <div class="article-meta">
-                        <a href="/2020/06/07/Hello-World/" class="article-date">
-  <time datetime="2020-06-07T01:07:49.000Z" itemprop="datePublished">2020-06-07</time>
+                        <a href="/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/" class="article-date">
+  <time datetime="2021-01-23T15:51:23.000Z" itemprop="datePublished">2021-01-23</time>
 </a>
                             
                     </div>
@@ -65,6 +65,8 @@
 
                         
                             
+    <div class="tocbot"></div>
+
 
 
 
@@ -78,21 +80,22 @@
                                             
 
                                                 
-                                                                    <p><strong>麦克斯韦方程组镇楼:</strong></p>
-<script type="math/tex; mode=display">\begin{array}{l}  
-        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
-        \nabla \cdot \mathbf{B} = 0 \\  
-        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
-        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
-    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
+                                                                    <p>在用Linux（特别是arch）的时候，比较折腾的一件事就是开发软件的问题，python3.8用着挺正常，3.9 一出就很头疼，一些库还得重新安装。或者是Linux内核的更新让虚拟机炸了，卸载又很难卸……<br><a id="more"></a></p>
+<p>为了避免这些问题就要养成特别强迫症的习惯。由于上面的原因，以及后悔装了DDE，让我把用了一年的 Arch 重装了。这次比较注重这几个点（以下全指学习的环境，生产过程要考虑实际情况）：</p>
+<h2 id="包管理器"><a href="#包管理器" class="headerlink" title="包管理器"></a>包管理器</h2><p>软件能在系统自带包管理器（pacman或者aur）找到的就直接用包管理器安装，用脚本或者编译安装的，更新和卸载都会很麻烦，比如vmware，卸载时需要保留安装包。</p>
+<h2 id="虚拟环境"><a href="#虚拟环境" class="headerlink" title="虚拟环境"></a>虚拟环境</h2><p>对于mysql这种包管理器找不到的软件，可以考虑安装在Docker里，一是省去了安装的流程，二是损坏了之后可以快速地重新部署，更重要的是可以和宿主系统隔离，解决一些版本问题也会比较容易</p>
+<h2 id="版本共存"><a href="#版本共存" class="headerlink" title="版本共存"></a>版本共存</h2><p>python，java，gcc等，这些在开发过程中都会碰到版本冲突的问题.用现成的方案解决，比如在 archlinux 下，用 conda 创建 python 的虚拟环境使得各版本 python 共存，或是用 <code>archlinux-java</code> 指令选择 java 版本。不要尝试通过卸载和安装来控制版本。</p>
+<h2 id="折腾"><a href="#折腾" class="headerlink" title="折腾"></a>折腾</h2><p>碰到问题记得google，不要急着卸载。</p>
 
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2020/06/07/Hello-World/" data-id="cked0j63q0002txsbdxyd08ln" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/" data-id="ckkaq2evv0000arlv9xxd9s1d" class="article-share-link">
                                             分享
                                         </a>
                                         
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
                                     </footer>
 
     </div>
@@ -101,15 +104,11 @@
         
   <nav class="article-nav">
     
-      <a href="/2020/06/11/%E6%8C%87%E6%95%B0%E5%BD%A2%E5%BC%8F%E7%9A%84%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E6%8D%A2/" class="article-nav-link">
-        <strong class="article-nav-caption">前一篇</strong>
-        <div class="article-nav-title">
-          
-            指数形式的傅立叶变换
-          
-        </div>
-      </a>
     
+      <a href="/2020/11/16/Linux-%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">Linux 后台运行程序</div>
+      </a>
     
   </nav>
 
