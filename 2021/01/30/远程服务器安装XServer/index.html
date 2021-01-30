@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>
-    用Linux学习应该养成的好习惯 |
+    远程服务器安装XServer |
     
     Chipen&#39;s blog</title>
   
@@ -35,7 +35,7 @@
  * @Description: file content
 -->
 <section class="outer">
-  <article id="post-用Linux学习应该养成的好习惯" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  <article id="post-远程服务器安装XServer" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
         
@@ -43,7 +43,7 @@
                 
   
     <h1 class="article-title" itemprop="name">
-      用Linux学习应该养成的好习惯
+      远程服务器安装XServer
     </h1>
   
   
@@ -56,8 +56,8 @@
 
                 
                     <div class="article-meta">
-                        <a href="/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/" class="article-date">
-  <time datetime="2021-01-23T15:51:23.000Z" itemprop="datePublished">2021-01-23</time>
+                        <a href="/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/" class="article-date">
+  <time datetime="2021-01-30T06:37:18.000Z" itemprop="datePublished">2021-01-30</time>
 </a>
                             
                     </div>
@@ -80,17 +80,21 @@
                                             
 
                                                 
-                                                                    <p>在用Linux（特别是arch）的时候，比较折腾的一件事就是开发软件的问题，python3.8用着挺正常，3.9 一出就很头疼，一些库还得重新安装。或者是Linux内核的更新让虚拟机炸了，卸载又很难卸……<br><a id="more"></a></p>
-<p>为了避免这些问题就要养成特别强迫症的习惯。由于上面的原因，以及后悔装了DDE，让我把用了一年的 Arch 重装了。这次比较注重这几个点（以下全指学习的环境，生产过程要考虑实际情况）：</p>
-<h2 id="包管理器"><a href="#包管理器" class="headerlink" title="包管理器"></a>包管理器</h2><p>软件能在系统自带包管理器（pacman或者aur）找到的就直接用包管理器安装，用脚本或者编译安装的，更新和卸载都会很麻烦，比如vmware，卸载时需要保留安装包。</p>
-<h2 id="虚拟环境"><a href="#虚拟环境" class="headerlink" title="虚拟环境"></a>虚拟环境</h2><p>对于mysql这种包管理器找不到的软件，可以考虑安装在Docker里，一是省去了安装的流程，二是损坏了之后可以快速地重新部署，更重要的是可以和宿主系统隔离，解决一些版本问题也会比较容易</p>
-<h2 id="版本共存"><a href="#版本共存" class="headerlink" title="版本共存"></a>版本共存</h2><p>python，java，gcc等，这些在开发过程中都会碰到版本冲突的问题.用现成的方案解决，比如在 archlinux 下，用 conda 创建 python 的虚拟环境使得各版本 python 共存，或是用 <code>archlinux-java</code> 指令选择 java 版本。不要尝试通过卸载和安装来控制版本。</p>
-<h2 id="折腾"><a href="#折腾" class="headerlink" title="折腾"></a>折腾</h2><p>碰到问题记得google，不要急着卸载。</p>
+                                                                    <p>Ubuntu 远程服务器安装 XServer</p>
+<a id="more"></a>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>当然远程服务器是不需要图形界面的，但最近在服务器做操作系统的实验，需要用到虚拟机，而虚拟机需要有图形界面做虚拟显示器，所以就需要安装 XServer 来运行这个虚拟机。</p>
+<p>服务器系统为 Ubuntu 16.04,使用下面的指令安装 XServer：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line">apt-get install xorg dbus-x11 x11-xserver-utils</span><br></pre></td></tr></table></figure>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>由于只是在做实验的时候使用，这边选择手动启动 XServer<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X &amp;</span><br></pre></td></tr></table></figure><br>加一个 <code>&amp;</code> 是将 XServer 放在后台运行，这样的话你可以继续使用当前的终端</p>
+<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><p>使用<code>jobs</code>来查看当前在运行的后台服务<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">jobs</span> </span></span><br><span class="line">[1]  + running    X</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>kill %序号</code> 可以将 XServer 关闭<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill %1</span><br></pre></td></tr></table></figure></p>
+<h1 id="ssh连接远程服务器"><a href="#ssh连接远程服务器" class="headerlink" title="ssh连接远程服务器"></a>ssh连接远程服务器</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -X user@host</span><br></pre></td></tr></table></figure>
+<p>在 ssh 的基础上加一个 <code>-X</code> 参数，可以将远程的 X11 图形界面转发至本地</p>
 
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/" data-id="ckkaq2evv0000arlv9xxd9s1d" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/" data-id="ckkjd2k3h0000wolv1y5f5oqd" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -104,19 +108,10 @@
         
   <nav class="article-nav">
     
-      <a href="/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/" class="article-nav-link">
-        <strong class="article-nav-caption">前一篇</strong>
-        <div class="article-nav-title">
-          
-            远程服务器安装XServer
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/11/16/Linux-%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F/" class="article-nav-link">
+      <a href="/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/" class="article-nav-link">
         <strong class="article-nav-caption">后一篇</strong>
-        <div class="article-nav-title">Linux 后台运行程序</div>
+        <div class="article-nav-title">用Linux学习应该养成的好习惯</div>
       </a>
     
   </nav>

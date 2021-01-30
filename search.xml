@@ -518,4 +518,22 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
         <tag>Linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>远程服务器安装XServer</title>
+    <url>/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/</url>
+    <content><![CDATA[<p>Ubuntu 远程服务器安装 XServer</p>
+<a id="more"></a>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>当然远程服务器是不需要图形界面的，但最近在服务器做操作系统的实验，需要用到虚拟机，而虚拟机需要有图形界面做虚拟显示器，所以就需要安装 XServer 来运行这个虚拟机。</p>
+<p>服务器系统为 Ubuntu 16.04,使用下面的指令安装 XServer：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line">apt-get install xorg dbus-x11 x11-xserver-utils</span><br></pre></td></tr></table></figure>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>由于只是在做实验的时候使用，这边选择手动启动 XServer<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">X &amp;</span><br></pre></td></tr></table></figure><br>加一个 <code>&amp;</code> 是将 XServer 放在后台运行，这样的话你可以继续使用当前的终端</p>
+<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><p>使用<code>jobs</code>来查看当前在运行的后台服务<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">jobs</span> </span></span><br><span class="line">[1]  + running    X</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>kill %序号</code> 可以将 XServer 关闭<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill %1</span><br></pre></td></tr></table></figure></p>
+<h1 id="ssh连接远程服务器"><a href="#ssh连接远程服务器" class="headerlink" title="ssh连接远程服务器"></a>ssh连接远程服务器</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -X user@host</span><br></pre></td></tr></table></figure>
+<p>在 ssh 的基础上加一个 <code>-X</code> 参数，可以将远程的 X11 图形界面转发至本地</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
 </search>
