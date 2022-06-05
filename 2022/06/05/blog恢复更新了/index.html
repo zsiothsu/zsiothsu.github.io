@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>
-    含参量积分的微分 |
+    blog恢复更新了! |
     
     Chipen&#39;s blog</title>
   
@@ -35,7 +35,7 @@
  * @Description: file content
 -->
 <section class="outer">
-  <article id="post-含参量积分的微分" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  <article id="post-blog恢复更新了" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
         
@@ -43,7 +43,7 @@
                 
   
     <h1 class="article-title" itemprop="name">
-      含参量积分的微分
+      blog恢复更新了!
     </h1>
   
   
@@ -56,8 +56,8 @@
 
                 
                     <div class="article-meta">
-                        <a href="/2022/02/23/%E5%90%AB%E5%8F%82%E9%87%8F%E7%A7%AF%E5%88%86%E7%9A%84%E5%BE%AE%E5%88%86/" class="article-date">
-  <time datetime="2022-02-23T12:53:35.000Z" itemprop="datePublished">2022-02-23</time>
+                        <a href="/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/" class="article-date">
+  <time datetime="2022-06-05T14:49:37.000Z" itemprop="datePublished">2022-06-05</time>
 </a>
                             
                     </div>
@@ -65,8 +65,6 @@
 
                         
                             
-    <div class="tocbot"></div>
-
 
 
 
@@ -80,42 +78,25 @@
                                             
 
                                                 
-                                                                    <p>在复习高数的时候对一道对积分的求导有些困惑。想起来之前用到过费曼积分法，但抛开技巧来谈，底层的原理还是要温习一下的，于是写了这篇博客留档。</p>
-<a id="more"></a>
-<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>$f(x) = \int_{1}^{x^2} (x^2 - t)e^{-t^2}\mathrm{d}t$, 求 $f’(x)$</p>
-<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>$\color{red}{以下是错误解法}$</p>
-<p>一看就是个变上限积分，<br>令</p>
-<script type="math/tex; mode=display">h(x,t) = (x^2 - t)e^{-t^2}</script><script type="math/tex; mode=display">\begin{align}
-    f'(x) &= h(x,x^2) \frac{\mathrm{d} x^2}{\mathrm{d}x} + h(x,1) \frac{\mathrm{d} 1}{\mathrm{d}x} \\
-    &= 0
-\end{align}</script><p>好像哪里不太对</p>
-<p>$\color{red}{原因}$</p>
-<p>之前能用变上限积分的式子都是如下形式</p>
-<script type="math/tex; mode=display">\int_{1}^{\sqrt{x}} \sin{t^2} \mathrm{d} t</script><p>可以看到被积函数是不含有参数x的，x只改变了积分的上限<br>但题目$f(x) = \int_{1}^{x^2} (x^2 - t)e^{-t^2}\mathrm{d}t$ 中 $x$ 在被积函数中，可以直接改变 $f$ 的值，（相对于上式通过 $\sqrt{x}$ 间接改变 $f$ 的值）所以用多元函数的写法来看</p>
-<script type="math/tex; mode=display">\begin{align}
-    & f(x,\psi(x),\phi(x)) = \int_{\psi(x)=1}^{\phi(x)=x^2} (x^2 - t)e^{-t^2}\mathrm{d}t \\
-    & f(\psi(x),\phi(x)) = \int_{\psi(x)=1}^{\phi(x)=\sqrt{x}} \sin{t^2} \mathrm{d} t
-\end{align}</script><p>用更一般的写法：</p>
-<script type="math/tex; mode=display">f(x,\psi(x),\phi(x)) = \int_{\psi(x)}^{\phi(x)} h(x,t) \mathrm{d}t</script><p>使用全微分</p>
-<script type="math/tex; mode=display">\begin{align}
-    \frac{\mathrm{d} f(x,\psi(x),\phi(x))}{\mathrm{d} x} &= \frac{\partial f}{\partial x}  + \frac{\partial f}{\partial \psi}\frac{\partial \psi}{\partial x} + \frac{\partial f}{\partial \phi}\frac{\partial \phi}{\partial x} \\
-    &= \int_{\psi(x)}^{\phi(x)} \frac{\partial h}{\partial x} \mathrm{d} t + h(x,\psi)\frac{\partial \psi}{\partial x} + h(x,\phi)\frac{\partial \phi}{\partial x}
-\end{align}</script><p>得到含参量积分的微分公式</p>
-<p>$\color{red}{正确解法}$</p>
-<p>令</p>
-<script type="math/tex; mode=display">h(x,t) = (x^2 - t)e^{-t^2}</script><script type="math/tex; mode=display">\begin{align}
-    f'(x) &= \int_{1}^{x^2} \frac{\partial h}{\partial x}\mathrm{d} t + h(x,x^2) \frac{\mathrm{d} x^2}{\mathrm{d}x} + h(x,1) \frac{\mathrm{d} 1}{\mathrm{d}x} \\
-    &= 2x \int_{1}^{x^2} e^{-t^2} \mathrm{d} t
-\end{align}</script><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>高数中类似这种看一遍忘一遍的点还是挺多的，经常在复习题中超前出现，比如这个多元函数微分学的内容就出现在了一元函数微分学的题目中，在考研一轮复习的背景下还是很容易被打个猝不及防。如果大一的时候有随手留档的习惯就好了。</p>
+                                                                    <a id="more"></a>
+<p>&emsp;&emsp;上一次更新是在2月23日了，到现在为止……过了一个季度<br>&emsp;&emsp;这个blog的定位一直摇摆不定，一开始想作为一个日常记录技术内容的博客，但后来也想要记录一些笔记或瞎想之类的。但写完之后这个博客的内容就显得比较乱的。不过这个博客也就自己一个人在看，应该是不用太在意内容定位问题的。像 <a href="https://nth233.top" target="_blank" rel="noopener">@MrNothing233</a> 说的那样，写一些破事水记录日常就可以了。所以这个博客开始恢复更新了。<br>&emsp;&emsp;目前想要写的内容大概有以下这些：</p>
+<ul>
+<li>AVSI的开发过程记录（一个自制的编译器）</li>
+<li>自己的一些技术类的学习笔记</li>
+<li>西哲和马哲的笔记和思考</li>
+<li>可能偶尔放一些日语和希腊语的学习笔记</li>
+</ul>
+<p>&emsp;&emsp;如果增加了这些内容，博客的主题大概要改一下了，目前使用的主题是 <a href="https://zhwangart.com/2018/11/30/Ocean/" target="_blank" rel="noopener">Ocean</a>。我很喜欢这个简约的主题，但是它缺少了归档目录的功能，只有标签可以区别文章的内容。虽然功能上是一样的，但在逻辑上还是没有办法取代目录这一类似于「文件夹」的定位。所以主题到之后再寻找一下吧。</p>
+<p>&emsp;&emsp;哦对了，这篇博客和之前的文章不太一样，对比一下可以发现现在在段落的前面添加了首行缩进。虽然是一个很小的变化，但在大量阅读文字的情况下，首行缩进显然是有助于区分段落的。使用 <code>&amp;emsp;</code>这个转移字符就可以添加一个全角的空格。在文章开头放两个就能有空两格的效果。</p>
 
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2022/02/23/%E5%90%AB%E5%8F%82%E9%87%8F%E7%A7%AF%E5%88%86%E7%9A%84%E5%BE%AE%E5%88%86/" data-id="ckzzmeo9400072jlv1g9i5wzr" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/" data-id="cl41gobv70000dflv2q039tts" class="article-share-link">
                                             分享
                                         </a>
                                         
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%9E%8E%E6%83%B3/" rel="tag">瞎想</a></li></ul>
 
                                     </footer>
 
@@ -125,19 +106,10 @@
         
   <nav class="article-nav">
     
-      <a href="/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/" class="article-nav-link">
-        <strong class="article-nav-caption">前一篇</strong>
-        <div class="article-nav-title">
-          
-            blog恢复更新了!
-          
-        </div>
-      </a>
     
-    
-      <a href="/2021/03/27/%E7%AC%AC%E4%B8%80%E6%AC%A1-Hack/" class="article-nav-link">
+      <a href="/2022/02/23/%E5%90%AB%E5%8F%82%E9%87%8F%E7%A7%AF%E5%88%86%E7%9A%84%E5%BE%AE%E5%88%86/" class="article-nav-link">
         <strong class="article-nav-caption">后一篇</strong>
-        <div class="article-nav-title">第一次 Hack</div>
+        <div class="article-nav-title">含参量积分的微分</div>
       </a>
     
   </nav>
