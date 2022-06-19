@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    如何避免编译代码造成的电脑卡顿 |
+    
+    Chipen&#39;s blog</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<script src="/js/pace.min.js"></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+<main class="content">
+  <!--
+ * @Author: your name
+ * @Date: 1970-01-01 08:00:00
+ * @LastEditTime: 2020-06-07 15:06:50
+ * @Description: file content
+-->
+<section class="outer">
+  <article id="post-如何避免编译代码造成的电脑卡顿" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+  
+    <h1 class="article-title" itemprop="name">
+      如何避免编译代码造成的电脑卡顿
+    </h1>
+  
+  
+
+
+
+
+            </header>
+            
+
+                
+                    <div class="article-meta">
+                        <a href="/2022/06/18/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81%E9%80%A0%E6%88%90%E7%9A%84%E7%94%B5%E8%84%91%E5%8D%A1%E9%A1%BF/" class="article-date">
+  <time datetime="2022-06-18T15:16:01.000Z" itemprop="datePublished">2022-06-18</time>
+</a>
+                            
+                    </div>
+                    
+
+                        
+                            
+    <div class="tocbot"></div>
+
+
+
+
+
+                                
+
+                                    <div class="article-entry" itemprop="articleBody">
+                                        
+
+
+                                            
+
+                                                
+                                                                    <p>编译大项目（特别是c++项目）时，经常会造成个人电脑卡顿甚至崩溃。而如果是在公共服务器上的话甚至会导致抢占资源。所以需要用一些方法来限制编译的程序。</p>
+<a id="more"></a>
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>如果程序理论上需要消耗的内存大小大于你的电脑所能提供的内存，那程序也只有消耗交换空间和直接崩溃两条路可走。所以电脑不行的话还是换电脑吧，或者放到服务器上运行。</p>
+<h2 id="nice"><a href="#nice" class="headerlink" title="nice"></a>nice</h2><p><code>nice</code> 是一个 Linux 自带的指令，用于调整程序优先级。在程序面前加上<code>nice</code>可以在默认的优先级上进行再调整。调整范围为 -20 (最高优先级)到 19 (最低优先级)。数值越高</p>
+<p>这里抄一段菜鸟教程上面的实例<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"># vi &amp; &#x2F;&#x2F;后台运行</span><br><span class="line">[1] 15297</span><br><span class="line"># nice vi &amp; &#x2F;&#x2F;设置默认优先级</span><br><span class="line">[2] 15298</span><br><span class="line"></span><br><span class="line">[1]+ Stopped         vi</span><br><span class="line"># nice -n 19 vi &amp; &#x2F;&#x2F;设置优先级为19</span><br><span class="line">[3] 15299</span><br><span class="line"></span><br><span class="line">[2]+ Stopped         nice vi</span><br><span class="line"># nice -n -20 vi &amp; &#x2F;&#x2F;设置优先级为 -20</span><br><span class="line">[4] 15300</span><br><span class="line"></span><br><span class="line">[3]+ Stopped         nice -n 19 vi</span><br><span class="line"># ps -l &#x2F;&#x2F;显示进程</span><br><span class="line">F S  UID  PID PPID C PRI NI ADDR SZ WCHAN TTY     TIME CMD</span><br><span class="line">4 S   0 15278 15212 0 80  0 - 1208 wait  pts&#x2F;2  00:00:00 bash</span><br><span class="line">0 T   0 15297 15278 0 80  0 - 2687 signal pts&#x2F;2  00:00:00 vi   &#x2F;&#x2F; 默认优先级</span><br><span class="line">0 T   0 15298 15278 0 90 10 - 2687 signal pts&#x2F;2  00:00:00 vi   &#x2F;&#x2F; 优先级+10 （降低优先级）</span><br><span class="line">0 T   0 15299 15278 1 99 19 - 2687 signal pts&#x2F;2  00:00:00 vi   &#x2F;&#x2F; 优先级+19 （降低优先级）</span><br><span class="line">4 T   0 15300 15278 3 60 -20 - 2687 signal pts&#x2F;2  00:00:00 vi  &#x2F;&#x2F; 优先级-20 （提高优先级）</span><br><span class="line">4 R   0 15301 15278 0 80  0 -  625 -   pts&#x2F;2  00:00:00 ps</span><br><span class="line"></span><br><span class="line">[4]+ Stopped         nice -n -20 vi</span><br></pre></td></tr></table></figure>
+<h2 id="taskset-sched-setaffinity"><a href="#taskset-sched-setaffinity" class="headerlink" title="taskset / sched_setaffinity"></a>taskset / sched_setaffinity</h2><p><code>taskset</code> 指令可以指定程序运行在哪个cpu上。cpu编号从0开始<br>如以下指令<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">taskset -c 4-7 ./test.sh&amp;</span><br></pre></td></tr></table></figure><br>将 ./test.sh 这个任务绑定在第5到第8个cpu上运行。其底层是使用了<code>sched_setaffinity()</code> 系统调用，参考<a href="https://linux.die.net/man/2/sched_setaffinity" target="_blank" rel="noopener">sched_setaffinity(2) - Linux man page</a>。子进程如果继承了环境变量的话，那么绑定cpu的操作也会自动继承到子进程上。</p>
+<h2 id="cgroups"><a href="#cgroups" class="headerlink" title="cgroups"></a>cgroups</h2><p>cgroups 机制对系统底层资源进行了物理隔离，是 linux 内核资源虚拟化的基础。用 cgroups 对程序隔离的方式比较灵活。这里不展开了，参考这篇文章：<a href="https://zhuanlan.zhihu.com/p/81668069" target="_blank" rel="noopener">lecury-浅谈Linux Cgroups机制</a></p>
+<h2 id="c-编译加速的几个方式"><a href="#c-编译加速的几个方式" class="headerlink" title="c++编译加速的几个方式"></a>c++编译加速的几个方式</h2><h3 id="distcc"><a href="#distcc" class="headerlink" title="distcc"></a>distcc</h3><p>distcc 是一个将 C、C++、Objective C 或 Objective C++ 等程序的编译任务分发到网络中多个主机的程序。distcc 力求实现和本地编译相同的结果，安装、使用都很方便，而且通常比本地编译快很多 <sup><a href="#fn_2" id="reffn_2">2</a></sup></p>
+<h3 id="ccache"><a href="#ccache" class="headerlink" title="ccache"></a>ccache</h3><p>由于C/C++编译时需要大量重复展开头文件，造成了编译慢的情况。ccache将头文件构建了高速缓存，可以加快编译速度。并且 ccache 适配了 gcc 和 clang， archlinux 中的 makepkg 指令也支持使用 ccache。<sup><a href="#fn_3" id="reffn_3">3</a></sup></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><sup><a href="#fn_1" id="reffn_1">1</a></sup>:<a href="https://www.runoob.com/linux/linux-comm-nice.html" target="_blank" rel="noopener">Linux nice命令 - 菜鸟教程</a><br><sup><a href="#fn_2" id="reffn_2">2</a></sup>:<a href="https://wiki.archlinux.org/title/Distcc" target="_blank" rel="noopener">distcc - archlinux wiki</a><br><sup><a href="#fn_3" id="reffn_3">3</a></sup>:<a href="https://wiki.archlinux.org/title/Ccache" target="_blank" rel="noopener">ccache - archlinux wiki</a></p>
+
+                                                                        
+                                    </div>
+                                    <footer class="article-footer">
+                                        <a data-url="http://chipensblog.tk/2022/06/18/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81%E9%80%A0%E6%88%90%E7%9A%84%E7%94%B5%E8%84%91%E5%8D%A1%E9%A1%BF/" data-id="cl4ksbkpi000b2qlvc0m844hr" class="article-share-link">
+                                            分享
+                                        </a>
+                                        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+                                    </footer>
+
+    </div>
+
+    
+        
+  <nav class="article-nav">
+    
+    
+      <a href="/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">blog恢复更新了!</div>
+      </a>
+    
+  </nav>
+
+
+            
+
+                
+                    
+                        
+  <div class="gitalk" id="gitalk-container"></div>
+  
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+
+  
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  
+<script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: '716c45e2d3a22f047a0e',
+      clientSecret: '92883abf985a2388bd6ba230e54f3cfb6c10b236',
+      repo: 'gittalk',
+      owner: 'zsiothsu',
+      admin: ['zsiothsu'],
+      // id: location.pathname,      // Ensure uniqueness and length less than 50
+      id: md5(location.pathname),
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      pagerDirection: 'last'
+    })
+
+  gitalk.render('gitalk-container')
+  </script>
+
+                            
+
+</article>
+</section>
+
+
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <!-- <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+    <li><i class="fe fe-bookmark"></i> <span id="busuanzi_value_page_pv"></span></li>
+  
+</ul> -->
+<div class="powered-by">
+  
+	&emsp;<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">访客数:<span id="busuanzi_value_site_uv"></span></span>&emsp;
+  
+    <i class="fe fe-bookmark"></i>文章访问量:<span id="busuanzi_value_page_pv"></span>
+  
+</div>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2022 Chipen&#39;s blog</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+<aside class="sidebar">
+  <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/avatar.jpg" alt="Chipen&#39;s blog"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/tags">Tags</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="搜索">
+        <i class="fe fe-search"></i>
+        搜索
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="https://github.com/zsiothsu" title="github">
+          <img src="/images/github.svg" width=20px>
+        </a>
+      
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="https://www.zhihu.com/people/xu-jia-bin-18-83" title="zhihu">
+          <img src="/images/zhihu.svg" width=20px>
+        </a>
+      
+    </li>
+    <li class="nav-item">
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+</aside>
+
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+  });
+</script>
+
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

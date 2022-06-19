@@ -40,18 +40,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World!</title>
-    <url>/2020/06/07/Hello-World/</url>
-    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
-<script type="math/tex; mode=display">\begin{array}{l}  
-        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
-        \nabla \cdot \mathbf{B} = 0 \\  
-        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
-        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
-    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
-]]></content>
-  </entry>
-  <entry>
     <title>假的，都是假的</title>
     <url>/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/</url>
     <content><![CDATA[<p>老师假装教书<br>学生假装念书<br>学习的结果是绩点<br>比赛比的是ppt<br>入党是为了优先<br>选票看的是人脉不是实力<br>志愿活动重要的是宣传</p>
@@ -117,6 +105,18 @@
       <tags>
         <tag>Linux</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World!</title>
+    <url>/2020/06/07/Hello-World/</url>
+    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
+<script type="math/tex; mode=display">\begin{array}{l}  
+        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
+        \nabla \cdot \mathbf{B} = 0 \\  
+        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
+        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
+    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
+]]></content>
   </entry>
   <entry>
     <title>匈牙利算法</title>
@@ -221,6 +221,24 @@
       </tags>
   </entry>
   <entry>
+    <title>blog恢复更新了!</title>
+    <url>/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/</url>
+    <content><![CDATA[<a id="more"></a>
+<p>&emsp;&emsp;上一次更新是在2月23日了，到现在为止……过了一个季度<br>&emsp;&emsp;这个blog的定位一直摇摆不定，一开始想作为一个日常记录技术内容的博客，但后来也想要记录一些笔记或瞎想之类的。但写完之后这个博客的内容就显得比较乱的。不过这个博客也就自己一个人在看，应该是不用太在意内容定位问题的。像 <a href="https://nth233.top" target="_blank" rel="noopener">@MrNothing233</a> 说的那样，写一些破事水记录日常就可以了。所以这个博客开始恢复更新了。<br>&emsp;&emsp;目前想要写的内容大概有以下这些：</p>
+<ul>
+<li>AVSI的开发过程记录（一个自制的编译器）</li>
+<li>自己的一些技术类的学习笔记</li>
+<li>西哲和马哲的笔记和思考</li>
+<li>可能偶尔放一些日语和希腊语的学习笔记</li>
+</ul>
+<p>&emsp;&emsp;如果增加了这些内容，博客的主题大概要改一下了，目前使用的主题是 <a href="https://zhwangart.com/2018/11/30/Ocean/" target="_blank" rel="noopener">Ocean</a>。我很喜欢这个简约的主题，但是它缺少了归档目录的功能，只有标签可以区别文章的内容。虽然功能上是一样的，但在逻辑上还是没有办法取代目录这一类似于「文件夹」的定位。所以主题到之后再寻找一下吧。</p>
+<p>&emsp;&emsp;哦对了，这篇博客和之前的文章不太一样，对比一下可以发现现在在段落的前面添加了首行缩进。虽然是一个很小的变化，但在大量阅读文字的情况下，首行缩进显然是有助于区分段落的。使用 <code>&amp;emsp;</code>这个转移字符就可以添加一个全角的空格。在文章开头放两个就能有空两格的效果。</p>
+]]></content>
+      <tags>
+        <tag>瞎想</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>含参量积分的微分</title>
     <url>/2022/02/23/%E5%90%AB%E5%8F%82%E9%87%8F%E7%A7%AF%E5%88%86%E7%9A%84%E5%BE%AE%E5%88%86/</url>
     <content><![CDATA[<p>在复习高数的时候对一道对积分的求导有些困惑。想起来之前用到过费曼积分法，但抛开技巧来谈，底层的原理还是要温习一下的，于是写了这篇博客留档。</p>
@@ -253,6 +271,25 @@
 ]]></content>
       <tags>
         <tag>数学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何避免编译代码造成的电脑卡顿</title>
+    <url>/2022/06/18/%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81%E9%80%A0%E6%88%90%E7%9A%84%E7%94%B5%E8%84%91%E5%8D%A1%E9%A1%BF/</url>
+    <content><![CDATA[<p>编译大项目（特别是c++项目）时，经常会造成个人电脑卡顿甚至崩溃。而如果是在公共服务器上的话甚至会导致抢占资源。所以需要用一些方法来限制编译的程序。</p>
+<a id="more"></a>
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>如果程序理论上需要消耗的内存大小大于你的电脑所能提供的内存，那程序也只有消耗交换空间和直接崩溃两条路可走。所以电脑不行的话还是换电脑吧，或者放到服务器上运行。</p>
+<h2 id="nice"><a href="#nice" class="headerlink" title="nice"></a>nice</h2><p><code>nice</code> 是一个 Linux 自带的指令，用于调整程序优先级。在程序面前加上<code>nice</code>可以在默认的优先级上进行再调整。调整范围为 -20 (最高优先级)到 19 (最低优先级)。数值越高</p>
+<p>这里抄一段菜鸟教程上面的实例<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># vi &amp; &#x2F;&#x2F;后台运行</span><br><span class="line">[1] 15297</span><br><span class="line"># nice vi &amp; &#x2F;&#x2F;设置默认优先级</span><br><span class="line">[2] 15298</span><br><span class="line"></span><br><span class="line">[1]+ Stopped         vi</span><br><span class="line"># nice -n 19 vi &amp; &#x2F;&#x2F;设置优先级为19</span><br><span class="line">[3] 15299</span><br><span class="line"></span><br><span class="line">[2]+ Stopped         nice vi</span><br><span class="line"># nice -n -20 vi &amp; &#x2F;&#x2F;设置优先级为 -20</span><br><span class="line">[4] 15300</span><br><span class="line"></span><br><span class="line">[3]+ Stopped         nice -n 19 vi</span><br><span class="line"># ps -l &#x2F;&#x2F;显示进程</span><br><span class="line">F S  UID  PID PPID C PRI NI ADDR SZ WCHAN TTY     TIME CMD</span><br><span class="line">4 S   0 15278 15212 0 80  0 - 1208 wait  pts&#x2F;2  00:00:00 bash</span><br><span class="line">0 T   0 15297 15278 0 80  0 - 2687 signal pts&#x2F;2  00:00:00 vi   &#x2F;&#x2F; 默认优先级</span><br><span class="line">0 T   0 15298 15278 0 90 10 - 2687 signal pts&#x2F;2  00:00:00 vi   &#x2F;&#x2F; 优先级+10 （降低优先级）</span><br><span class="line">0 T   0 15299 15278 1 99 19 - 2687 signal pts&#x2F;2  00:00:00 vi   &#x2F;&#x2F; 优先级+19 （降低优先级）</span><br><span class="line">4 T   0 15300 15278 3 60 -20 - 2687 signal pts&#x2F;2  00:00:00 vi  &#x2F;&#x2F; 优先级-20 （提高优先级）</span><br><span class="line">4 R   0 15301 15278 0 80  0 -  625 -   pts&#x2F;2  00:00:00 ps</span><br><span class="line"></span><br><span class="line">[4]+ Stopped         nice -n -20 vi</span><br></pre></td></tr></table></figure>
+<h2 id="taskset-sched-setaffinity"><a href="#taskset-sched-setaffinity" class="headerlink" title="taskset / sched_setaffinity"></a>taskset / sched_setaffinity</h2><p><code>taskset</code> 指令可以指定程序运行在哪个cpu上。cpu编号从0开始<br>如以下指令<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">taskset -c 4-7 ./test.sh&amp;</span><br></pre></td></tr></table></figure><br>将 ./test.sh 这个任务绑定在第5到第8个cpu上运行。其底层是使用了<code>sched_setaffinity()</code> 系统调用，参考<a href="https://linux.die.net/man/2/sched_setaffinity" target="_blank" rel="noopener">sched_setaffinity(2) - Linux man page</a>。子进程如果继承了环境变量的话，那么绑定cpu的操作也会自动继承到子进程上。</p>
+<h2 id="cgroups"><a href="#cgroups" class="headerlink" title="cgroups"></a>cgroups</h2><p>cgroups 机制对系统底层资源进行了物理隔离，是 linux 内核资源虚拟化的基础。用 cgroups 对程序隔离的方式比较灵活。这里不展开了，参考这篇文章：<a href="https://zhuanlan.zhihu.com/p/81668069" target="_blank" rel="noopener">lecury-浅谈Linux Cgroups机制</a></p>
+<h2 id="c-编译加速的几个方式"><a href="#c-编译加速的几个方式" class="headerlink" title="c++编译加速的几个方式"></a>c++编译加速的几个方式</h2><h3 id="distcc"><a href="#distcc" class="headerlink" title="distcc"></a>distcc</h3><p>distcc 是一个将 C、C++、Objective C 或 Objective C++ 等程序的编译任务分发到网络中多个主机的程序。distcc 力求实现和本地编译相同的结果，安装、使用都很方便，而且通常比本地编译快很多 <sup><a href="#fn_2" id="reffn_2">2</a></sup></p>
+<h3 id="ccache"><a href="#ccache" class="headerlink" title="ccache"></a>ccache</h3><p>由于C/C++编译时需要大量重复展开头文件，造成了编译慢的情况。ccache将头文件构建了高速缓存，可以加快编译速度。并且 ccache 适配了 gcc 和 clang， archlinux 中的 makepkg 指令也支持使用 ccache。<sup><a href="#fn_3" id="reffn_3">3</a></sup></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><sup><a href="#fn_1" id="reffn_1">1</a></sup>:<a href="https://www.runoob.com/linux/linux-comm-nice.html" target="_blank" rel="noopener">Linux nice命令 - 菜鸟教程</a><br><sup><a href="#fn_2" id="reffn_2">2</a></sup>:<a href="https://wiki.archlinux.org/title/Distcc" target="_blank" rel="noopener">distcc - archlinux wiki</a><br><sup><a href="#fn_3" id="reffn_3">3</a></sup>:<a href="https://wiki.archlinux.org/title/Ccache" target="_blank" rel="noopener">ccache - archlinux wiki</a></p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -487,6 +524,24 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
       </tags>
   </entry>
   <entry>
+    <title>远程服务器安装XServer</title>
+    <url>/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/</url>
+    <content><![CDATA[<p>Ubuntu 远程服务器安装 XServer</p>
+<a id="more"></a>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>当然远程服务器是不需要图形界面的，但最近在服务器做操作系统的实验，需要用到虚拟机，而虚拟机需要有图形界面做虚拟显示器，所以就需要安装 XServer 来运行这个虚拟机。</p>
+<p>服务器系统为 Ubuntu 16.04,使用下面的指令安装 XServer：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line">apt-get install xorg dbus-x11 x11-xserver-utils</span><br></pre></td></tr></table></figure>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>由于只是在做实验的时候使用，这边选择手动启动 XServer<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">X &amp;</span><br></pre></td></tr></table></figure><br>加一个 <code>&amp;</code> 是将 XServer 放在后台运行，这样的话你可以继续使用当前的终端</p>
+<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><p>使用<code>jobs</code>来查看当前在运行的后台服务<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">jobs</span> </span></span><br><span class="line">[1]  + running    X</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>kill %序号</code> 可以将 XServer 关闭<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill %1</span><br></pre></td></tr></table></figure></p>
+<h1 id="ssh连接远程服务器"><a href="#ssh连接远程服务器" class="headerlink" title="ssh连接远程服务器"></a>ssh连接远程服务器</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -X user@host</span><br></pre></td></tr></table></figure>
+<p>在 ssh 的基础上加一个 <code>-X</code> 参数，可以将远程的 X11 图形界面转发至本地</p>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>缩点</title>
     <url>/2020/08/05/%E7%BC%A9%E7%82%B9/</url>
     <content><![CDATA[<p>Tarjan算法 （以发现者Robert Tarjan[1]命名）是一个在图中查找强连通分量的算法。<br><a id="more"></a></p>
@@ -595,42 +650,6 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
       <tags>
         <tag>算法</tag>
         <tag>图论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>远程服务器安装XServer</title>
-    <url>/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/</url>
-    <content><![CDATA[<p>Ubuntu 远程服务器安装 XServer</p>
-<a id="more"></a>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>当然远程服务器是不需要图形界面的，但最近在服务器做操作系统的实验，需要用到虚拟机，而虚拟机需要有图形界面做虚拟显示器，所以就需要安装 XServer 来运行这个虚拟机。</p>
-<p>服务器系统为 Ubuntu 16.04,使用下面的指令安装 XServer：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line">apt-get install xorg dbus-x11 x11-xserver-utils</span><br></pre></td></tr></table></figure>
-<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>由于只是在做实验的时候使用，这边选择手动启动 XServer<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">X &amp;</span><br></pre></td></tr></table></figure><br>加一个 <code>&amp;</code> 是将 XServer 放在后台运行，这样的话你可以继续使用当前的终端</p>
-<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><p>使用<code>jobs</code>来查看当前在运行的后台服务<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">jobs</span> </span></span><br><span class="line">[1]  + running    X</span><br></pre></td></tr></table></figure></p>
-<p>使用 <code>kill %序号</code> 可以将 XServer 关闭<br><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill %1</span><br></pre></td></tr></table></figure></p>
-<h1 id="ssh连接远程服务器"><a href="#ssh连接远程服务器" class="headerlink" title="ssh连接远程服务器"></a>ssh连接远程服务器</h1><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ssh -X user@host</span><br></pre></td></tr></table></figure>
-<p>在 ssh 的基础上加一个 <code>-X</code> 参数，可以将远程的 X11 图形界面转发至本地</p>
-]]></content>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>blog恢复更新了!</title>
-    <url>/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/</url>
-    <content><![CDATA[<a id="more"></a>
-<p>&emsp;&emsp;上一次更新是在2月23日了，到现在为止……过了一个季度<br>&emsp;&emsp;这个blog的定位一直摇摆不定，一开始想作为一个日常记录技术内容的博客，但后来也想要记录一些笔记或瞎想之类的。但写完之后这个博客的内容就显得比较乱的。不过这个博客也就自己一个人在看，应该是不用太在意内容定位问题的。像 <a href="https://nth233.top" target="_blank" rel="noopener">@MrNothing233</a> 说的那样，写一些破事水记录日常就可以了。所以这个博客开始恢复更新了。<br>&emsp;&emsp;目前想要写的内容大概有以下这些：</p>
-<ul>
-<li>AVSI的开发过程记录（一个自制的编译器）</li>
-<li>自己的一些技术类的学习笔记</li>
-<li>西哲和马哲的笔记和思考</li>
-<li>可能偶尔放一些日语和希腊语的学习笔记</li>
-</ul>
-<p>&emsp;&emsp;如果增加了这些内容，博客的主题大概要改一下了，目前使用的主题是 <a href="https://zhwangart.com/2018/11/30/Ocean/" target="_blank" rel="noopener">Ocean</a>。我很喜欢这个简约的主题，但是它缺少了归档目录的功能，只有标签可以区别文章的内容。虽然功能上是一样的，但在逻辑上还是没有办法取代目录这一类似于「文件夹」的定位。所以主题到之后再寻找一下吧。</p>
-<p>&emsp;&emsp;哦对了，这篇博客和之前的文章不太一样，对比一下可以发现现在在段落的前面添加了首行缩进。虽然是一个很小的变化，但在大量阅读文字的情况下，首行缩进显然是有助于区分段落的。使用 <code>&amp;emsp;</code>这个转移字符就可以添加一个全角的空格。在文章开头放两个就能有空两格的效果。</p>
-]]></content>
-      <tags>
-        <tag>瞎想</tag>
       </tags>
   </entry>
 </search>
