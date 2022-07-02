@@ -78,7 +78,8 @@
                                             
 
                                                 
-                                                                    <a id="more"></a>
+                                                                    <p>占楼</p>
+<a id="more"></a>
 <p>&emsp;&emsp;上一次更新是在2月23日了，到现在为止……过了一个季度<br>&emsp;&emsp;这个blog的定位一直摇摆不定，一开始想作为一个日常记录技术内容的博客，但后来也想要记录一些笔记或瞎想之类的。但写完之后这个博客的内容就显得比较乱的。不过这个博客也就自己一个人在看，应该是不用太在意内容定位问题的。像 <a href="https://nth233.top" target="_blank" rel="noopener">@MrNothing233</a> 说的那样，写一些破事水记录日常就可以了。所以这个博客开始恢复更新了。<br>&emsp;&emsp;目前想要写的内容大概有以下这些：</p>
 <ul>
 <li>AVSI的开发过程记录（一个自制的编译器）</li>
@@ -299,5 +300,20 @@
 
 <script src="/js/ocean.js"></script>
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
