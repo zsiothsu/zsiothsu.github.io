@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AVSI2和cart基本完成了!</title>
+    <url>/2022/07/02/AVSI2%E5%92%8Ccart%E5%9F%BA%E6%9C%AC%E5%AE%8C%E6%88%90%E4%BA%86/</url>
+    <content><![CDATA[<p><a href="https://github.com/zsiothsu/AVSI2" target="_blank" rel="noopener">AVSI</a> 是我从大一开始制作的编译器系列。最近又完善了一下，出了个第二代，还写了一个包管理器叫 cart，定位类似于 rust 的 cargo。目前基本能用了。</p>
+<a id="more"></a>
+<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>&emsp;&emsp;项目由三个部分组成：</p>
+<ul>
+<li>avsi: 编译器本体</li>
+<li>cart: 包管理器</li>
+<li>libavsi: 标准库</li>
+</ul>
+<p>&emsp;&emsp;包管理器的命名过程挺有趣的，一开始想命名为 minecart（矿车）。但搜了一下 github 已经有同名的项目，所以索性去个头，命名成 cart。<br>&emsp;&emsp;光编译器本体和包管理器加起来就达到了九千多行代码，标准库后续应该会继续写，目前只有 print 和 read 两种函数。第一次写这么大的项目，以前写的山寨 Minecraft 也才三千多行。这在以前的我看来是完全不可能的事情。大概这就是迭代开发的魔力吧。回看我第一号 commit 的时候有种无法言说的奇妙感觉。<br>&emsp;&emsp;这么大的项目不仅意味着函数分组麻烦，而且意味着出bug会更加难以调试。由于写的测试样例比较刁钻，导致每一次花一小时增加一个小功能，就要花上五六个小时 debug。这个过程下来可能把 c++ 语言本身的坑和 llvm 的坑都踩了一遍。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>&emsp;&emsp;使用 <code>cart</code> 可以很方便地建立和构建项目（毕竟对标的是 cargo）：</p>
+<p>&emsp;&emsp;新建一个项目，名为 mycode,这个过程会建立一个项目文件夹，并且提供一个 Hello World 的代码和一个配置文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cart new mycode</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> mycode</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls</span></span><br><span class="line">Cart.toml  main.sl</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;然后使用 <code>cart build</code> 构建项目，默认可执行文件为 a.out</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cart build</span></span><br><span class="line">compile source files</span><br><span class="line">avsi main.sl --package-name mycode -O -W </span><br><span class="line"></span><br><span class="line">link objs</span><br><span class="line">GNU ld (GNU Binutils) 2.38</span><br><span class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;过程十分简单</p>
+<h2 id="杂谈"><a href="#杂谈" class="headerlink" title="杂谈"></a>杂谈</h2><p>&emsp;&emsp;llvm项目有一个明显的问题，llvm入门的文章非常多，搜索引擎搜索一下，首页的文章基本都可以入门。但是遇到具体问题后搜索引擎就失灵了，因为基本找不到解决方法，英文和中文搜索都是一样的。这个时候采取的办法比较极端一些了：看别人的项目源码。Google上面搜索一个代码片段可以搜索到相关的项目。我通过看源码解决了一些玄学无比的问题。再麻烦一点只能看头文件和llvm或clang源码来解决了。<br>&emsp;&emsp;这个项目花费了我非常多的时间，最终呈现的效果也很不错。但写到后面又产生了一种疑惑。现在的本科以算法竞赛为主，这个对于别人来说是非常容易区分能力的办法。但是由于算法竞赛的投入和产出不成比例，所以一开始并没有参加，而是把精力投入到一堆个人项目中。如果以后有人能觉得这个项目能够不逊色于算法竞赛的话那就太好了。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>[ArchLinux] 安装nvidia显卡驱动</title>
     <url>/2020/07/04/ArchLinux-%E5%AE%89%E8%A3%85nvidia%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</url>
     <content><![CDATA[<p>Linux安装显卡驱动一直是一个很麻烦的事，这篇文章是一个经验贴，安装nvdia驱动，并且安装cuda<br><a id="more"></a></p>
@@ -40,14 +61,16 @@
       </tags>
   </entry>
   <entry>
-    <title>假的，都是假的</title>
-    <url>/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/</url>
-    <content><![CDATA[<p>老师假装教书<br>学生假装念书<br>学习的结果是绩点<br>比赛比的是ppt<br>入党是为了优先<br>选票看的是人脉不是实力<br>志愿活动重要的是宣传</p>
-<p>美好的大学生活都是假的</p>
+    <title>Hello World!</title>
+    <url>/2020/06/07/Hello-World/</url>
+    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
+<script type="math/tex; mode=display">\begin{array}{l}  
+        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
+        \nabla \cdot \mathbf{B} = 0 \\  
+        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
+        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
+    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
 ]]></content>
-      <tags>
-        <tag>瞎想</tag>
-      </tags>
   </entry>
   <entry>
     <title>Linux 后台运行程序</title>
@@ -107,16 +130,33 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World!</title>
-    <url>/2020/06/07/Hello-World/</url>
-    <content><![CDATA[<p><strong>麦克斯韦方程组镇楼:</strong></p>
-<script type="math/tex; mode=display">\begin{array}{l}  
-        \nabla \cdot \mathbf{E} =\cfrac{\rho}{\varepsilon _0}  \\  
-        \nabla \cdot \mathbf{B} = 0 \\  
-        \nabla \times  \mathbf{E} = -\cfrac{\partial \mathbf{B}}{\partial t }  \\  
-        \nabla \times  \mathbf{B} = \mu _0\mathbf{J} + \mu _0\varepsilon_0 \cfrac{\partial \mathbf{E}}{\partial t }   
-    \end{array}</script><p>花了两天建立这个博客，<strike>第二天的时候把第一天建的不小心删了</strike>。这是第一篇博客，用于测试网站的效果。<br>以后会在这里发布一些照片或者技术类文章 :)</p>
+    <title>blog恢复更新了!</title>
+    <url>/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/</url>
+    <content><![CDATA[<p>占楼</p>
+<a id="more"></a>
+<p>&emsp;&emsp;上一次更新是在2月23日了，到现在为止……过了一个季度<br>&emsp;&emsp;这个blog的定位一直摇摆不定，一开始想作为一个日常记录技术内容的博客，但后来也想要记录一些笔记或瞎想之类的。但写完之后这个博客的内容就显得比较乱的。不过这个博客也就自己一个人在看，应该是不用太在意内容定位问题的。像 <a href="https://nth233.top" target="_blank" rel="noopener">@MrNothing233</a> 说的那样，写一些破事水记录日常就可以了。所以这个博客开始恢复更新了。<br>&emsp;&emsp;目前想要写的内容大概有以下这些：</p>
+<ul>
+<li>AVSI的开发过程记录（一个自制的编译器）</li>
+<li>自己的一些技术类的学习笔记</li>
+<li>西哲和马哲的笔记和思考</li>
+<li>可能偶尔放一些日语和希腊语的学习笔记</li>
+</ul>
+<p>&emsp;&emsp;如果增加了这些内容，博客的主题大概要改一下了，目前使用的主题是 <a href="https://zhwangart.com/2018/11/30/Ocean/" target="_blank" rel="noopener">Ocean</a>。我很喜欢这个简约的主题，但是它缺少了归档目录的功能，只有标签可以区别文章的内容。虽然功能上是一样的，但在逻辑上还是没有办法取代目录这一类似于「文件夹」的定位。所以主题到之后再寻找一下吧。</p>
+<p>&emsp;&emsp;哦对了，这篇博客和之前的文章不太一样，对比一下可以发现现在在段落的前面添加了首行缩进。虽然是一个很小的变化，但在大量阅读文字的情况下，首行缩进显然是有助于区分段落的。使用 <code>&amp;emsp;</code>这个转移字符就可以添加一个全角的空格。在文章开头放两个就能有空两格的效果。</p>
 ]]></content>
+      <tags>
+        <tag>瞎想</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>假的，都是假的</title>
+    <url>/2020/08/26/%E5%81%87%E7%9A%84%EF%BC%8C%E9%83%BD%E6%98%AF%E5%81%87%E7%9A%84/</url>
+    <content><![CDATA[<p>老师假装教书<br>学生假装念书<br>学习的结果是绩点<br>比赛比的是ppt<br>入党是为了优先<br>选票看的是人脉不是实力<br>志愿活动重要的是宣传</p>
+<p>美好的大学生活都是假的</p>
+]]></content>
+      <tags>
+        <tag>瞎想</tag>
+      </tags>
   </entry>
   <entry>
     <title>匈牙利算法</title>
@@ -218,25 +258,6 @@
       <tags>
         <tag>算法</tag>
         <tag>图论</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>blog恢复更新了!</title>
-    <url>/2022/06/05/blog%E6%81%A2%E5%A4%8D%E6%9B%B4%E6%96%B0%E4%BA%86/</url>
-    <content><![CDATA[<p>占楼</p>
-<a id="more"></a>
-<p>&emsp;&emsp;上一次更新是在2月23日了，到现在为止……过了一个季度<br>&emsp;&emsp;这个blog的定位一直摇摆不定，一开始想作为一个日常记录技术内容的博客，但后来也想要记录一些笔记或瞎想之类的。但写完之后这个博客的内容就显得比较乱的。不过这个博客也就自己一个人在看，应该是不用太在意内容定位问题的。像 <a href="https://nth233.top" target="_blank" rel="noopener">@MrNothing233</a> 说的那样，写一些破事水记录日常就可以了。所以这个博客开始恢复更新了。<br>&emsp;&emsp;目前想要写的内容大概有以下这些：</p>
-<ul>
-<li>AVSI的开发过程记录（一个自制的编译器）</li>
-<li>自己的一些技术类的学习笔记</li>
-<li>西哲和马哲的笔记和思考</li>
-<li>可能偶尔放一些日语和希腊语的学习笔记</li>
-</ul>
-<p>&emsp;&emsp;如果增加了这些内容，博客的主题大概要改一下了，目前使用的主题是 <a href="https://zhwangart.com/2018/11/30/Ocean/" target="_blank" rel="noopener">Ocean</a>。我很喜欢这个简约的主题，但是它缺少了归档目录的功能，只有标签可以区别文章的内容。虽然功能上是一样的，但在逻辑上还是没有办法取代目录这一类似于「文件夹」的定位。所以主题到之后再寻找一下吧。</p>
-<p>&emsp;&emsp;哦对了，这篇博客和之前的文章不太一样，对比一下可以发现现在在段落的前面添加了首行缩进。虽然是一个很小的变化，但在大量阅读文字的情况下，首行缩进显然是有助于区分段落的。使用 <code>&amp;emsp;</code>这个转移字符就可以添加一个全角的空格。在文章开头放两个就能有空两格的效果。</p>
-]]></content>
-      <tags>
-        <tag>瞎想</tag>
       </tags>
   </entry>
   <entry>
@@ -467,20 +488,6 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
       </tags>
   </entry>
   <entry>
-    <title>用Linux学习应该养成的好习惯</title>
-    <url>/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/</url>
-    <content><![CDATA[<p>在用Linux（特别是arch）的时候，比较折腾的一件事就是开发软件的问题，python3.8用着挺正常，3.9 一出就很头疼，一些库还得重新安装。或者是Linux内核的更新让虚拟机炸了，卸载又很难卸……<br><a id="more"></a></p>
-<p>为了避免这些问题就要养成特别强迫症的习惯。由于上面的原因，以及后悔装了DDE，让我把用了一年的 Arch 重装了。这次比较注重这几个点（以下全指学习的环境，生产过程要考虑实际情况）：</p>
-<h2 id="包管理器"><a href="#包管理器" class="headerlink" title="包管理器"></a>包管理器</h2><p>软件能在系统自带包管理器（pacman或者aur）找到的就直接用包管理器安装，用脚本或者编译安装的，更新和卸载都会很麻烦，比如vmware，卸载时需要保留安装包。</p>
-<h2 id="虚拟环境"><a href="#虚拟环境" class="headerlink" title="虚拟环境"></a>虚拟环境</h2><p>对于mysql这种包管理器找不到的软件，可以考虑安装在Docker里，一是省去了安装的流程，二是损坏了之后可以快速地重新部署，更重要的是可以和宿主系统隔离，解决一些版本问题也会比较容易</p>
-<h2 id="版本共存"><a href="#版本共存" class="headerlink" title="版本共存"></a>版本共存</h2><p>python，java，gcc等，这些在开发过程中都会碰到版本冲突的问题.用现成的方案解决，比如在 archlinux 下，用 conda 创建 python 的虚拟环境使得各版本 python 共存，或是用 <code>archlinux-java</code> 指令选择 java 版本。不要尝试通过卸载和安装来控制版本。</p>
-<h2 id="折腾"><a href="#折腾" class="headerlink" title="折腾"></a>折腾</h2><p>碰到问题记得google，不要急着卸载。</p>
-]]></content>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>第一次 Hack</title>
     <url>/2021/03/27/%E7%AC%AC%E4%B8%80%E6%AC%A1-Hack/</url>
     <content><![CDATA[<p>这学期开始学汇编，除了嵌入式之外，还在信息安全方面有大用，本次实验通过 <code>radare2</code> （没钱买<code>ida-pro</code>）进行汇编代码查看，调试工具为<code>gdb</code></p>
@@ -654,24 +661,55 @@ $$ c_k = \frac{1}{2}A_{km}e^{j\phi_k} = \frac{i}{k\pi}e^{ik\pi} = \frac{i(-1)^k}
       </tags>
   </entry>
   <entry>
-    <title>AVSI2和cart基本完成了!</title>
-    <url>/2022/07/02/AVSI2%E5%92%8Ccart%E5%9F%BA%E6%9C%AC%E5%AE%8C%E6%88%90%E4%BA%86/</url>
-    <content><![CDATA[<p><a href="https://github.com/zsiothsu/AVSI2" target="_blank" rel="noopener">AVSI</a> 是我从大一开始制作的编译器系列。最近又完善了一下，出了个第二代，还写了一个包管理器叫 cart，定位类似于 rust 的 cargo。目前基本能用了。</p>
-<a id="more"></a>
-<h2 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h2><p>&emsp;&emsp;项目由三个部分组成：</p>
-<ul>
-<li>avsi: 编译器本体</li>
-<li>cart: 包管理器</li>
-<li>libavsi: 标准库</li>
-</ul>
-<p>&emsp;&emsp;包管理器的命名过程挺有趣的，一开始想命名为 minecart（矿车）。但搜了一下 github 已经有同名的项目，所以索性去个头，命名成 cart。<br>&emsp;&emsp;光编译器本体和包管理器加起来就达到了九千多行代码，标准库后续应该会继续写，目前只有 print 和 read 两种函数。第一次写这么大的项目，以前写的山寨 Minecraft 也才三千多行。这在以前的我看来是完全不可能的事情。大概这就是迭代开发的魔力吧。回看我第一号 commit 的时候有种无法言说的奇妙感觉。<br>&emsp;&emsp;这么大的项目不仅意味着函数分组麻烦，而且意味着出bug会更加难以调试。由于写的测试样例比较刁钻，导致每一次花一小时增加一个小功能，就要花上五六个小时 debug。这个过程下来可能把 c++ 语言本身的坑和 llvm 的坑都踩了一遍。</p>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>&emsp;&emsp;使用 <code>cart</code> 可以很方便地建立和构建项目（毕竟对标的是 cargo）：</p>
-<p>&emsp;&emsp;新建一个项目，名为 mycode,这个过程会建立一个项目文件夹，并且提供一个 Hello World 的代码和一个配置文件</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cart new mycode</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">cd</span> mycode</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ls</span></span><br><span class="line">Cart.toml  main.sl</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;然后使用 <code>cart build</code> 构建项目，默认可执行文件为 a.out</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cart build</span></span><br><span class="line">compile source files</span><br><span class="line">avsi main.sl --package-name mycode -O -W </span><br><span class="line"></span><br><span class="line">link objs</span><br><span class="line">GNU ld (GNU Binutils) 2.38</span><br><span class="line"><span class="meta">$</span><span class="bash"> ./a.out</span></span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;过程十分简单</p>
-<h2 id="杂谈"><a href="#杂谈" class="headerlink" title="杂谈"></a>杂谈</h2><p>&emsp;&emsp;llvm项目有一个明显的问题，llvm入门的文章非常多，搜索引擎搜索一下，首页的文章基本都可以入门。但是遇到具体问题后搜索引擎就失灵了，因为基本找不到解决方法，英文和中文搜索都是一样的。这个时候采取的办法比较极端一些了：看别人的项目源码。Google上面搜索一个代码片段可以搜索到相关的项目。我通过看源码解决了一些玄学无比的问题。再麻烦一点只能看头文件和llvm或clang源码来解决了。<br>&emsp;&emsp;这个项目花费了我非常多的时间，最终呈现的效果也很不错。但写到后面又产生了一种疑惑。现在的本科以算法竞赛为主，这个对于别人来说是非常容易区分能力的办法。但是由于算法竞赛的投入和产出不成比例，所以一开始并没有参加，而是把精力投入到一堆个人项目中。如果以后有人能觉得这个项目能够不逊色于算法竞赛的话那就太好了。</p>
+    <title>用Linux学习应该养成的好习惯</title>
+    <url>/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/</url>
+    <content><![CDATA[<p>在用Linux（特别是arch）的时候，比较折腾的一件事就是开发软件的问题，python3.8用着挺正常，3.9 一出就很头疼，一些库还得重新安装。或者是Linux内核的更新让虚拟机炸了，卸载又很难卸……<br><a id="more"></a></p>
+<p>为了避免这些问题就要养成特别强迫症的习惯。由于上面的原因，以及后悔装了DDE，让我把用了一年的 Arch 重装了。这次比较注重这几个点（以下全指学习的环境，生产过程要考虑实际情况）：</p>
+<h2 id="包管理器"><a href="#包管理器" class="headerlink" title="包管理器"></a>包管理器</h2><p>软件能在系统自带包管理器（pacman或者aur）找到的就直接用包管理器安装，用脚本或者编译安装的，更新和卸载都会很麻烦，比如vmware，卸载时需要保留安装包。</p>
+<h2 id="虚拟环境"><a href="#虚拟环境" class="headerlink" title="虚拟环境"></a>虚拟环境</h2><p>对于mysql这种包管理器找不到的软件，可以考虑安装在Docker里，一是省去了安装的流程，二是损坏了之后可以快速地重新部署，更重要的是可以和宿主系统隔离，解决一些版本问题也会比较容易</p>
+<h2 id="版本共存"><a href="#版本共存" class="headerlink" title="版本共存"></a>版本共存</h2><p>python，java，gcc等，这些在开发过程中都会碰到版本冲突的问题.用现成的方案解决，比如在 archlinux 下，用 conda 创建 python 的虚拟环境使得各版本 python 共存，或是用 <code>archlinux-java</code> 指令选择 java 版本。不要尝试通过卸载和安装来控制版本。</p>
+<h2 id="折腾"><a href="#折腾" class="headerlink" title="折腾"></a>折腾</h2><p>碰到问题记得google，不要急着卸载。</p>
 ]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>[ArchLinux] 内核启动参数设置</title>
+    <url>/2023/01/13/ArchLinux-%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/</url>
+    <content><![CDATA[<p>这几天笔记本触控板失灵了，虽然可以移动，但没法点选，所以开始排查了问题。</p>
+<a id="more"></a>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>笔者的电脑前几天重装了一下系统，只安装了必要的软件。目前笔者的Archlinux使用的是<code>linux-lts</code>内核，以往使用的都是最新的<code>linux</code>内核。安装完毕之后发现触控板失灵了。</p>
+<p>在网络上查找了一圈，大部分的文章说的是，触控板的问题可能是缺少<code>xf86-input-synaptics</code>包。安装完之后确实有效果，但重启之后问题又复现。于是问题有很多天都没有进展。包括 arch wiki 上也没有很好的办法。</p>
+<h1 id="转机"><a href="#转机" class="headerlink" title="转机"></a>转机</h1><p>偶然想到，会不会是我的笔记本特有的问题，于是搜索时加入了我的笔记本型号：<code>Xiaomi notebook pro</code>。在 arch wiki 上有相应词条。然后发现了下面这一段话：</p>
+<blockquote>
+<p>You may face a problem when the kernel sees 2 touchpad devices if you have multiple touchpad devices displayed in libinput list-devices Try to add i8042.noaux kernel param</p>
+</blockquote>
+<p>然后使用<code>libinput list-devices</code>指令之后，确实发现了两个触控板，大概就是这个问题了。也难怪在网上搜不到（</p>
+<h1 id="修改-linux-启动参数"><a href="#修改-linux-启动参数" class="headerlink" title="修改 linux 启动参数"></a>修改 linux 启动参数</h1><p>这一部分是在grub中修改的，直接修改 <code>/boot/grub/grub.cfg</code> 并不能长久储存。</p>
+<p>grub的生成模板储存在<code>/etc/grub.d/</code>当中，找了一下并没有发现参数该放哪，然后又去看了一下 <code>/etc/default/grub</code>，发现了参数对应的变量，有两个,<code>GRUB_CMDLINE_LINUX_DEFAULT</code> 和 <code>GRUB_CMDLINE_LINUX</code>。第一个存放 linux 内核启动的默认参数，第二个就是自定义参数了，然后修改为 <code>GRUB_CMDLINE_LINUX=&quot;i8042.noaux=1&quot;</code>。最后使用<code>update-grub</code>指令更新grub。</p>
+<p>更新为：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo	&#39;加载 Linux linux-lts ...&#39;</span><br><span class="line">linux	&#x2F;boot&#x2F;vmlinuz-linux-lts root&#x3D;UUID&#x3D;5918f557-8640-4c61-a62d-b7df69ff9c0d </span><br><span class="line">rw i8042.noaux&#x3D;1 loglevel&#x3D;3 quiet</span><br><span class="line">echo	&#39;加载初始化内存盘...&#39;</span><br><span class="line">initrd	&#x2F;boot&#x2F;intel-ucode.img &#x2F;boot&#x2F;initramfs-linux-lts.img</span><br></pre></td></tr></table></figure></p>
+<h1 id="i8042-noaux"><a href="#i8042-noaux" class="headerlink" title="i8042.noaux"></a>i8042.noaux</h1><p>linux 内核对于这个参数的解释是这样的<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
+<blockquote>
+<p>i8042.noaux    [HW] Don’t check for auxiliary (== mouse) port</p>
+</blockquote>
+<p>i8042.noaux 参数使得驱动不会检查控制器是否支持多路复用。在 stackexchange 上找到了这个回答<sup><a href="#fn_2" id="reffn_2">2</a></sup></p>
+<blockquote>
+<p>This is an arcane option, only necessary on some rare devices (one of which you have). The only documentation is one line in the kernel parameters list.</p>
+<p>The i8042 controller controls PS/2 keyboards and mice in PCs. It seems that on your laptop, both the keyboard and the touchpad are connected through that chip.<br>From what I understand from the option name and a brief skim of the source code (don’t rely on this to write an i8042 driver!), some i8042 chips are capable of multiplexing data coming from multiple pointing devices. The traditional PS/2 interface only provides for one keyboard and one mouse; modern laptops often have a two or more of a touchpad, a trackstick and an external PS/2 plug. Some controllers follow the active PS/2 multiplexing specification, which permit up to 4 devices; the data sent by each device carries an indication of which device it comes from.</p>
+<p>The Linux driver tries to find out whether the i8042 controller supports multiplexing, but sometimes guessing wrongly. With the i8042.nomux=1 parameter, the driver does not try to detect whether the controller supports multiplexing and assumes that it doesn’t. With the i8042.reset parameter, the driver resets the controller when starting, which may be useful to disable multiplexing mode if the controller does support it but in a buggy way.</p>
+</blockquote>
+<p>也算是个历史遗留问题了吧。</p>
+<hr>
+<blockquote id="fn_1">
+<sup>1</sup>. <a href="https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt" target="_blank" rel="noopener">https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. <a href="https://unix.stackexchange.com/questions/28736/what-does-the-i8042-nomux-1-kernel-option-do-during-booting-of-ubuntu" target="_blank" rel="noopener">https://unix.stackexchange.com/questions/28736/what-does-the-i8042-nomux-1-kernel-option-do-during-booting-of-ubuntu</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
   </entry>
 </search>

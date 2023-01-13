@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>
-    远程服务器安装XServer |
+    [ArchLinux] 内核启动参数设置 |
     
     Chipen&#39;s blog</title>
   
@@ -35,7 +35,7 @@
  * @Description: file content
 -->
 <section class="outer">
-  <article id="post-远程服务器安装XServer" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  <article id="post-ArchLinux-内核启动参数设置" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
         
@@ -43,7 +43,7 @@
                 
   
     <h1 class="article-title" itemprop="name">
-      远程服务器安装XServer
+      [ArchLinux] 内核启动参数设置
     </h1>
   
   
@@ -56,8 +56,8 @@
 
                 
                     <div class="article-meta">
-                        <a href="/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/" class="article-date">
-  <time datetime="2021-01-30T06:37:18.000Z" itemprop="datePublished">2021-01-30</time>
+                        <a href="/2023/01/13/ArchLinux-%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" class="article-date">
+  <time datetime="2023-01-13T04:11:02.000Z" itemprop="datePublished">2023-01-13</time>
 </a>
                             
                     </div>
@@ -80,21 +80,41 @@
                                             
 
                                                 
-                                                                    <p>Ubuntu 远程服务器安装 XServer</p>
+                                                                    <p>这几天笔记本触控板失灵了，虽然可以移动，但没法点选，所以开始排查了问题。</p>
 <a id="more"></a>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>当然远程服务器是不需要图形界面的，但最近在服务器做操作系统的实验，需要用到虚拟机，而虚拟机需要有图形界面做虚拟显示器，所以就需要安装 XServer 来运行这个虚拟机。</p>
-<p>服务器系统为 Ubuntu 16.04,使用下面的指令安装 XServer：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-get update</span><br><span class="line"></span><br><span class="line">apt-get install xorg dbus-x11 x11-xserver-utils</span><br></pre></td></tr></table></figure>
-<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>由于只是在做实验的时候使用，这边选择手动启动 XServer<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X &amp;</span><br></pre></td></tr></table></figure><br>加一个 <code>&amp;</code> 是将 XServer 放在后台运行，这样的话你可以继续使用当前的终端</p>
-<h2 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h2><p>使用<code>jobs</code>来查看当前在运行的后台服务<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> <span class="built_in">jobs</span> </span></span><br><span class="line">[1]  + running    X</span><br></pre></td></tr></table></figure></p>
-<p>使用 <code>kill %序号</code> 可以将 XServer 关闭<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill %1</span><br></pre></td></tr></table></figure></p>
-<h1 id="ssh连接远程服务器"><a href="#ssh连接远程服务器" class="headerlink" title="ssh连接远程服务器"></a>ssh连接远程服务器</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -X user@host</span><br></pre></td></tr></table></figure>
-<p>在 ssh 的基础上加一个 <code>-X</code> 参数，可以将远程的 X11 图形界面转发至本地</p>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>笔者的电脑前几天重装了一下系统，只安装了必要的软件。目前笔者的Archlinux使用的是<code>linux-lts</code>内核，以往使用的都是最新的<code>linux</code>内核。安装完毕之后发现触控板失灵了。</p>
+<p>在网络上查找了一圈，大部分的文章说的是，触控板的问题可能是缺少<code>xf86-input-synaptics</code>包。安装完之后确实有效果，但重启之后问题又复现。于是问题有很多天都没有进展。包括 arch wiki 上也没有很好的办法。</p>
+<h1 id="转机"><a href="#转机" class="headerlink" title="转机"></a>转机</h1><p>偶然想到，会不会是我的笔记本特有的问题，于是搜索时加入了我的笔记本型号：<code>Xiaomi notebook pro</code>。在 arch wiki 上有相应词条。然后发现了下面这一段话：</p>
+<blockquote>
+<p>You may face a problem when the kernel sees 2 touchpad devices if you have multiple touchpad devices displayed in libinput list-devices Try to add i8042.noaux kernel param</p>
+</blockquote>
+<p>然后使用<code>libinput list-devices</code>指令之后，确实发现了两个触控板，大概就是这个问题了。也难怪在网上搜不到（</p>
+<h1 id="修改-linux-启动参数"><a href="#修改-linux-启动参数" class="headerlink" title="修改 linux 启动参数"></a>修改 linux 启动参数</h1><p>这一部分是在grub中修改的，直接修改 <code>/boot/grub/grub.cfg</code> 并不能长久储存。</p>
+<p>grub的生成模板储存在<code>/etc/grub.d/</code>当中，找了一下并没有发现参数该放哪，然后又去看了一下 <code>/etc/default/grub</code>，发现了参数对应的变量，有两个,<code>GRUB_CMDLINE_LINUX_DEFAULT</code> 和 <code>GRUB_CMDLINE_LINUX</code>。第一个存放 linux 内核启动的默认参数，第二个就是自定义参数了，然后修改为 <code>GRUB_CMDLINE_LINUX=&quot;i8042.noaux=1&quot;</code>。最后使用<code>update-grub</code>指令更新grub。</p>
+<p>更新为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo	&#39;加载 Linux linux-lts ...&#39;</span><br><span class="line">linux	&#x2F;boot&#x2F;vmlinuz-linux-lts root&#x3D;UUID&#x3D;5918f557-8640-4c61-a62d-b7df69ff9c0d </span><br><span class="line">rw i8042.noaux&#x3D;1 loglevel&#x3D;3 quiet</span><br><span class="line">echo	&#39;加载初始化内存盘...&#39;</span><br><span class="line">initrd	&#x2F;boot&#x2F;intel-ucode.img &#x2F;boot&#x2F;initramfs-linux-lts.img</span><br></pre></td></tr></table></figure></p>
+<h1 id="i8042-noaux"><a href="#i8042-noaux" class="headerlink" title="i8042.noaux"></a>i8042.noaux</h1><p>linux 内核对于这个参数的解释是这样的<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
+<blockquote>
+<p>i8042.noaux    [HW] Don’t check for auxiliary (== mouse) port</p>
+</blockquote>
+<p>i8042.noaux 参数使得驱动不会检查控制器是否支持多路复用。在 stackexchange 上找到了这个回答<sup><a href="#fn_2" id="reffn_2">2</a></sup></p>
+<blockquote>
+<p>This is an arcane option, only necessary on some rare devices (one of which you have). The only documentation is one line in the kernel parameters list.</p>
+<p>The i8042 controller controls PS/2 keyboards and mice in PCs. It seems that on your laptop, both the keyboard and the touchpad are connected through that chip.<br>From what I understand from the option name and a brief skim of the source code (don’t rely on this to write an i8042 driver!), some i8042 chips are capable of multiplexing data coming from multiple pointing devices. The traditional PS/2 interface only provides for one keyboard and one mouse; modern laptops often have a two or more of a touchpad, a trackstick and an external PS/2 plug. Some controllers follow the active PS/2 multiplexing specification, which permit up to 4 devices; the data sent by each device carries an indication of which device it comes from.</p>
+<p>The Linux driver tries to find out whether the i8042 controller supports multiplexing, but sometimes guessing wrongly. With the i8042.nomux=1 parameter, the driver does not try to detect whether the controller supports multiplexing and assumes that it doesn’t. With the i8042.reset parameter, the driver resets the controller when starting, which may be useful to disable multiplexing mode if the controller does support it but in a buggy way.</p>
+</blockquote>
+<p>也算是个历史遗留问题了吧。</p>
+<hr>
+<blockquote id="fn_1">
+<sup>1</sup>. <a href="https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt" target="_blank" rel="noopener">https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
+</blockquote>
+<blockquote id="fn_2">
+<sup>2</sup>. <a href="https://unix.stackexchange.com/questions/28736/what-does-the-i8042-nomux-1-kernel-option-do-during-booting-of-ubuntu" target="_blank" rel="noopener">https://unix.stackexchange.com/questions/28736/what-does-the-i8042-nomux-1-kernel-option-do-during-booting-of-ubuntu</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
+</blockquote>
 
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2021/01/30/%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%89%E8%A3%85XServer/" data-id="clcu1m812000lddsb26l3b1ae" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2023/01/13/ArchLinux-%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" data-id="clcu1u2tx0000tmsbhtanhzow" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -108,19 +128,10 @@
         
   <nav class="article-nav">
     
-      <a href="/2021/03/27/%E7%AC%AC%E4%B8%80%E6%AC%A1-Hack/" class="article-nav-link">
-        <strong class="article-nav-caption">前一篇</strong>
-        <div class="article-nav-title">
-          
-            第一次 Hack
-          
-        </div>
-      </a>
     
-    
-      <a href="/2021/01/23/%E7%94%A8Linux%E5%AD%A6%E4%B9%A0%E5%BA%94%E8%AF%A5%E5%85%BB%E6%88%90%E7%9A%84%E5%A5%BD%E4%B9%A0%E6%83%AF/" class="article-nav-link">
+      <a href="/2022/07/02/AVSI2%E5%92%8Ccart%E5%9F%BA%E6%9C%AC%E5%AE%8C%E6%88%90%E4%BA%86/" class="article-nav-link">
         <strong class="article-nav-caption">后一篇</strong>
-        <div class="article-nav-title">用Linux学习应该养成的好习惯</div>
+        <div class="article-nav-title">AVSI2和cart基本完成了!</div>
       </a>
     
   </nav>
