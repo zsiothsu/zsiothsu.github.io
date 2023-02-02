@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>
-    [ArchLinux] 内核启动参数设置 |
+    [ArchLinux] Linux中的环境隔离 |
     
     Chipen&#39;s blog</title>
   
@@ -35,7 +35,7 @@
  * @Description: file content
 -->
 <section class="outer">
-  <article id="post-ArchLinux-内核启动参数设置" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  <article id="post-Linux中的环境隔离" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
 
     <div class="article-inner">
         
@@ -43,7 +43,7 @@
                 
   
     <h1 class="article-title" itemprop="name">
-      [ArchLinux] 内核启动参数设置
+      [ArchLinux] Linux中的环境隔离
     </h1>
   
   
@@ -56,8 +56,8 @@
 
                 
                     <div class="article-meta">
-                        <a href="/2023/01/13/ArchLinux-%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" class="article-date">
-  <time datetime="2023-01-13T04:11:02.000Z" itemprop="datePublished">2023-01-13</time>
+                        <a href="/2023/02/02/Linux%E4%B8%AD%E7%9A%84%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/" class="article-date">
+  <time datetime="2023-02-02T12:26:19.000Z" itemprop="datePublished">2023-02-02</time>
 </a>
                             
                     </div>
@@ -80,41 +80,21 @@
                                             
 
                                                 
-                                                                    <p>这几天笔记本触控板失灵了，虽然可以移动，但没法点选，所以开始排查了问题。</p>
+                                                                    <p>我在之前的 blog 文章“用Linux学习应该养成的好习惯”中介绍了几个隔离环境的方法。两年使用下来，觉得在日用上还是不太舒服，所以这篇文章做一个补充说明。</p>
 <a id="more"></a>
-<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>笔者的电脑前几天重装了一下系统，只安装了必要的软件。目前笔者的Archlinux使用的是<code>linux-lts</code>内核，以往使用的都是最新的<code>linux</code>内核。安装完毕之后发现触控板失灵了。</p>
-<p>在网络上查找了一圈，大部分的文章说的是，触控板的问题可能是缺少<code>xf86-input-synaptics</code>包。安装完之后确实有效果，但重启之后问题又复现。于是问题有很多天都没有进展。包括 arch wiki 上也没有很好的办法。</p>
-<h1 id="转机"><a href="#转机" class="headerlink" title="转机"></a>转机</h1><p>偶然想到，会不会是我的笔记本特有的问题，于是搜索时加入了我的笔记本型号：<code>Xiaomi notebook pro</code>。在 arch wiki 上有相应词条。然后发现了下面这一段话：</p>
-<blockquote>
-<p>You may face a problem when the kernel sees 2 touchpad devices if you have multiple touchpad devices displayed in libinput list-devices Try to add i8042.noaux kernel param</p>
-</blockquote>
-<p>然后使用<code>libinput list-devices</code>指令之后，确实发现了两个触控板，大概就是这个问题了。也难怪在网上搜不到（</p>
-<h1 id="修改-linux-启动参数"><a href="#修改-linux-启动参数" class="headerlink" title="修改 linux 启动参数"></a>修改 linux 启动参数</h1><p>这一部分是在grub中修改的，直接修改 <code>/boot/grub/grub.cfg</code> 并不能长久储存。</p>
-<p>grub的生成模板储存在<code>/etc/grub.d/</code>当中，找了一下并没有发现参数该放哪，然后又去看了一下 <code>/etc/default/grub</code>，发现了参数对应的变量，有两个,<code>GRUB_CMDLINE_LINUX_DEFAULT</code> 和 <code>GRUB_CMDLINE_LINUX</code>。第一个存放 linux 内核启动的默认参数，第二个就是自定义参数了，然后修改为 <code>GRUB_CMDLINE_LINUX=&quot;i8042.noaux=1&quot;</code>。最后使用<code>update-grub</code>指令更新grub。</p>
-<p>更新为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo	&#39;加载 Linux linux-lts ...&#39;</span><br><span class="line">linux	&#x2F;boot&#x2F;vmlinuz-linux-lts root&#x3D;UUID&#x3D;5918f557-8640-4c61-a62d-b7df69ff9c0d </span><br><span class="line">rw i8042.noaux&#x3D;1 loglevel&#x3D;3 quiet</span><br><span class="line">echo	&#39;加载初始化内存盘...&#39;</span><br><span class="line">initrd	&#x2F;boot&#x2F;intel-ucode.img &#x2F;boot&#x2F;initramfs-linux-lts.img</span><br></pre></td></tr></table></figure></p>
-<h1 id="i8042-noaux"><a href="#i8042-noaux" class="headerlink" title="i8042.noaux"></a>i8042.noaux</h1><p>linux 内核对于这个参数的解释是这样的<sup><a href="#fn_1" id="reffn_1">1</a></sup></p>
-<blockquote>
-<p>i8042.noaux    [HW] Don’t check for auxiliary (== mouse) port</p>
-</blockquote>
-<p>i8042.noaux 参数使得驱动不会检查控制器是否支持多路复用。在 stackexchange 上找到了这个回答<sup><a href="#fn_2" id="reffn_2">2</a></sup></p>
-<blockquote>
-<p>This is an arcane option, only necessary on some rare devices (one of which you have). The only documentation is one line in the kernel parameters list.</p>
-<p>The i8042 controller controls PS/2 keyboards and mice in PCs. It seems that on your laptop, both the keyboard and the touchpad are connected through that chip.<br>From what I understand from the option name and a brief skim of the source code (don’t rely on this to write an i8042 driver!), some i8042 chips are capable of multiplexing data coming from multiple pointing devices. The traditional PS/2 interface only provides for one keyboard and one mouse; modern laptops often have a two or more of a touchpad, a trackstick and an external PS/2 plug. Some controllers follow the active PS/2 multiplexing specification, which permit up to 4 devices; the data sent by each device carries an indication of which device it comes from.</p>
-<p>The Linux driver tries to find out whether the i8042 controller supports multiplexing, but sometimes guessing wrongly. With the i8042.nomux=1 parameter, the driver does not try to detect whether the controller supports multiplexing and assumes that it doesn’t. With the i8042.reset parameter, the driver resets the controller when starting, which may be useful to disable multiplexing mode if the controller does support it but in a buggy way.</p>
-</blockquote>
-<p>也算是个历史遗留问题了吧。</p>
-<hr>
-<blockquote id="fn_1">
-<sup>1</sup>. <a href="https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt" target="_blank" rel="noopener">https://www.kernel.org/doc/Documentation/admin-guide/kernel-parameters.txt</a><a href="#reffn_1" title="Jump back to footnote [1] in the text."> &#8617;</a>
-</blockquote>
-<blockquote id="fn_2">
-<sup>2</sup>. <a href="https://unix.stackexchange.com/questions/28736/what-does-the-i8042-nomux-1-kernel-option-do-during-booting-of-ubuntu" target="_blank" rel="noopener">https://unix.stackexchange.com/questions/28736/what-does-the-i8042-nomux-1-kernel-option-do-during-booting-of-ubuntu</a><a href="#reffn_2" title="Jump back to footnote [2] in the text."> &#8617;</a>
-</blockquote>
+<h2 id="编程环境"><a href="#编程环境" class="headerlink" title="编程环境"></a>编程环境</h2><h3 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h3><p>&emsp;&emsp;在之前的文章中介绍使用 anaconda<sup><small>pip</small></sup> 隔离 python 的环境，但由于习惯上使用 pip 来安装包，conda自成一套的安装源用起来不太舒服（毕竟我装个wine都要考虑很久），而且包版本不如pip新。所以conda被弃用了。</p>
+<p>&emsp;&emsp;另一个方法是使用 virtualenv<sup><small>pip</small></sup>。virtualenv基于项目来划分虚拟环境，也就是每个项目一个配置，走到了环境隔离的极端。如果有大量项目需要隔离的话，virtualenv很合适。但我本身并不使用python作为主力开发语言，项目不多。对我而言环境隔离最重要的是，装完一些临时使用的包之后可以方便一次卸载。</p>
+<p>&emsp;&emsp;这时候virtualenvwrapper<sup><small>pip</small></sup>更适合环境隔离，virtualenvwrapper是基于整个用户环境的隔离，只要当前终端开启了虚拟环境，那么所有项目都会使用。特别适合临时安装的包，或者一些全局的命令。</p>
+<h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p>&emsp;&emsp;archlinux-java（在java-runtime-common<sup><small>pacman</small></sup>中） 目前仍然是最推荐的隔离 Java 环境的脚本，同样是全局地替换环境。</p>
+<h3 id="C-C"><a href="#C-C" class="headerlink" title="C/C++"></a>C/C++</h3><p>&emsp;&emsp;C/C++目前没有很好的版本管理工具，鉴于平时都是使用 Makefile，所以在 Makefile 中控制即可。</p>
+<h2 id="运行环境"><a href="#运行环境" class="headerlink" title="运行环境"></a>运行环境</h2><h3 id="wine"><a href="#wine" class="headerlink" title="wine"></a>wine</h3><p>&emsp;&emsp;wine 是我最头疼的一个环境，部分软件需要依赖wine运行，但版本各不相同，用久了之后就会出现 wine5、wine6、wine、deepin-wine5、deepin-wine6等wine版本出现在电脑上，而且会在用户目录下留下一堆文件。这个从一开始就要想清楚，能不用 wine 就不用 wine。</p>
+<p>&emsp;&emsp;如果必须要使用的话，根据 <a href="https://wiki.archlinux.org/title/Wine#Running_Wine_under_a_separate_user_account" target="_blank" rel="noopener">archwiki</a> 上所写，创建一个新的账户，专门用来安装 wine 和其它依赖 wine 的软件。wiki上给出了一个脚本用来直接 sudo 执行windows软件。但是由于一些权限问题，声卡等设备是不能用的。所以建议直接登出当前用户，使用新用户登录桌面环境后，再运行wine软件。</p>
+<h3 id="electron"><a href="#electron" class="headerlink" title="electron"></a>electron</h3><p>&emsp;&emsp;别想了，认命吧。</p>
 
                                                                         
                                     </div>
                                     <footer class="article-footer">
-                                        <a data-url="http://chipensblog.tk/2023/01/13/ArchLinux-%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" data-id="clcu1u2tx0000tmsbhtanhzow" class="article-share-link">
+                                        <a data-url="http://chipensblog.tk/2023/02/02/Linux%E4%B8%AD%E7%9A%84%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/" data-id="cldn48tpy0000dksb75yt5a1e" class="article-share-link">
                                             分享
                                         </a>
                                         
@@ -128,19 +108,10 @@
         
   <nav class="article-nav">
     
-      <a href="/2023/02/02/Linux%E4%B8%AD%E7%9A%84%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/" class="article-nav-link">
-        <strong class="article-nav-caption">前一篇</strong>
-        <div class="article-nav-title">
-          
-            [ArchLinux] Linux中的环境隔离
-          
-        </div>
-      </a>
     
-    
-      <a href="/2022/07/02/AVSI2%E5%92%8Ccart%E5%9F%BA%E6%9C%AC%E5%AE%8C%E6%88%90%E4%BA%86/" class="article-nav-link">
+      <a href="/2023/01/13/ArchLinux-%E5%86%85%E6%A0%B8%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE/" class="article-nav-link">
         <strong class="article-nav-caption">后一篇</strong>
-        <div class="article-nav-title">AVSI2和cart基本完成了!</div>
+        <div class="article-nav-title">[ArchLinux] 内核启动参数设置</div>
       </a>
     
   </nav>
